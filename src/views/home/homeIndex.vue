@@ -1,6 +1,8 @@
 <template>
   <div>
     <div>
+      <position-index v-show="active === 'position'"></position-index>
+      <job-index v-show="active === 'job'"></job-index>
       <myself-index v-show="active === 'myself'"></myself-index>
     </div>
     <van-tabbar v-model="active" active-color="#07c160" inactive-color="#000">
@@ -14,12 +16,16 @@
 <script>
 import { Tabbar, TabbarItem } from "vant"
 import myselfIndex from "../myself/myselfIndex"
+import positionIndex from "../position/positionIndex"
+import jobIndex from "../job/jobIndex"
 export default {
   name: "homeIndex",
   components: {
     [Tabbar.name]: Tabbar,
     [TabbarItem.name]: TabbarItem,
-    myselfIndex
+    myselfIndex,
+    positionIndex,
+    jobIndex
   },
   data() {
     return {
