@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-tabs type="card" v-model="chooseIndex">
+    <van-tabs type="card" v-model="active">
       <van-tab name="accepted" title="已录取">内容 1</van-tab>
       <van-tab name="settled" title="已结算">内容 2</van-tab>
     </van-tabs>
@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      active: "chooseIndex"
+      active: "accepted"
     }
   }
 }
