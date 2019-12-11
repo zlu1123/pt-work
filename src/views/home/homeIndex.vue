@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home-index-content">
     <div>
       <position-index v-show="active === 'position'"></position-index>
       <job-index v-show="active === 'job'"></job-index>
@@ -34,4 +34,8 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  .home-index-content {
+    overflow: hidden;
+  }
+</style>
