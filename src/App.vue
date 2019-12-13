@@ -136,4 +136,14 @@ a:link,a:active,a:visited,a:hover {
 .dn{
     display: none;
 }
+  html,
+  body {
+    height: 100%;
+  }
+
+  #app {
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 </style>

@@ -1,14 +1,35 @@
 <template>
   <div class="home-index-content">
     <div>
-      <position-index v-show="active === 'position'"></position-index>
-      <job-index v-show="active === 'job'"></job-index>
-      <myself-index v-show="active === 'myself'"></myself-index>
+      <position-index v-if="active === 'position'"></position-index>
+      <job-index v-if="active === 'job'"></job-index>
+      <myself-index v-if="active === 'myself'"></myself-index>
     </div>
-    <van-tabbar v-model="active" active-color="#07c160" inactive-color="#000">
-      <van-tabbar-item name="position" icon="logistics">职位</van-tabbar-item>
-      <van-tabbar-item name="job" icon="sign">工作</van-tabbar-item>
-      <van-tabbar-item name="myself" icon="manager-o">我的</van-tabbar-item>
+    <van-tabbar v-model="active"
+                active-color="#3B7960"
+                inactive-color="#B3B3B3">
+      <van-tabbar-item name="position">
+        <span>职位</span>
+        <img slot="icon"
+             slot-scope="props"
+             :src="props.active ? positionIcon.active : positionIcon.inactive"
+             class="position-img">
+      </van-tabbar-item>
+      <van-tabbar-item name="job"
+                       icon="sign">
+        <span>工作</span>
+        <img slot="icon"
+             slot-scope="props"
+             :src="props.active ? jobIcon.active : jobIcon.inactive"
+             class="job-img">
+      </van-tabbar-item>
+      <van-tabbar-item name="myself"
+                       icon="manager-o">
+        <span>我的</span>
+        <img slot="icon"
+             slot-scope="props"
+             :src="props.active ? myIcon.active : myIcon.inactive"
+             class="my-img"></van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -29,13 +50,36 @@ export default {
   },
   data() {
     return {
-      active: "position"
+      active: "myself",
+      positionIcon: {
+        active: './img/home/position-img.png',
+        inactive: './img/home/position-img-unchoose.png'
+      },
+      jobIcon: {
+        active: './img/home/job-img.png',
+        inactive: './img/home/job-img-unchoose.png'
+      },
+      myIcon: {
+        active: './img/home/my-img.png',
+        inactive: './img/home/my-img-unchoose.png'
+      }
     }
   }
 }
 </script>
 <style lang="less" scoped>
-  .home-index-content {
-    overflow: hidden;
-  }
+.position-img {
+  width: 20px;
+  height: 20px;
+}
+
+.job-img {
+  width: 24px;
+  height: 24px;
+}
+
+.my-img {
+  width: 24px;
+  height: 24px;
+}
 </style>
