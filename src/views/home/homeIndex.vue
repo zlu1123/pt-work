@@ -15,16 +15,14 @@
              :src="props.active ? positionIcon.active : positionIcon.inactive"
              class="position-img">
       </van-tabbar-item>
-      <van-tabbar-item name="job"
-                       icon="sign">
+      <van-tabbar-item name="job">
         <span>工作</span>
         <img slot="icon"
              slot-scope="props"
              :src="props.active ? jobIcon.active : jobIcon.inactive"
              class="job-img">
       </van-tabbar-item>
-      <van-tabbar-item name="myself"
-                       icon="manager-o">
+      <van-tabbar-item name="myself">
         <span>我的</span>
         <img slot="icon"
              slot-scope="props"
@@ -50,7 +48,7 @@ export default {
   },
   data() {
     return {
-      active: "myself",
+      active: "job",
       positionIcon: {
         active: './img/home/position-img.png',
         inactive: './img/home/position-img-unchoose.png'

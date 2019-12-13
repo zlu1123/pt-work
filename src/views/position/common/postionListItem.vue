@@ -30,7 +30,8 @@ export default {
   props: {
     listItem: {
       type: Object,
-      default: () => { }
+      // eslint-disable-next-line vue/require-valid-default-prop
+      default: {}
     }
   },
   data() {
