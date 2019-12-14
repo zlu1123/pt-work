@@ -27,6 +27,7 @@
           v-for="(item, index) of infoList"
           :key="index"
           :item-data="item"
+          @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
       <div class="login-out">
@@ -61,7 +62,8 @@ export default {
           name: "银行卡信息"
         },
         {
-          name: "个人信息维护"
+          name: "个人信息维护",
+          path: "/personalInfo"
         },
         {
           name: "保险"
@@ -74,6 +76,13 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    goToNextPage(item) {
+      this.$router.push({
+        path: item.path
+      });
+    }
   }
 };
 </script>

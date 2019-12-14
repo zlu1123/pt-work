@@ -1,14 +1,28 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive :include="$store.getters.getKeepAlivePath">
+      <router-view :key="key"/>
+    </keep-alive>
   </div>
 </template>
 
+<script>
+export default {
+  mounted() {
+    this.$store.commit('setKeepAlivePath', 'home');
+  },
+
+  computed: {
+    key() {
+      // 或者 :key="$route.fullPath" 只要保证key唯一就可以了
+      return this.$route.name !== undefined ? this.$route.name + Number(new Date()) : this.$route + Number(new Date());
+    }
+  }
+}
+</script>
 <style lang="less">
 
-@charset "utf-8";
-
-/* 禁用iPhone中Safari的字号自动调整 */
+  /* 禁用iPhone中Safari的字号自动调整 */
 html {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
