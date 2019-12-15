@@ -39,7 +39,7 @@
 
 <script>
 import { Row, Col, Image, Cell } from "vant";
-import listItem from "./listItem.vue";
+import listItem from "./common/listItem.vue";
 export default {
   name: "",
   components: {
@@ -53,10 +53,13 @@ export default {
     return {
       infoList: [
         {
-          name: "工资单"
+          name: "工资单",
+          path: "/payRoll"
         },
         {
-          name: "我的认证"
+          name: "我的认证",
+          // path: "/myCertification"
+          path: "/idCertification"
         },
         {
           name: "银行卡信息"
@@ -72,7 +75,8 @@ export default {
           name: "违约记录"
         },
         {
-          name: "打卡情况"
+          name: "打卡情况",
+          path: "/checkInSituation"
         }
       ]
     };

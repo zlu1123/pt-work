@@ -35,13 +35,42 @@ const routes = [
   },
   {
     name: "personalInfo",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import("../views/myself/personalInfo.vue"),
     meta: {
       title: "个人信息维护"
+    }
+  },
+  {
+    name: "payRoll",
+    component: () =>
+      import("../views/myself/payRoll.vue"),
+    meta: {
+      title: "工资单"
+    }
+  },
+  {
+    name: "myCertification",
+    component: () =>
+      import("../views/myself/myCertification.vue"),
+    meta: {
+      title: "我的认证"
+    }
+  },
+  {
+    name: "idCertification",
+    component: () =>
+      import("../views/myself/idCertification.vue"),
+    meta: {
+      title: "身份证认证"
+    }
+  },
+  {
+    name: "checkInSituation",
+    component: () =>
+      import("../views/myself/checkInSituation.vue"),
+    meta: {
+      title: "打卡"
     }
   }
 ]

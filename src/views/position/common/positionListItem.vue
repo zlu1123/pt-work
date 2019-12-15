@@ -7,7 +7,8 @@
     <div class="list__item__content">
       <div class="list__item__content-tilte">
         <div>顺丰快递分派员（顺丰）</div>
-        <div>1.5km</div>
+        <div v-if="listItem.status" class="cancel-registration">取消报名</div>
+        <div v-else class="distance">1.5km</div>
       </div>
       <div class="list__item__content-time">
         <span>11月12日</span>
@@ -44,7 +45,7 @@ export default {
 
 <style lang="less" scoped>
 .list__item {
-  margin: 10px 0 0;
+  margin: 0 0 10px;
   background: @itemColor;
   padding: 0 15px;
   display: flex;
@@ -68,9 +69,13 @@ export default {
       opacity: 1;
       display: flex;
       justify-content: space-between;
-      div:last-child {
-        font-size: 13px;
-        line-height: 18px;
+      .cancel-registration {
+        font-size: @fs12;
+        font-family: @pfSC;
+        color: @chooseColor
+      }
+      .distance {
+        font-size: @fs13;
         color: @tipColor;
       }
     }

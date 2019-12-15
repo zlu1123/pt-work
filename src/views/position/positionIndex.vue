@@ -52,7 +52,7 @@
 <script>
 import { Cell, SwipeItem, Swipe, Search, Row, Col, DropdownMenu, DropdownItem,
   List } from "vant";
-import positionListItem from './common/postionListItem'
+import positionListItem from './common/positionListItem'
 export default {
   name: "positionIndex",
 

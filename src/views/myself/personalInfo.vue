@@ -27,16 +27,7 @@
         <div class="img-title">
           人员照片
         </div>
-        <div class="upload-content">
-          <van-uploader>
-            <div class="upload-content-img">
-              <van-icon size="25px" color="#21A675" name="plus" />
-            </div>
-          </van-uploader>
-        </div>
-        <div class="img-tip">
-            请上传真实人员照片
-        </div>
+        <upload-item img-tip-name="请上传真实人员照片" upload-height="180px"></upload-item>
         <div class="img-size">
           大小3M以内
         </div>
@@ -53,7 +44,8 @@
 
 <script>
 import { Row, Col, Image, Cell, Uploader, Icon } from "vant";
-import listItem from "./listItem.vue";
+import listItem from "./common/listItem.vue";
+import uploadItem from "./common/uploadItem";
 export default {
   name: "personalInfo",
   components: {
@@ -63,7 +55,8 @@ export default {
     [Cell.name]: Cell,
     [Uploader.name]: Uploader,
     [Icon.name]: Icon,
-    listItem
+    listItem,
+    uploadItem
   },
   data() {
     return {
@@ -156,31 +149,8 @@ export default {
           color: @myselfListTitleColor;
           padding-left: 20px;
         }
-        .upload-content {
-          text-align: center;
-          margin-top: 17px;
-          .upload-content-img {
-            height: 180px;
-            width: 155px;
-            background: @myselfListTitle;
-            border-radius:5px 5px 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-        }
-        .img-tip {
-          width: 155px;
-          height:25px;
-          margin: 0 auto;
-          border-radius: 0 0 5px 5px;
-          font-size: @fs13;
-          font-family: @pfSC;
-          background: @myselfListTitleColor;
-          color: @itemColor;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        .upload-item {
+          display: inline-block;
         }
         .img-size {
           margin: 12px 0 7px;

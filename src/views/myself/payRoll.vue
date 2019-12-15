@@ -1,5 +1,5 @@
 <template>
-  <div class="job-index-content">
+  <div>
     <common-list-header :content-data="showData">
       <van-list
         slot="firstList"
@@ -7,10 +7,7 @@
         :finished="acceptedFinished"
         finished-text="没有更多了"
         @load="acceptedOnLoad">
-        <div v-for="(item, index) of acceptedList" :key="index">
-          <common-list-des></common-list-des>
-          <position-list-item :listItem="item"></position-list-item>
-        </div>
+        <pay-roll-list-item v-for="(item, index) of acceptedList" :key="index" :listItem="item"></pay-roll-list-item>
       </van-list>
       <van-list
         slot="lastList"
@@ -18,36 +15,34 @@
         :finished="settledFinished"
         finished-text="没有更多了"
         @load="settledOnLoad">
-        <position-list-item v-for="(item, index) of settledList" :key="index" :listItem="item"></position-list-item>
+        <pay-roll-list-item v-for="(item, index) of settledList" :key="index" :listItem="item"></pay-roll-list-item>
       </van-list>
     </common-list-header>
   </div>
 </template>
 
 <script>
-import { List } from "vant"
 import commonListHeader from "../components/commonListHeader";
-import positionListItem from "../position/common/positionListItem";
-import commonListDes from "../components/commonListDes";
+import payRollListItem from "./common/payRollListItem";
+import { List } from "vant"
 export default {
-  name: "",
+  name: "payRoll",
   components: {
-    [List.name]: List,
-    [positionListItem.name]: positionListItem,
     commonListHeader,
-    commonListDes
+    payRollListItem,
+    [List.name]: List
   },
   data() {
     return {
       showData: {
-        title: "零时工",
-        firstName: '已录取',
-        lastName: "已结算"
+        title: "工资单",
+        firstName: '已领取',
+        lastName: "未领取"
       },
       acceptedList: [
         {
           imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg",
-          status: "accepted"
+          claimed: 'claimed'
         }
       ],
       acceptedLoading: false,
@@ -96,8 +91,6 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-  .job-index-content {
-    background: @bgColor;
-  }
+<style scoped>
+
 </style>
