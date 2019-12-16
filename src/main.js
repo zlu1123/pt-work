@@ -8,8 +8,11 @@ import store from './store';
 import 'lib-flexible/flexible';
 
 import VueLazyload from 'vue-lazyload';
+import { Dialog } from 'vant';
 
+// 全局注册
 Vue.use(VueLazyload);
+Vue.use(Dialog);
 
 Vue.config.productionTip = false;
 

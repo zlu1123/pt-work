@@ -1,5 +1,5 @@
 <template>
-  <div class="list__item">
+  <div class="list__item" @click.stop="test">
     <div class="list__item__img">
       <img v-lazy="listItem.imgUrl"
            alt="">
@@ -38,6 +38,13 @@ export default {
   data() {
     return {
 
+    }
+  },
+  methods: {
+    test() {
+      this.$router.push({
+        path: "/jobDetail"
+      })
     }
   }
 }

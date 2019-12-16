@@ -80,6 +80,22 @@ const routes = [
     meta: {
       title: "工资单反馈"
     }
+  },
+  {
+    name: "jobDetail",
+    component: () =>
+      import("../views/job/jobDetail.vue"),
+    meta: {
+      title: "职位详情"
+    }
+  },
+  {
+    name: "selectRole",
+    component: () =>
+      import("../views/home/selectRole.vue"),
+    meta: {
+      title: "角色选择"
+    }
   }
 ]
 
