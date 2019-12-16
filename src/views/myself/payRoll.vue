@@ -15,7 +15,7 @@
         :finished="settledFinished"
         finished-text="没有更多了"
         @load="settledOnLoad">
-        <pay-roll-list-item v-for="(item, index) of settledList" :key="index" :listItem="item"></pay-roll-list-item>
+        <pay-roll-list-item v-for="(item, index) of settledList" :key="index" :listItem="item" @billFeedback="billFeedback(item)"></pay-roll-list-item>
       </van-list>
     </common-list-header>
   </div>
@@ -86,6 +86,11 @@ export default {
           this.settledFinished = true;
         }
       }, 500);
+    },
+    billFeedback(item) {
+      this.$router.push({
+        path: "/settlementFeedback"
+      })
     }
   }
 }

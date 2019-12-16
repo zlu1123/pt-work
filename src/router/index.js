@@ -72,6 +72,14 @@ const routes = [
     meta: {
       title: "打卡"
     }
+  },
+  {
+    name: "settlementFeedback",
+    component: () =>
+      import("../views/myself/settlementFeedback.vue"),
+    meta: {
+      title: "工资单反馈"
+    }
   }
 ]
 

@@ -11,7 +11,7 @@
       <div class="card-record">
         <div class="pay-money">结算金额：120元</div>
         <div class="btn-list-info">
-          <div class="btn-list" v-if="!listItem.claimed" ><span>结算反馈</span></div>
+          <div class="btn-list" v-if="!listItem.claimed" @click.stop="feedback"><span>结算反馈</span></div>
           <div class="btn-list"><span>打卡记录</span></div>
           <div class="btn-received" v-if="!listItem.claimed" ><span>领取</span></div>
         </div>
@@ -33,6 +33,11 @@ export default {
   },
   components: {
     commonListDes
+  },
+  methods: {
+    feedback() {
+      this.$emit("billFeedback")
+    }
   }
 }
 </script>
