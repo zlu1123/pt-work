@@ -17,21 +17,26 @@ export default {
       roleInfoList: [
         {
           roleImg: "./img/home/worker.png",
-          name: "零活工"
+          name: "零活工",
+          path: "/home"
         },
         {
           roleImg: "./img/home/company.png",
-          name: "企业人员"
+          name: "企业人员",
+          path: "/checkIn"
         },
         {
           roleImg: "./img/home/manager.png",
-          name: "平台现场人员"
+          name: "平台现场人员",
+          path: "/checkIn"
         }
-      ]
+      ],
+      chooseRole: {}
     }
   },
   methods: {
     selectRole(item) {
+      this.chooseRole = item;
       this.$dialog.confirm({
         title: '选择角色',
         message: `您确认选择${item.name}吗？`,
@@ -39,9 +44,10 @@ export default {
       });
     },
 
-    beforeClose(action, done) {
+    beforeClose(action, done, item) {
       if (action === 'confirm') {
         setTimeout(done, 1000);
+        this.$router.push(this.chooseRole.path)
       } else {
         done();
       }

@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      active: "myself",
+      active: "position",
       positionIcon: {
         active: './img/home/position-img.png',
         inactive: './img/home/position-img-unchoose.png'

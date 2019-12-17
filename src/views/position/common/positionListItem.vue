@@ -8,6 +8,7 @@
       <div class="list__item__content-tilte">
         <div>顺丰快递分派员（顺丰）</div>
         <div v-if="listItem.status" class="cancel-registration">取消报名</div>
+        <div v-else-if="listItem.settled" class="cancel-registration">打卡详情</div>
         <div v-else class="distance">1.5km</div>
       </div>
       <div class="list__item__content-time">

@@ -1,19 +1,14 @@
 <template>
-  <div>
-    <van-row>
-      <van-col :span="6">
-        <van-cell value="单元格"
-                  icon="location-o"
-                  class="location-content" />
-      </van-col>
-      <van-col :span="18">
-        <form action="/">
-          <van-search v-model="searchValue"
-                      placeholder="搜索用人单位" />
-        </form>
-      </van-col>
-
-    </van-row>
+  <div class="position__content">
+    <form action="/">
+      <van-search v-model="searchValue"
+                  placeholder="搜索用人单位">
+        <div slot="label" class="location">
+          <img :src="locationImgUrl" alt="">
+          <div>大明宫</div>
+        </div>
+      </van-search>
+    </form>
     <!-- 滑动页面 -->
     <div>
       <van-swipe :autoplay="3000">
@@ -24,7 +19,7 @@
         </van-swipe-item>
       </van-swipe>
     </div>
-    <div>
+    <div class="filter-list">
       <van-row>
         <van-col :span="6" class="filter-content-left">
           综合排序
@@ -112,7 +107,8 @@ export default {
         }
       ],
       loading: false,
-      finished: false
+      finished: false,
+      locationImgUrl: './img/job/dingwei@2x.png'
     };
   },
   methods: {
@@ -135,30 +131,55 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.swipe-img-position {
-  width: auto;
-  height: 5rem;
+.position__content {
+  .swipe-img-position {
+    height: 150px;
+  }
+
+  /deep/ .van-search__content {
+    padding-left: 0;
+    .van-search__label {
+      padding-left: 0;
+    }
+  }
+
+  .location {
+    padding-right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: @fs12;
+    font-family:Microsoft YaHei UI;
+    color: @chooseColor;
+    background: @itemColor;
+    padding-right: 10px;
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .filter-list {
+    margin: 10px 0;
+    .filter-content-left {
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 15px;
+      color: #21A675;
+      background: @itemColor;
+    }
+  }
+
+  .filter-content {
+    height: 40px;
+  }
+
+  .filter-title {
+    font-weight: bold !important;
+    font-size: 100px !important;
+  }
 }
 
-.location-content {
-  padding-right: 0;
-}
-
-.filter-content-left {
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 15px;
-  color: #21A675
-}
-
-.filter-content {
-  height: 40px;
-}
-
-.filter-title {
-  font-weight: bold !important;
-  font-size: 100px !important;
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="job-index-content">
+  <div>
     <common-list-header :content-data="showData">
       <van-list
         slot="firstList"
@@ -7,10 +7,7 @@
         :finished="acceptedFinished"
         finished-text="没有更多了"
         @load="acceptedOnLoad">
-        <div v-for="(item, index) of acceptedList" :key="index">
-          <common-list-des></common-list-des>
-          <position-list-item :listItem="item"></position-list-item>
-        </div>
+        <punch-info-list-item v-for="(item, index) of acceptedList" :key="index" :listItem="item"></punch-info-list-item>
       </van-list>
       <van-list
         slot="lastList"
@@ -18,47 +15,71 @@
         :finished="settledFinished"
         finished-text="没有更多了"
         @load="settledOnLoad">
-        <div v-for="(item, index) of settledList" :key="index">
-          <common-list-des></common-list-des>
-          <position-list-item :listItem="item"></position-list-item>
-        </div>
+        <punch-info-list-item v-for="(item, index) of settledList" :key="index" :listItem="item" ></punch-info-list-item>
       </van-list>
     </common-list-header>
   </div>
 </template>
 
 <script>
-import { List } from "vant"
 import commonListHeader from "../components/commonListHeader";
-import positionListItem from "../position/common/positionListItem";
-import commonListDes from "../components/commonListDes";
+import punchInfoListItem from "./components/punchInfoListItem";
+import { List } from "vant"
+
 export default {
-  name: "",
+  name: "checkIn",
   components: {
-    [List.name]: List,
-    [positionListItem.name]: positionListItem,
     commonListHeader,
-    commonListDes
+    punchInfoListItem,
+    [List.name]: List
   },
   data() {
     return {
       showData: {
-        title: "零时工",
-        firstName: '已录取',
-        lastName: "已结算"
+        title: "零活工",
+        firstName: '待审核',
+        lastName: "已审核"
       },
       acceptedList: [
         {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg",
-          status: "accepted"
+          name: "顺丰快递分派员（顺丰）",
+          isCheckIn: true,
+          workInfo: [
+            {
+              label: "打 卡 人",
+              value: "李江涛"
+            },
+            {
+              label: "打卡类型",
+              value: "上班"
+            },
+            {
+              label: "打卡时间",
+              value: "8:55:12"
+            }
+          ]
         }
       ],
       acceptedLoading: false,
       acceptedFinished: false,
       settledList: [
         {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-2.jpg",
-          settled: "settled"
+          name: "顺丰快递分派员（顺丰）",
+          isCheckIn: false,
+          workInfo: [
+            {
+              label: "打 卡 人",
+              value: "李江涛"
+            },
+            {
+              label: "打卡类型",
+              value: "上班"
+            },
+            {
+              label: "打卡时间",
+              value: "8:55:12"
+            }
+          ]
         }
       ],
       settledLoading: false,
@@ -100,8 +121,6 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-  .job-index-content {
-    background: @bgColor;
-  }
+<style scoped>
+
 </style>
