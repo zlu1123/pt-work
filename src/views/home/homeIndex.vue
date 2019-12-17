@@ -46,6 +46,8 @@ export default {
     positionIndex,
     jobIndex
   },
+  mounted() {
+  },
   data() {
     return {
       active: "myself",
@@ -62,6 +64,8 @@ export default {
         inactive: './img/home/my-img-unchoose.png'
       }
     }
+  },
+  activated() {
   }
 }
 </script>

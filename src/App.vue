@@ -1,22 +1,21 @@
 <template>
   <div id="app">
-    <keep-alive :include="$store.getters.getKeepAlivePath">
-      <router-view :key="key"/>
-    </keep-alive>
+    <transition name="router-fade" mode="out-in">
+      <keep-alive :include="$store.getters.getKeepAlivePath">
+        <router-view/>
+      </keep-alive>
+    </transition>
   </div>
 </template>
 
 <script>
+// import { mutationsName } from "./common/constants";
 export default {
   mounted() {
-    this.$store.commit('setKeepAlivePath', 'home');
+    // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
   },
 
   computed: {
-    key() {
-      // 或者 :key="$route.fullPath" 只要保证key唯一就可以了
-      return this.$route.name !== undefined ? this.$route.name + Number(new Date()) : this.$route + Number(new Date());
-    }
   }
 }
 </script>
@@ -27,7 +26,7 @@ html {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     /* 解决IOS默认滑动很卡的情况 */
-    // -webkit-overflow-scrolling : touch;
+    -webkit-overflow-scrolling : touch;
     background: @bgColor;
 }
 
@@ -150,14 +149,12 @@ a:link,a:active,a:visited,a:hover {
 .dn{
     display: none;
 }
-  html,
-  body {
-    height: 100%;
-  }
+html,
+body {
+  height: 100%;
+}
 
-  #app {
-    height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-  }
+#app {
+  height: 100%;
+}
 </style>

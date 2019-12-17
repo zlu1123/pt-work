@@ -1,5 +1,7 @@
 export const mutationsName = {
-  setKeepAlivePath: 'setKeepAlivePath'
+  setKeepAlivePath: 'setKeepAlivePath',
+  deleteKeepAlive: 'deleteKeepAlive',
+  deleteAllKeepAlive: 'deleteAllKeepAlive'
 }
 
 export const gettersName = {

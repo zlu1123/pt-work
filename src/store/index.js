@@ -1,16 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import publicModules from "./publicModules";
+import publicModules from "./modules/publicModules";
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
     publicModules
   }
