@@ -120,5 +120,5 @@ export const handleRequestPromise = (
 
 // 职位报名
 export const enRoll = (params) => {
-  return axiosRequest("POST", urlConstant.en_roll, params);
+  return axiosRequest("POST", urlConstant.enRoll, params);
 }

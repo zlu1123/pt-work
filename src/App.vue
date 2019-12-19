@@ -10,9 +10,12 @@
 
 <script>
 // import { mutationsName } from "./common/constants";
+import { enRoll } from "./service/api";
+
 export default {
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
+    enRoll();
   },
 
   computed: {

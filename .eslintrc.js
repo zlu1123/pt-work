@@ -1,7 +1,8 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    browser: true
   },
   'extends': [
     'plugin:vue/essential',
@@ -14,7 +15,8 @@ module.exports = {
     "no-var": 0, // 禁用var，用let和const代替
     "quotes": [0, "double"],
     // "semi": [2, "always"],//语句强制分号结尾
-    'semi': [0, "never"]
+    'semi': [0, "never"],
+    "camelcase": ["error", {"allow": ["aa_bb"]}]
   },
   parserOptions: {
     parser: 'babel-eslint'

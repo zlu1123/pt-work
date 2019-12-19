@@ -1,1 +1,1 @@
-export const en_roll = "/worker/position/enRoll";
+export const enRoll = "/worker/position/enRoll";
