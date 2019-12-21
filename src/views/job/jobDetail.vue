@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="job-info">
-      <div class="location">
+      <div class="location" @click="goMapPage">
         <div class="left">
           <div class="choose-location">
             <img :src="locationImgUrl" alt="">
@@ -119,6 +119,13 @@ export default {
         "6、鉴定货运质量，分析货物残损原因，划分事故责任；",
         "7、办理货物交接手续。"
       ]
+    }
+  },
+  methods: {
+    goMapPage() {
+      this.$router.push({
+        path: "/routeNavigation"
+      })
     }
   }
 }

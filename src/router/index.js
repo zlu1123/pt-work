@@ -104,6 +104,14 @@ const routes = [
     meta: {
       title: "打卡审核"
     }
+  },
+  {
+    name: "routeNavigation",
+    component: () =>
+      import("../views/job/routeNavigation.vue"),
+    meta: {
+      title: "路径导航"
+    }
   }
 ]
 
