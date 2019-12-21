@@ -20,21 +20,15 @@
       </van-swipe>
     </div>
     <div class="filter-list">
-      <van-row>
-        <van-col :span="6" class="filter-content-left">
-          综合排序
-        </van-col>
-        <van-col :span="18">
-          <van-dropdown-menu class="filter-content" active-color="#21A675">
-            <van-dropdown-item v-model="value1"
-                               :options="option1" :title-class="titleClass"/>
-            <van-dropdown-item v-model="value2"
-                               :options="option2" />
-            <van-dropdown-item v-model="value3"
-                               :options="option3" />
-          </van-dropdown-menu>
-        </van-col>
-      </van-row>
+      <van-dropdown-menu class="filter-content" active-color="#21A675">
+        <van-dropdown-item v-model="allSort" :options="sortList"/>
+        <van-dropdown-item v-model="chooseDate"
+                           title="日期选择"/>
+        <van-dropdown-item v-model="linkWay" title="结算方式"
+                           :options="linkList" />
+        <van-dropdown-item v-model="jobWAy" title="职业类型"
+                           :options="jobList" />
+      </van-dropdown-menu>
     </div>
     <van-list v-model="loading"
   :finished="finished"
@@ -70,23 +64,30 @@ export default {
         "https://img.yzcdn.cn/vant/apple-2.jpg"
       ],
       searchValue: "",
-      value1: 0,
-      value2: 'a',
-      value3: "A",
-      option1: [
-        { text: '日期选择', value: 0 },
-        { text: '新款商品', value: 1 },
-        { text: '活动商品', value: 2 }
+      allSort: 0,
+      linkWay: 0,
+      jobWAy: "A",
+      sortList: [
+        { text: '综合排序', value: 0 },
+        { text: '离我最近', value: 1 },
+        { text: '价格最高', value: 2 },
+        { text: '时间最长', value: 3 },
+        { text: '日期最长', value: 4 }
       ],
-      option2: [
-        { text: '联系方式', value: 'a' },
-        { text: '好评排序', value: 'b' },
-        { text: '销量排序', value: 'c' }
+      linkList: [
+        { text: '全部', value: 1 },
+        { text: '完工结', value: 2 },
+        { text: '次日结', value: 3 },
+        { text: '周结', value: 4 },
+        { text: '半月结', value: 5 },
+        { text: '月结', value: 6 }
       ],
-      option3: [
-        { text: '职位类型', value: 'A' },
-        { text: '好评排序', value: 'B' },
-        { text: '销量排序', value: 'C' }
+      jobList: [
+        { text: '全部', value: 1 },
+        { text: '餐饮', value: 2 },
+        { text: '快递', value: 3 },
+        { text: '客房', value: 4 },
+        { text: '其他', value: 5 }
       ],
       titleClass: "filter-title",
       positionData: [
@@ -108,7 +109,8 @@ export default {
       ],
       loading: false,
       finished: false,
-      locationImgUrl: './img/job/dingwei@2x.png'
+      locationImgUrl: './img/job/dingwei@2x.png',
+      chooseDate: ""
     };
   },
   methods: {
