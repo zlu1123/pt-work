@@ -78,9 +78,15 @@ export function getHeader(header) {
     "reqTime": "",
     "termId": "",
     "pageSize": "",
-    "pageIndex": ""
+    "pageIndex": "",
+    "openId": getOpenId()
   }
   return Object.assign(headers, header);
+}
+
+export function getOpenId() {
+  // return Math.random(32);
+  return 0.7546318464188451
 }
 
 export default Plugin;
