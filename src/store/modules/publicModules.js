@@ -38,10 +38,11 @@ export default {
     }) {
       let userInfo = "";
       try {
-        userInfo = handleRequestPromise(userLogin);
+        userInfo = await handleRequestPromise(userLogin);
       } catch (error) {
 
       } finally {
+        console.log(userInfo);
         commit(mutationsName.setUserInfo, userInfo.data);
       }
       return userInfo;
