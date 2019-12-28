@@ -1,7 +1,16 @@
-import { mutationsName, gettersName } from "../../common/constants"
+import {
+  mutationsName,
+  gettersName,
+  actionsName
+} from "../../common/constants"
+import {
+  handleRequestPromise,
+  userLogin
+} from "../../service/api"
 export default {
   state: {
-    keepAlivePath: ["homeIndex"]
+    keepAlivePath: ["homeIndex"],
+    userInfo: {}
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -17,13 +26,33 @@ export default {
     },
     [mutationsName.deleteAllKeepAlive]: (state, data) => {
       state.keepAlivePath = [];
+    },
+    [mutationsName.setUserInfo]: (state, data) => {
+      state.userInfo = data;
     }
   },
   actions: {
+    async [actionsName.requestUserInfo]({
+      commit,
+      state
+    }) {
+      let userInfo = "";
+      try {
+        userInfo = handleRequestPromise(userLogin);
+      } catch (error) {
+
+      } finally {
+        commit(mutationsName.setUserInfo, userInfo.data);
+      }
+      return userInfo;
+    }
   },
   getters: {
     [gettersName.getKeepAlivePath](state, getters) {
       return state.keepAlivePath;
+    },
+    [gettersName.getUserInfo](state, getters) {
+      return state.userInfo;
     }
   }
 }

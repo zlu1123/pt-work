@@ -11,6 +11,6 @@ module.exports = {
   },
   devServer: {
     port: process.env.PORT,
-    proxy: 'https://www.easy-mock.com/mock/5df8cad9d1f75a6575846403/pt'
+    proxy: 'http://test.coa.police.adxinfo.cn:8811/'
   }
 }

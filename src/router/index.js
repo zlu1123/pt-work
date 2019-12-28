@@ -112,6 +112,14 @@ const routes = [
     meta: {
       title: "路径导航"
     }
+  },
+  {
+    name: "punchList",
+    component: () =>
+      import("../views/myself/punchList.vue"),
+    meta: {
+      title: "打卡详情"
+    }
   }
 ]
 
@@ -128,7 +136,10 @@ const router = new VueRouter({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { x: 0, y: 0 }
+      return {
+        x: 0,
+        y: 0
+      }
     }
   }
 })

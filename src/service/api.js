@@ -1,4 +1,6 @@
-import { axiosRequest } from "../plugins/axios";
+import {
+  axiosRequest
+} from "../plugins/axios";
 import * as urlConstant from "./urlConstant";
 
 // 用户管理
@@ -85,7 +87,7 @@ export const handleRequestPromise = (
         }
 
         let retCode = response.data.retCode;
-        if (retCode !== undefined && retCode !== "000000") {
+        if (retCode !== undefined && retCode !== "00000") {
           if (showLoading) {
             response.data.msgcde = "cuowu";
             reject(response.data);
@@ -118,7 +120,13 @@ export const handleRequestPromise = (
   })
 };
 
+const POST = "post";
+
 // 职位报名
 export const enRoll = (params) => {
-  return axiosRequest("POST", urlConstant.enRoll, params);
+  return axiosRequest(POST, urlConstant.enRoll, params);
+}
+
+export const userLogin = () => {
+  return axiosRequest(POST, urlConstant.userLogin)
 }
