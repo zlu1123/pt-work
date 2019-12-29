@@ -5,25 +5,80 @@
         <router-view />
       </keep-alive>
     </transition>
+    <el-amap
+      v-show="false"
+      vid="amap"
+      :plugin="plugin"
+      :amap-manager="amapManager"
+      ::map-manager="amapManager"
+    ></el-amap>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import { actionsName } from "./common/constants";
+import { actionsName, mutationsName } from "./common/constants";
 // import { userLogin } from "./service/api";
+import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
+let amapManager = new AMapManager(); // 新建生成地图画布
 
 export default {
+  data() {
+    let self = this;
+    return {
+      lng: 0,
+      lat: 0,
+      amapManager,
+      plugin: [
+        {
+          pName: "Geolocation", // 定位
+          events: {
+            init(o) {
+              // o 是高德地图定位插件实例
+              o.getCurrentPosition((status, result) => {
+                if (result && result.position) {
+                  console.log(result);
+                  self.lng = result.position.lng; // 设置经度
+                  self.lat = result.position.lat; // 设置维度
+                  self.getPosition([result.position.lng, result.position.lat]);
+                  self.$nextTick();
+                }
+              });
+            }
+          }
+        }
+      ]
+    };
+  },
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
     // enRoll();
     // userLogin()
     this[actionsName.requestUserInfo]().then(res => {
-      // console.log(res);
+      console.log(res);
     });
   },
   methods: {
-    ...mapActions([actionsName.requestUserInfo])
+    ...mapActions([actionsName.requestUserInfo]),
+
+    getPosition(param) {
+      const that = this;
+      console.log(param);
+      lazyAMapApiLoaderInstance.load().then(() => {
+        debugger;
+        let geocoder = new AMap.Geocoder({
+          city: "029",
+          radius: 1000 // 范围，默认：500
+        });
+        geocoder.getAddress(param, (status, result) => {
+          if (status === "complete" && result.info === "OK") {
+            // result为对应的地理位置详细信息
+            console.log(result);
+            that.$store.commit(mutationsName.setLocationInfo, result);
+          }
+        });
+      });
+    }
   },
 
   computed: {}

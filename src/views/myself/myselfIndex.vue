@@ -30,9 +30,24 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <div class="login-out">
+      <div class="login-out" @click="test">
         退出登录
       </div>
+      <!-- <div class="login-out" @click="test1">
+        职位申请维护-职位申请人列表
+      </div>
+      <div class="login-out" @click="test2">
+        职位申请维护-职位申请人审核
+      </div>
+      <div class="login-out" @click="test3">
+        本人打卡ID
+      </div>
+      <div class="login-out" @click="test4">
+        本人打卡信息查询
+      </div>
+      <div class="login-out" @click="test5">
+        发工资
+      </div> -->
     </div>
   </div>
 </template>
@@ -40,6 +55,13 @@
 <script>
 import { Row, Col, Image, Cell } from "vant";
 import listItem from "./common/listItem.vue";
+import {
+  applyList,
+  applyExam,
+  queryCurrentDayClock,
+  clockInOrSignOut,
+  getPayRoll
+} from "../../service/api";
 export default {
   name: "",
   components: {
@@ -86,6 +108,42 @@ export default {
       this.$router.push({
         path: item.path
       });
+    },
+    test() {},
+    test1() {
+      applyList({
+        merchId: "001",
+        postionId: "001",
+        pageNum: 1,
+        pageSize: 20
+      });
+    },
+    test2() {
+      applyExam({
+        merchId: "001",
+        postionId: "001",
+        postionApplyId: "20191229165145001001"
+      });
+    },
+    test3() {
+      queryCurrentDayClock({
+        merchId: "001",
+        postionId: "001"
+      });
+      // {"retCode":"00000","retInfo":"操作成功","data":"20191229165145001001"}  申请ID
+    },
+    test4() {
+      clockInOrSignOut({
+        postionApplyId: "20191227103521001001",
+        clockType: "2",
+        clockAddr: "112312",
+        postionId: "001",
+        merchId: "001",
+        currentDay: "20191229"
+      });
+    },
+    test5() {
+      getPayRoll({ payType: "2" });
     }
   }
 };
@@ -154,7 +212,7 @@ export default {
     margin-top: 98px;
     margin-bottom: 50px;
     height: 52px;
-    border: 2px solid #D2D2D2;
+    border: 2px solid #d2d2d2;
     border-radius: 5px;
     font-size: @fs18;
     font-family: @pfSC;

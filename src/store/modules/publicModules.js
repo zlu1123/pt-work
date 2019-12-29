@@ -10,7 +10,8 @@ import {
 export default {
   state: {
     keepAlivePath: ["homeIndex"],
-    userInfo: {}
+    userInfo: {},
+    locationInfo: {}
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -29,6 +30,9 @@ export default {
     },
     [mutationsName.setUserInfo]: (state, data) => {
       state.userInfo = data;
+    },
+    [mutationsName.setLocationInfo]: (state, data) => {
+      state.locationInfo = data;
     }
   },
   actions: {
@@ -38,7 +42,7 @@ export default {
     }) {
       let userInfo = "";
       try {
-        userInfo = handleRequestPromise(userLogin);
+        userInfo = await handleRequestPromise(userLogin);
       } catch (error) {
 
       } finally {
@@ -53,6 +57,9 @@ export default {
     },
     [gettersName.getUserInfo](state, getters) {
       return state.userInfo;
+    },
+    [gettersName.getLocationInfo](state, getters) {
+      return state.locationInfo;
     }
   }
 }

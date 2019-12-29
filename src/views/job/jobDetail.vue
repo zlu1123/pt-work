@@ -5,25 +5,27 @@
         西安顺丰有限责任公司
       </div>
       <div class="scale">
-        民营   1000-9999人
+        民营 1000-9999人
       </div>
       <div class="des">
         货运/物流仓储，咨询服务，民航/铁路/公路/水路客运
       </div>
       <div class="logo">
-        <img v-lazy="'https://img.yzcdn.cn/vant/apple-1.jpg'" alt="">
+        <img v-lazy="'https://img.yzcdn.cn/vant/apple-1.jpg'" alt="" />
       </div>
     </div>
     <div class="job-info">
       <div class="location" @click="goMapPage">
         <div class="left">
           <div class="choose-location">
-            <img :src="locationImgUrl" alt="">
+            <img :src="locationImgUrl" alt="" />
           </div>
-          <div class="location-name">公司地址：陕西省西安市雁塔区沣惠南路27号</div>
+          <div class="location-name">
+            公司地址：陕西省西安市雁塔区沣惠南路27号
+          </div>
         </div>
         <div class="right">
-          <img :src="defaultImgUrl" alt="">
+          <img :src="defaultImgUrl" alt="" />
         </div>
       </div>
       <div class="job-img">
@@ -37,10 +39,18 @@
       <div class="required">
         <detail-title title-name="福利及要求"></detail-title>
         <div class="welfare">
-          <detail-welfare-require v-for="(item, index) of welfareList" :key="index" :welfare-name="item"></detail-welfare-require>
+          <detail-welfare-require
+            v-for="(item, index) of welfareList"
+            :key="index"
+            :welfare-name="item"
+          ></detail-welfare-require>
         </div>
         <div class="require">
-          <detail-welfare-require v-for="(item, index) of requireList" :key="index" :require-name="item"></detail-welfare-require>
+          <detail-welfare-require
+            v-for="(item, index) of requireList"
+            :key="index"
+            :require-name="item"
+          ></detail-welfare-require>
         </div>
       </div>
       <div class="work-time">
@@ -51,25 +61,30 @@
       <div class="work-info">
         <detail-title title-name="职位信息"></detail-title>
         <div class="list">
-          <detail-work-info v-for="(item, index) of workInfoList" :key="index" :work-info="item"></detail-work-info>
+          <detail-work-info
+            v-for="(item, index) of workInfoList"
+            :key="index"
+            :work-info="item"
+          ></detail-work-info>
         </div>
       </div>
       <div class="work-des">
         <detail-title title-name="职位描述"></detail-title>
-        <div v-for="(item, index) of workDesList" :key="index">{{item}}</div>
+        <div v-for="(item, index) of workDesList" :key="index">{{ item }}</div>
       </div>
     </div>
-    <div class="btn-sign-up">
+    <div class="btn-sign-up" @click="applyWork">
       立即报名
     </div>
   </div>
 </template>
 
 <script>
-import { Image } from "vant"
+import { Image } from "vant";
 import detailTitle from "./common/detailTitle";
 import detailWelfareRequire from "./common/detailWelfareRequire";
 import detailWorkInfo from "./common/detailWorkInfo";
+import { enRoll } from "../../service/api";
 export default {
   name: "jobDetail",
   components: {
@@ -80,17 +95,10 @@ export default {
   },
   data() {
     return {
-      locationImgUrl: './img/job/dingwei@2x.png',
-      defaultImgUrl: './img/myself/fanhui@2x.png',
-      welfareList: [
-        "提供工作餐",
-        "提供住宿",
-        "提供工作服"
-      ],
-      requireList: [
-        "实名认证",
-        "年龄限制：16-25岁"
-      ],
+      locationImgUrl: "./img/job/dingwei@2x.png",
+      defaultImgUrl: "./img/myself/fanhui@2x.png",
+      welfareList: ["提供工作餐", "提供住宿", "提供工作服"],
+      requireList: ["实名认证", "年龄限制：16-25岁"],
       workInfoList: [
         {
           label: "职位名称",
@@ -119,16 +127,22 @@ export default {
         "6、鉴定货运质量，分析货物残损原因，划分事故责任；",
         "7、办理货物交接手续。"
       ]
-    }
+    };
   },
   methods: {
     goMapPage() {
       this.$router.push({
         path: "/routeNavigation"
-      })
+      });
+    },
+    applyWork() {
+      enRoll({
+        merchId: "001",
+        postionId: "001"
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -141,13 +155,13 @@ export default {
   .name {
     padding-top: 40px;
     font-size: @fs18;
-    font-weight:bold;
+    font-weight: bold;
     line-height: 25px;
   }
   .scale {
     margin-top: 18px;
     font-size: 12px;
-    line-height:17px;
+    line-height: 17px;
   }
   .des {
     margin-top: 5px;
@@ -165,7 +179,7 @@ export default {
 .job-info {
   background: @itemColor;
   padding: 0 20px 40px;
-  border-radius:10px 10px 0px 0px;
+  border-radius: 10px 10px 0px 0px;
   .location {
     height: 55px;
     border-bottom: 1px solid @dividerBgColor;
@@ -181,9 +195,9 @@ export default {
         height: 16px;
       }
       .location-name {
-        font-size:12px;
+        font-size: 12px;
         font-family: @pfSC;
-        line-height:17px;
+        line-height: 17px;
         color: @chooseColor;
       }
     }
@@ -216,7 +230,7 @@ export default {
       margin-top: 3px;
       font-size: 12px;
       font-family: @pfSC;
-      line-height:17px;
+      line-height: 17px;
       color: @titleColor;
       span {
         margin-left: 10px;
@@ -233,11 +247,11 @@ export default {
   .work-des {
     div:first-child {
       margin: 17px 0 5px;
-    };
+    }
     div:not(:first-of-type) {
       font-size: @fs12;
       font-family: @pfSC;
-      line-height:17px;
+      line-height: 17px;
       color: @titleColor;
       text-align: justify;
     }

@@ -2,12 +2,14 @@ export const mutationsName = {
   setKeepAlivePath: 'setKeepAlivePath',
   deleteKeepAlive: 'deleteKeepAlive',
   deleteAllKeepAlive: 'deleteAllKeepAlive',
-  setUserInfo: 'setUserInfo'
+  setUserInfo: 'setUserInfo',
+  setLocationInfo: 'setLocationInfo'
 }
 
 export const gettersName = {
   getKeepAlivePath: 'getKeepAlivePath',
-  getUserInfo: 'getUserInfo'
+  getUserInfo: 'getUserInfo',
+  getLocationInfo: 'getLocationInfo'
 }
 
 export const actionsName = {

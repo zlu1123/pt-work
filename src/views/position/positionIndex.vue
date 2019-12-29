@@ -1,10 +1,9 @@
 <template>
   <div class="position__content">
     <form action="/">
-      <van-search v-model="searchValue"
-                  placeholder="搜索用人单位">
+      <van-search v-model="searchValue" placeholder="搜索用人单位">
         <div slot="label" class="location">
-          <img :src="locationImgUrl" alt="">
+          <img :src="locationImgUrl" alt="" />
           <div>大明宫</div>
         </div>
       </van-search>
@@ -12,36 +11,54 @@
     <!-- 滑动页面 -->
     <div>
       <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(image, index) in images"
-                        :key="index">
-          <img v-lazy="image"
-               class="swipe-img-position" />
+        <van-swipe-item v-for="(image, index) in images" :key="index">
+          <img v-lazy="image" class="swipe-img-position" />
         </van-swipe-item>
       </van-swipe>
     </div>
     <div class="filter-list">
       <van-dropdown-menu class="filter-content" active-color="#21A675">
-        <van-dropdown-item v-model="allSort" :options="sortList"/>
-        <van-dropdown-item v-model="chooseDate"
-                           title="日期选择"/>
-        <van-dropdown-item v-model="linkWay" title="结算方式"
-                           :options="linkList" />
-        <van-dropdown-item v-model="jobWAy" title="职业类型"
-                           :options="jobList" />
+        <van-dropdown-item v-model="allSort" :options="sortList" />
+        <van-dropdown-item v-model="chooseDate" title="日期选择" />
+        <van-dropdown-item
+          v-model="linkWay"
+          title="结算方式"
+          :options="linkList"
+        />
+        <van-dropdown-item
+          v-model="jobWAy"
+          title="职业类型"
+          :options="jobList"
+        />
       </van-dropdown-menu>
     </div>
-    <van-list v-model="loading"
-  :finished="finished"
-  finished-text="没有更多了"
-  @load="onLoad">
-      <position-list-item v-for="(item, index) of positionData" :key="index" :listItem="item"></position-list-item>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <position-list-item
+        v-for="(item, index) of positionData"
+        :key="index"
+        :listItem="item"
+      ></position-list-item>
     </van-list>
   </div>
 </template>
 <script>
-import { Cell, SwipeItem, Swipe, Search, Row, Col, DropdownMenu, DropdownItem,
-  List } from "vant";
-import positionListItem from './common/positionListItem'
+import {
+  Cell,
+  SwipeItem,
+  Swipe,
+  Search,
+  Row,
+  Col,
+  DropdownMenu,
+  DropdownItem,
+  List
+} from "vant";
+import positionListItem from "./common/positionListItem";
 export default {
   name: "positionIndex",
 
@@ -68,26 +85,26 @@ export default {
       linkWay: 0,
       jobWAy: "A",
       sortList: [
-        { text: '综合排序', value: 0 },
-        { text: '离我最近', value: 1 },
-        { text: '价格最高', value: 2 },
-        { text: '时间最长', value: 3 },
-        { text: '日期最长', value: 4 }
+        { text: "综合排序", value: 0 },
+        { text: "离我最近", value: 1 },
+        { text: "价格最高", value: 2 },
+        { text: "时间最长", value: 3 },
+        { text: "日期最长", value: 4 }
       ],
       linkList: [
-        { text: '全部', value: 1 },
-        { text: '完工结', value: 2 },
-        { text: '次日结', value: 3 },
-        { text: '周结', value: 4 },
-        { text: '半月结', value: 5 },
-        { text: '月结', value: 6 }
+        { text: "全部", value: 1 },
+        { text: "完工结", value: 2 },
+        { text: "次日结", value: 3 },
+        { text: "周结", value: 4 },
+        { text: "半月结", value: 5 },
+        { text: "月结", value: 6 }
       ],
       jobList: [
-        { text: '全部', value: 1 },
-        { text: '餐饮', value: 2 },
-        { text: '快递', value: 3 },
-        { text: '客房', value: 4 },
-        { text: '其他', value: 5 }
+        { text: "全部", value: 1 },
+        { text: "餐饮", value: 2 },
+        { text: "快递", value: 3 },
+        { text: "客房", value: 4 },
+        { text: "其他", value: 5 }
       ],
       titleClass: "filter-title",
       positionData: [
@@ -109,7 +126,7 @@ export default {
       ],
       loading: false,
       finished: false,
-      locationImgUrl: './img/job/dingwei@2x.png',
+      locationImgUrl: "./img/job/dingwei@2x.png",
       chooseDate: ""
     };
   },
@@ -151,7 +168,7 @@ export default {
     align-items: center;
     justify-content: center;
     font-size: @fs12;
-    font-family:Microsoft YaHei UI;
+    font-family: Microsoft YaHei UI;
     color: @chooseColor;
     background: @itemColor;
     padding-right: 10px;
@@ -169,7 +186,7 @@ export default {
       text-align: center;
       font-weight: bold;
       font-size: 15px;
-      color: #21A675;
+      color: #21a675;
       background: @itemColor;
     }
   }
@@ -183,5 +200,4 @@ export default {
     font-size: 100px !important;
   }
 }
-
 </style>
