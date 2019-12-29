@@ -10,7 +10,8 @@ import {
 export default {
   state: {
     keepAlivePath: ["homeIndex"],
-    userInfo: {}
+    userInfo: {},
+    locationInfo: {}
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -29,6 +30,9 @@ export default {
     },
     [mutationsName.setUserInfo]: (state, data) => {
       state.userInfo = data;
+    },
+    [mutationsName.setLocationInfo]: (state, data) => {
+      state.locationInfo = data;
     }
   },
   actions: {
@@ -42,7 +46,6 @@ export default {
       } catch (error) {
 
       } finally {
-        console.log(userInfo);
         commit(mutationsName.setUserInfo, userInfo.data);
       }
       return userInfo;
@@ -54,6 +57,9 @@ export default {
     },
     [gettersName.getUserInfo](state, getters) {
       return state.userInfo;
+    },
+    [gettersName.getLocationInfo](state, getters) {
+      return state.locationInfo;
     }
   }
 }

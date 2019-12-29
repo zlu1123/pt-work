@@ -1,7 +1,8 @@
 "use strict";
 
-import Vue from 'vue';
+import Vue from "vue";
 import axios from "axios";
+import { baseUrlConfig } from "../service/baseUrl";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -9,7 +10,11 @@ import axios from "axios";
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || "",
+  // baseURL: process.env.baseURL || process.env.apiUrl || "",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? baseUrlConfig.proURL
+      : baseUrlConfig.devURL,
   timeout: 30 * 1000, // Timeout
   withCredentials: true, // Check cross-site Access-Control
   headers: "",
@@ -19,11 +24,11 @@ let config = {
 const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
-  function (config) {
+  config => {
     // Do something before request is sent
     return config;
   },
-  function (error) {
+  error => {
     // Do something with request error
     return Promise.reject(error);
   }
@@ -31,17 +36,17 @@ _axios.interceptors.request.use(
 
 // Add a response interceptor
 _axios.interceptors.response.use(
-  function (response) {
+  response => {
     // Do something with response data
     return response;
   },
-  function (error) {
+  error => {
     // Do something with response error
     return Promise.reject(error);
   }
 );
 
-Plugin.install = function (Vue, options) {
+Plugin.install = (Vue, options) => {
   Vue.axios = _axios;
   window.axios = _axios;
   Object.defineProperties(Vue.prototype, {
@@ -58,35 +63,36 @@ Plugin.install = function (Vue, options) {
   });
 };
 
-Vue.use(Plugin)
+Vue.use(Plugin);
 
 export function axiosRequest(methods, requestUrl, params, header) {
   let config = {
     method: methods,
     url: requestUrl,
     data: params,
-    dataType: 'json',
+    dataType: "json",
     headers: getHeader(header)
-  }
+  };
   return axios(config);
 }
 
 export function getHeader(header) {
   let headers = {
-    "servcUrl": "",
-    "transSeqNo": "",
-    "reqTime": "",
-    "termId": "",
-    "pageSize": "",
-    "pageIndex": "",
-    "openId": getOpenId()
-  }
+    servcUrl: "",
+    transSeqNo: "",
+    reqTime: "",
+    termId: "",
+    pageSize: "",
+    pageIndex: "",
+    openId: getOpenId()
+  };
   return Object.assign(headers, header);
 }
 
 export function getOpenId() {
   // return Math.random(32);
-  return 0.7546318464188451
+  // return 0.7546318464188451
+  return "2019122874054400";
 }
 
 export default Plugin;

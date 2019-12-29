@@ -130,3 +130,23 @@ export const enRoll = (params) => {
 export const userLogin = () => {
   return axiosRequest(POST, urlConstant.userLogin)
 }
+
+export const applyList = (params) => {
+  return axiosRequest(POST, urlConstant.applyList, params)
+}
+
+export const applyExam = (params) => {
+  return axiosRequest(POST, urlConstant.applyExam, params)
+}
+
+export const queryCurrentDayClock = (params) => {
+  return axiosRequest(POST, urlConstant.queryCurrentDayClock, params)
+}
+
+export const clockInOrSignOut = (params) => {
+  return axiosRequest(POST, urlConstant.clockInOrSignOut, params)
+}
+
+export const getPayRoll = (params) => {
+  return axiosRequest(POST, urlConstant.getPayRoll, params)
+}

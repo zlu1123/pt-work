@@ -21,8 +21,8 @@ Vue.use(VueMap);
 // 初始化vue-amap
 VueMap.initAMapApiLoader({
   // 高德key
-  // key: '1e098fb2b135edf3f50eb0b5cafef19c',
-  key: 'd618bbef4475929b27c029cf6cb01bf1',
+  key: '1e098fb2b135edf3f50eb0b5cafef19c',
+  // key: 'd618bbef4475929b27c029cf6cb01bf1',
   // 插件集合 （插件按需引入）
   // plugin: ['AMap.Geolocation']
   plugin: [

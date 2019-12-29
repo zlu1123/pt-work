@@ -17,9 +17,9 @@
 
 <script>
 import { mapActions } from "vuex";
-import { actionsName } from "./common/constants";
+import { actionsName, mutationsName } from "./common/constants";
 // import { userLogin } from "./service/api";
-import { AMapManager } from "vue-amap";
+import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
 let amapManager = new AMapManager(); // 新建生成地图画布
 
 export default {
@@ -55,20 +55,28 @@ export default {
     // enRoll();
     // userLogin()
     this[actionsName.requestUserInfo]().then(res => {
-      // console.log(res);
+      console.log(res);
     });
   },
   methods: {
     ...mapActions([actionsName.requestUserInfo]),
 
     getPosition(param) {
-      let geocoder = new AMap.Geocoder({
-        city: "029"
-      });
-      geocoder.getAddress(param, (status, result) => {
-        if (status === "complete" && result.info === "OK") {
-          // result为对应的地理位置详细信息
-        }
+      const that = this;
+      console.log(param);
+      lazyAMapApiLoaderInstance.load().then(() => {
+        debugger;
+        let geocoder = new AMap.Geocoder({
+          city: "029",
+          radius: 1000 // 范围，默认：500
+        });
+        geocoder.getAddress(param, (status, result) => {
+          if (status === "complete" && result.info === "OK") {
+            // result为对应的地理位置详细信息
+            console.log(result);
+            that.$store.commit(mutationsName.setLocationInfo, result);
+          }
+        });
       });
     }
   },
