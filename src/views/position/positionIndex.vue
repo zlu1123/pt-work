@@ -19,7 +19,12 @@
     <div class="filter-list">
       <van-dropdown-menu class="filter-content" active-color="#21A675">
         <van-dropdown-item v-model="allSort" :options="sortList" />
-        <van-dropdown-item v-model="chooseDate" title="日期选择" />
+        <van-dropdown-item
+          v-model="chooseDate"
+          title="日期选择"
+          @open="openCalendar"
+          class="filter-container"
+        />
         <van-dropdown-item
           v-model="linkWay"
           title="结算方式"
@@ -44,34 +49,20 @@
         :listItem="item"
       ></position-list-item>
     </van-list>
+    <van-calendar
+      v-model="showCalendar"
+      :show-confirm="false"
+      color="#21a675"
+      @select="chooseSelectDate"
+    />
   </div>
 </template>
 <script>
-import {
-  Cell,
-  SwipeItem,
-  Swipe,
-  Search,
-  Row,
-  Col,
-  DropdownMenu,
-  DropdownItem,
-  List
-} from "vant";
 import positionListItem from "./common/positionListItem";
 export default {
   name: "positionIndex",
 
   components: {
-    [Cell.name]: Cell,
-    [SwipeItem.name]: SwipeItem,
-    [Swipe.name]: Swipe,
-    [Search.name]: Search,
-    [Row.name]: Row,
-    [Col.name]: Col,
-    [DropdownMenu.name]: DropdownMenu,
-    [DropdownItem.name]: DropdownItem,
-    [List.name]: List,
     [positionListItem.name]: positionListItem
   },
   data() {
@@ -127,7 +118,10 @@ export default {
       loading: false,
       finished: false,
       locationImgUrl: "./img/job/dingwei@2x.png",
-      chooseDate: ""
+      chooseDate: "",
+      showCalendar: false,
+      minDate: new Date(),
+      currentDate: new Date()
     };
   },
   methods: {
@@ -145,6 +139,14 @@ export default {
           this.finished = true;
         }
       }, 500);
+    },
+    // 返回一个特定的 DOM 节点，作为挂载的父节点
+    openCalendar() {
+      this.showCalendar = true;
+    },
+    chooseSelectDate(value) {
+      this.showCalendar = false;
+      console.log(value);
     }
   }
 };
@@ -198,6 +200,10 @@ export default {
   .filter-title {
     font-weight: bold !important;
     font-size: 100px !important;
+  }
+
+  .pop {
+    width: 100%;
   }
 }
 </style>

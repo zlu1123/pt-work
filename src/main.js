@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import Vant from 'vant';
+import 'vant/lib/index.css'
 import './plugins/axios'
 import VueMap from 'vue-amap'
 import App from './App.vue';
@@ -10,13 +12,9 @@ import store from './store';
 import 'lib-flexible/flexible';
 
 import VueLazyload from 'vue-lazyload';
-import {
-  Dialog
-} from 'vant';
-
 // 全局注册
+Vue.use(Vant);
 Vue.use(VueLazyload);
-Vue.use(Dialog);
 Vue.use(VueMap);
 // 初始化vue-amap
 VueMap.initAMapApiLoader({
