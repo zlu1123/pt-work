@@ -63,7 +63,7 @@ export default {
   name: "positionIndex",
 
   components: {
-    [positionListItem.name]: positionListItem
+    positionListItem
   },
   data() {
     return {
