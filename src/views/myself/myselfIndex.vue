@@ -84,7 +84,8 @@ export default {
           path: "/idCertification"
         },
         {
-          name: "银行卡信息"
+          name: "银行卡信息",
+          path: "/myBankCard"
         },
         {
           name: "个人信息维护",

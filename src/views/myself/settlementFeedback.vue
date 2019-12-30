@@ -35,79 +35,75 @@
 
 <script>
 import commonHeader from "../components/commonHeader";
-import { Divider, Field, CellGroup } from "vant"
 export default {
   name: "settlementFeedback",
   components: {
-    commonHeader,
-    [Divider.name]: Divider,
-    [Field.name]: Field,
-    [CellGroup.name]: CellGroup
+    commonHeader
   },
   data() {
     return {
       feedbackList: [1, 1],
       message: ""
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  .settlement-feedback {
-    .title {
-      height: 31px;
+.settlement-feedback {
+  .title {
+    height: 31px;
+    font-size: @fs12;
+    font-family: @pfSC;
+    color: @tipColor;
+    background: @bgColor;
+    padding-left: 15px;
+    line-height: 31px;
+  }
+  .content {
+    background: @itemColor;
+    padding: 0 15px;
+    margin-bottom: 10px;
+    .feedback-title {
+      padding: 11px 0;
       font-size: @fs12;
       font-family: @pfSC;
       color: @tipColor;
-      background: @bgColor;
-      padding-left: 15px;
-      line-height: 31px;
+      border-bottom: 1px solid @dividerBgColor;
     }
-    .content {
-      background: @itemColor;
-      padding: 0 15px;
-      margin-bottom: 10px;
-      .feedback-title {
-        padding: 11px 0;
-        font-size: @fs12;
-        font-family: @pfSC;
-        color: @tipColor;
-        border-bottom: 1px solid @dividerBgColor;
-      }
-      .feedback-content {
-        font-size: @fs15;
-        font-family: @pfSC;
-        line-height: @fs21;
-        color: @titleColor;
-        padding: 9px 0 14px;
-        border-bottom: 1px solid @dividerBgColor;
-      }
-      .reply-title {
-        padding: 11px 0;
-        font-size: @fs12;
-        font-family: @pfSC;
-        color: @tipColor;
-        border-bottom: 1px solid @dividerBgColor;
-      }
-      .reply-content {
-        font-size: @fs15;
-        font-family: @pfSC;
-        line-height: @fs21;
-        color: @titleColor;
-        padding: 9px 0 14px;
-      }
+    .feedback-content {
+      font-size: @fs15;
+      font-family: @pfSC;
+      line-height: @fs21;
+      color: @titleColor;
+      padding: 9px 0 14px;
+      border-bottom: 1px solid @dividerBgColor;
     }
-    .feedback-submit {
-      margin: 30px 15px 27px;
-      height: 52px;
-      text-align: center;
-      line-height: 52px;
-      background: @myselfListTitleColor;
-      border-radius: 5px;
-      font-size: @fs18;
-      font-family: @yhUI;
-      color: @myselfNameColor;
+    .reply-title {
+      padding: 11px 0;
+      font-size: @fs12;
+      font-family: @pfSC;
+      color: @tipColor;
+      border-bottom: 1px solid @dividerBgColor;
+    }
+    .reply-content {
+      font-size: @fs15;
+      font-family: @pfSC;
+      line-height: @fs21;
+      color: @titleColor;
+      padding: 9px 0 14px;
     }
   }
+  .feedback-submit {
+    margin: 30px 15px 27px;
+    height: 52px;
+    text-align: center;
+    line-height: 52px;
+    background: @myselfListTitleColor;
+    border-radius: 5px;
+    font-size: @fs18;
+    font-family: @yhUI;
+    color: @myselfNameColor;
+  }
+}
 </style>
