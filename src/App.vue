@@ -5,13 +5,6 @@
         <router-view />
       </keep-alive>
     </transition>
-    <el-amap
-      v-show="false"
-      vid="amap"
-      :plugin="plugin"
-      :amap-manager="amapManager"
-      ::map-manager="amapManager"
-    ></el-amap>
   </div>
 </template>
 
@@ -19,64 +12,65 @@
 import { mapActions } from "vuex";
 import { actionsName, mutationsName } from "./common/constants";
 // import { userLogin } from "./service/api";
-import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
-let amapManager = new AMapManager(); // 新建生成地图画布
 
 export default {
   data() {
-    let self = this;
-    return {
-      lng: 0,
-      lat: 0,
-      amapManager,
-      plugin: [
-        {
-          pName: "Geolocation", // 定位
-          events: {
-            init(o) {
-              // o 是高德地图定位插件实例
-              o.getCurrentPosition((status, result) => {
-                if (result && result.position) {
-                  console.log(result);
-                  self.lng = result.position.lng; // 设置经度
-                  self.lat = result.position.lat; // 设置维度
-                  self.getPosition([result.position.lng, result.position.lat]);
-                  self.$nextTick();
-                }
-              });
-            }
-          }
-        }
-      ]
-    };
+    return {};
   },
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
     // enRoll();
     // userLogin()
-    this[actionsName.requestUserInfo]().then(res => {
-      console.log(res);
-    });
+    // this[actionsName.requestUserInfo]().then(res => {
+    //   console.log(res);
+    // });
+    this.initMap();
   },
   methods: {
     ...mapActions([actionsName.requestUserInfo]),
 
-    getPosition(param) {
-      const that = this;
-      console.log(param);
-      lazyAMapApiLoaderInstance.load().then(() => {
-        debugger;
-        let geocoder = new AMap.Geocoder({
-          city: "029",
-          radius: 1000 // 范围，默认：500
+    initMap() {
+      const self = this;
+      var map = new AMap.Map("container", {
+        resizeEnable: true
+      });
+      AMap.plugin("AMap.Geolocation", () => {
+        var geolocation = new AMap.Geolocation({
+          enableHighAccuracy: true, // 是否使用高精度定位，默认:true
+          timeout: 10000, // 超过10秒后停止定位，默认：5s
+          buttonPosition: "RB", // 定位按钮的停靠位置
+          buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          zoomToAccuracy: true // 定位成功后是否自动调整地图视野到定位点
         });
-        geocoder.getAddress(param, (status, result) => {
-          if (status === "complete" && result.info === "OK") {
-            // result为对应的地理位置详细信息
-            console.log(result);
-            that.$store.commit(mutationsName.setLocationInfo, result);
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition((status, result) => {
+          if (status === "complete") {
+            // onComplete(result);
+            self.lng = result.position.lng; // 设置经度
+            self.lat = result.position.lat; // 设置维度
+            // self.$store.commit(mutationsName.setLocationInfo, result.position);
+            self.getPosition([result.position.lng, result.position.lat]);
+            self.$nextTick();
+          } else {
+            // onError(result);
           }
         });
+      });
+    },
+
+    getPosition(param) {
+      var geocoder = new AMap.Geocoder({
+        city: "029", // 城市设为北京，默认：“全国”
+        radius: 1000 // 范围，默认：500
+      });
+
+      geocoder.getAddress(param, (status, result) => {
+        if (status === "complete" && result.regeocode) {
+          // var address = result.regeocode.formattedAddress;
+          console.log(result);
+        } else {
+          console.error("根据经纬度查询地址失败");
+        }
       });
     }
   },
