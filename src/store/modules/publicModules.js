@@ -2,16 +2,16 @@ import {
   mutationsName,
   gettersName,
   actionsName
-} from "../../common/constants"
-import {
-  handleRequestPromise,
-  userLogin
-} from "../../service/api"
+} from "../../common/constants";
+import { handleRequestPromise, userLogin } from "../../service/api";
 export default {
   state: {
     keepAlivePath: ["homeIndex"],
     userInfo: {},
-    locationInfo: {}
+    locationInfo: {
+      lng: 108.982758,
+      lat: 34.327999
+    } // 默认显示万科幸福里
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -36,15 +36,11 @@ export default {
     }
   },
   actions: {
-    async [actionsName.requestUserInfo]({
-      commit,
-      state
-    }) {
+    async [actionsName.requestUserInfo]({ commit, state }) {
       let userInfo = "";
       try {
         userInfo = await handleRequestPromise(userLogin);
       } catch (error) {
-
       } finally {
         commit(mutationsName.setUserInfo, userInfo.data);
       }
@@ -62,4 +58,4 @@ export default {
       return state.locationInfo;
     }
   }
-}
+};
