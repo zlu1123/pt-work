@@ -47,6 +47,7 @@
         v-for="(item, index) of positionData"
         :key="index"
         :listItem="item"
+        @goJobDetail="goJobDetail(item)"
       ></position-list-item>
     </van-list>
     <van-calendar
@@ -59,6 +60,7 @@
 </template>
 <script>
 import positionListItem from "./common/positionListItem";
+import { queryPosition } from "../../service/api";
 export default {
   name: "positionIndex",
 
@@ -126,19 +128,28 @@ export default {
   },
   methods: {
     onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.positionData.push(this.positionData[i]);
-        }
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.positionData.length >= 40) {
-          this.finished = true;
-        }
-      }, 500);
+      queryPosition({
+        searchType: "",
+        searchName: "",
+        pageSize: "",
+        pageNum: ""
+      }).then(res => {
+        this.positionData = res.data.data;
+        this.finished = true;
+      });
+      // console.log(a);
+      // // 异步更新数据
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.positionData.push(this.positionData[i]);
+      //   }
+      //   // 加载状态结束
+      //   this.loading = false;
+      //   // 数据全部加载完成
+      //   if (this.positionData.length >= 40) {
+      //     this.finished = true;
+      //   }
+      // }, 500);
     },
     // 返回一个特定的 DOM 节点，作为挂载的父节点
     openCalendar() {
@@ -147,6 +158,14 @@ export default {
     chooseSelectDate(value) {
       this.showCalendar = false;
       console.log(value);
+    },
+    goJobDetail(item) {
+      this.$router.push({
+        path: "/jobDetail",
+        query: {
+          postionId: item.postionId
+        }
+      });
     }
   }
 };

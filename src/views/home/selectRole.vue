@@ -1,12 +1,18 @@
 <template>
   <div class="select-role-content">
     <div class="title">请选择您的角色</div>
-    <role-item v-for="(item, index) of roleInfoList" :key="index" :role-info="item" @selectRole="selectRole(item)"></role-item>
+    <role-item
+      v-for="(item, index) of roleInfoList"
+      :key="index"
+      :role-info="item"
+      @selectRole="selectRole(item)"
+    ></role-item>
   </div>
 </template>
 
 <script>
 import roleItem from "./components/roleItem";
+import { Dialog } from "vant";
 export default {
   name: "selectRole",
   components: {
@@ -23,37 +29,42 @@ export default {
         {
           roleImg: "./img/home/company.png",
           name: "企业人员",
-          path: "/checkIn"
+          path: "/checkIn",
+          loginType: "02"
         },
         {
           roleImg: "./img/home/manager.png",
           name: "平台现场人员",
-          path: "/checkIn"
+          path: "/checkIn",
+          loginType: "03"
         }
       ],
       chooseRole: {}
-    }
+    };
   },
   methods: {
     selectRole(item) {
-      this.chooseRole = item;
-      this.$dialog.confirm({
-        title: '选择角色',
-        message: `您确认选择${item.name}吗？`,
-        beforeClose: this.beforeClose
-      });
-    },
-
-    beforeClose(action, done, item) {
-      if (action === 'confirm') {
-        setTimeout(done, 1000);
-        this.$router.push(this.chooseRole.path)
-      } else {
-        done();
-      }
+      this.$dialog
+        .confirm({
+          title: "选择角色",
+          message: `您确认选择${item.name}吗？`
+        })
+        .then(() => {
+          if (item.path !== "/home") {
+            this.$router.replace({
+              name: "loginIndex",
+              params: {
+                roleInfo: item
+              }
+            });
+          } else {
+            this.$router.push(item.path);
+          }
+        })
+        .catch(() => {});
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

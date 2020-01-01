@@ -1,19 +1,19 @@
 <template>
   <div>
     <common-header title="打卡"></common-header>
-    <div class="check-in-history"
-         @click="goPunchList">打卡记录</div>
+    <div class="check-in-history" @click="goPunchList">打卡记录</div>
     <div>
-      <van-steps direction="vertical"
-                 :active="0">
-        <check-in-list-item v-for="(item, index) of checkInList"
-                            :key="index"
-                            :check-in-item="item"
-                            :check-index="index"></check-in-list-item>
+      <van-steps direction="vertical" :active="0">
+        <check-in-list-item
+          v-for="(item, index) of checkInList"
+          :key="index"
+          :check-in-item="item"
+          :check-index="index"
+        ></check-in-list-item>
       </van-steps>
     </div>
-    <div class="check-in-btn">
-      {{checkInList.length >= 2 ? "下班打卡" : "上班打卡"}}
+    <div class="check-in-btn" @click="checkIn">
+      {{ checkInList.length >= 2 ? "下班打卡" : "上班打卡" }}
     </div>
   </div>
 </template>
@@ -21,13 +21,18 @@
 <script>
 import commonHeader from "../components/commonHeader";
 import checkInListItem from "./common/checkInListItem";
-import { Steps } from 'vant';
+import { clockInOrSignOut, queryCurrentDayClock } from "../../service/api";
 export default {
   name: "checkInSituation",
   components: {
     commonHeader,
-    checkInListItem,
-    [Steps.name]: Steps
+    checkInListItem
+  },
+  mounted() {
+    queryCurrentDayClock({}).then(res => {
+      // console.log(res);
+      this.postionApplyId = res.data.data;
+    });
   },
   data() {
     return {
@@ -35,19 +40,27 @@ export default {
         {
           checkInFlag: true
         },
-        {
-        }
-      ]
-    }
+        {}
+      ],
+      postionApplyId: ""
+    };
   },
   methods: {
     goPunchList() {
       this.$router.push({
         path: "/punchList"
-      })
+      });
+    },
+    checkIn() {
+      clockInOrSignOut({
+        postionApplyId: this.postionApplyId,
+        clockType: "2", // 1上班 2下班
+        clockAddr: "112312", // 经纬度
+        currentDay: "20191229" // new Date();
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

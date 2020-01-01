@@ -1,8 +1,8 @@
 <template>
-  <div class="list-des-content">
+  <div class="list-des-content" @click.stop="goJobMap">
     <div class="list-des-content-info">
       <div>顺丰快递公司</div>
-      <img :src="defaultImgUrl" alt="">
+      <img v-if="showDes" :src="defaultImgUrl" alt="" />
     </div>
   </div>
 </template>
@@ -10,12 +10,23 @@
 <script>
 export default {
   name: "commonListDes",
+  props: {
+    showDes: {
+      default: true,
+      type: Boolean
+    }
+  },
   data() {
     return {
-      defaultImgUrl: './img/myself/fanhui@2x.png'
+      defaultImgUrl: "./img/myself/fanhui@2x.png"
+    };
+  },
+  methods: {
+    goJobMap() {
+      this.$emit("goJobMap");
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

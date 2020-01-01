@@ -6,10 +6,19 @@
         v-model="acceptedLoading"
         :finished="acceptedFinished"
         finished-text="没有更多了"
-        @load="acceptedOnLoad">
-        <div v-for="(item, index) of acceptedList" :key="index">
-          <common-list-des></common-list-des>
-          <position-list-item :listItem="item"></position-list-item>
+        @load="acceptedOnLoad"
+      >
+        <div
+          v-for="(item, index) of acceptedList"
+          :key="index"
+          v-show="item.exemStat !== '1'"
+        >
+          <common-list-des @goJobMap="goJobMapDetail"></common-list-des>
+          <position-list-item
+            :listItem="item"
+            @goJobDetail="goJobDetail"
+            @cancelRegistration="cancelJob(item)"
+          ></position-list-item>
         </div>
       </van-list>
       <van-list
@@ -17,10 +26,14 @@
         v-model="settledLoading"
         :finished="settledFinished"
         finished-text="没有更多了"
-        @load="settledOnLoad">
+        @load="settledOnLoad"
+      >
         <div v-for="(item, index) of settledList" :key="index">
-          <common-list-des></common-list-des>
-          <position-list-item :listItem="item"></position-list-item>
+          <common-list-des :show-des="false"></common-list-des>
+          <position-list-item
+            :listItem="item"
+            @checkInDetail="goCheckIn"
+          ></position-list-item>
         </div>
       </van-list>
     </common-list-header>
@@ -28,15 +41,14 @@
 </template>
 
 <script>
-import { List } from "vant"
 import commonListHeader from "../components/commonListHeader";
 import positionListItem from "../position/common/positionListItem";
 import commonListDes from "../components/commonListDes";
+import { applyList, disRoll } from "../../service/api";
 export default {
-  name: "",
+  name: "jobIndex",
   components: {
-    [List.name]: List,
-    [positionListItem.name]: positionListItem,
+    positionListItem,
     commonListHeader,
     commonListDes
   },
@@ -44,7 +56,7 @@ export default {
     return {
       showData: {
         title: "零时工",
-        firstName: '已录取',
+        firstName: "已录取",
         lastName: "已结算"
       },
       acceptedList: [
@@ -62,25 +74,32 @@ export default {
         }
       ],
       settledLoading: false,
-      settledFinished: false
-    }
+      settledFinished: false,
+      postionApplyId: ""
+    };
   },
   methods: {
     acceptedOnLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.acceptedList.push(this.acceptedList[i]);
-        }
-        // 加载状态结束
-        this.acceptedLoading = false;
-
-        // 数据全部加载完成
-        if (this.acceptedList.length >= 40) {
-          this.acceptedFinished = true;
-        }
-      }, 500);
+      // // 异步更新数据
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.acceptedList.push(this.acceptedList[i]);
+      //   }
+      //   // 加载状态结束
+      //   this.acceptedLoading = false;
+      //   // 数据全部加载完成
+      //   if (this.acceptedList.length >= 40) {
+      //     this.acceptedFinished = true;
+      //   }
+      // }, 500);
+      applyList().then(res => {
+        // { applyExemStat: 2 }
+        this.acceptedList = res.data.data;
+        // 循环增加职位名称
+        this.acceptedFinished = true;
+      });
     },
+
     settledOnLoad() {
       // 异步更新数据
       setTimeout(() => {
@@ -95,13 +114,53 @@ export default {
           this.settledFinished = true;
         }
       }, 500);
-    }
+    },
+    goCheckIn() {
+      this.$router.push({
+        path: "/punchList"
+      });
+    },
+    goJobDetail() {
+      this.$router.push({
+        path: "/jobDetail"
+      });
+    },
+    cancelJob(item) {
+      this.postionApplyId = item.postionApplyId;
+      this.$dialog.confirm({
+        title: "提醒",
+        message: `确认取消该职位申请吗？`,
+        beforeClose: this.beforeClose
+      });
+    },
+    beforeClose(action, done) {
+      if (action === "confirm") {
+        // setTimeout(done, 1000);
+        // 刷新当前页面
+        disRoll({
+          postionApplyId: this.postionApplyId
+        }).then(res => {
+          if (res.data.retCode === "00000") {
+            this.$toast("取消报名成功");
+            done();
+          }
+        });
+      } else {
+        done();
+      }
+    },
+    goJobMapDetail() {
+      this.$router.push({
+        path: "/routeNavigation"
+      });
+    },
+    disRollPostion(item) {}
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  .job-index-content {
-    background: @bgColor;
-  }
+.job-index-content {
+  background: @bgColor;
+}
 </style>

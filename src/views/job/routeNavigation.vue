@@ -287,8 +287,11 @@ export default {
 
       // 根据起终点坐标规划步行路线
       walking.search(
-        [116.399028, 39.845042],
-        [116.436281, 39.880719],
+        new AMap.LngLat(
+          this[gettersName.getLocationInfo].lng,
+          this[gettersName.getLocationInfo].lat
+        ),
+        new AMap.LngLat(108.887444, 34.2372), // 地铁延平门站
         (status, result) => {
           // result即是对应的步行路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_WalkingResult
           if (status === "complete") {

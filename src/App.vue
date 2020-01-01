@@ -10,8 +10,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { actionsName, mutationsName } from "./common/constants";
-// import { userLogin } from "./service/api";
+import { actionsName } from "./common/constants";
 
 export default {
   data() {
@@ -19,11 +18,6 @@ export default {
   },
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
-    // enRoll();
-    // userLogin()
-    // this[actionsName.requestUserInfo]().then(res => {
-    //   console.log(res);
-    // });
     this.initMap();
   },
   methods: {

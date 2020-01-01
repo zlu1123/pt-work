@@ -30,9 +30,9 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <div class="login-out" @click="test">
+      <!-- <div class="login-out" @click="test">
         退出登录
-      </div>
+      </div> -->
       <!-- <div class="login-out" @click="test1">
         职位申请维护-职位申请人列表
       </div>
@@ -48,6 +48,12 @@
       <div class="login-out" @click="test5">
         发工资
       </div> -->
+      <div class="login-out" @click="test6">
+        企业新增
+      </div>
+      <div class="login-out" @click="test7">
+        企业负责人新增
+      </div>
     </div>
   </div>
 </template>
@@ -60,7 +66,9 @@ import {
   applyExam,
   queryCurrentDayClock,
   clockInOrSignOut,
-  getPayRoll
+  getPayRoll,
+  insertEnterprise,
+  insertEnterpriseDirector
 } from "../../service/api";
 export default {
   name: "",
@@ -95,7 +103,8 @@ export default {
           name: "保险"
         },
         {
-          name: "违约记录"
+          name: "违约记录",
+          path: "/breachInfo"
         },
         {
           name: "打卡情况",
@@ -145,6 +154,21 @@ export default {
     },
     test5() {
       getPayRoll({ payType: "2" });
+    },
+    test6() {
+      insertEnterprise({
+        merchName: "shunfeng",
+        merchImg: "D:/123/123",
+        merchInfo: "快递公司"
+      });
+    },
+    test7() {
+      insertEnterpriseDirector({
+        merchId: "202001019536",
+        merchChargeName: "谢明刚",
+        certNo: "610526199111234914",
+        mobile: "123123123123"
+      });
     }
   }
 };

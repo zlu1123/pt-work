@@ -7,11 +7,16 @@ import App from "./App.vue";
 import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
+import VConsole from "vconsole/dist/vconsole.min.js"; // import vconsole
 
 // 引入lib-flexible
 import "lib-flexible/flexible";
 
 import VueLazyload from "vue-lazyload";
+
+// eslint-disable-next-line no-unused-vars
+let vConsole = new VConsole(); // 初始化
+
 // 全局注册
 Vue.use(Vant);
 Vue.use(VueLazyload);
