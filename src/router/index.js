@@ -115,6 +115,20 @@ const routes = [
     meta: {
       title: "我的银行卡"
     }
+  },
+  {
+    name: "breachInfo",
+    component: () => import("../views/myself/breachInfo.vue"),
+    meta: {
+      title: "违约信息"
+    }
+  },
+  {
+    name: "loginIndex",
+    component: () => import("../views/home/loginIndex.vue"),
+    meta: {
+      title: "违约信息"
+    }
   }
 ];
 

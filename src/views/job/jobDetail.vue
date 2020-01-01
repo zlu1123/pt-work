@@ -84,7 +84,7 @@ import { Image } from "vant";
 import detailTitle from "./common/detailTitle";
 import detailWelfareRequire from "./common/detailWelfareRequire";
 import detailWorkInfo from "./common/detailWorkInfo";
-import { enRoll } from "../../service/api";
+import { enRoll, positionInfo } from "../../service/api";
 export default {
   name: "jobDetail",
   components: {
@@ -126,8 +126,16 @@ export default {
         "5、搬运、整理、堆码货物；",
         "6、鉴定货运质量，分析货物残损原因，划分事故责任；",
         "7、办理货物交接手续。"
-      ]
+      ],
+      postionId: "",
+      releasEmerch: ""
     };
+  },
+  mounted() {
+    this.postionId = this.$route.query.postionId;
+    positionInfo({ postionId: this.postionId }).then(res => {
+      this.eleasEmerch = res.data.data.releasEmerch;
+    });
   },
   methods: {
     goMapPage() {
@@ -137,8 +145,13 @@ export default {
     },
     applyWork() {
       enRoll({
-        merchId: "001",
-        postionId: "001"
+        merchId: this.eleasEmerch,
+        postionId: this.postionId
+      }).then(res => {
+        if (res.data.retCode === "00000") {
+          this.$toast("您已经报名成功");
+          this.$router.go(-1);
+        }
       });
     }
   }

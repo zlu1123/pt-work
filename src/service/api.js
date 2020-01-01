@@ -1,6 +1,4 @@
-import {
-  axiosRequest
-} from "../plugins/axios";
+import { axiosRequest } from "../plugins/axios";
 import * as urlConstant from "./urlConstant";
 
 // 用户管理
@@ -39,26 +37,27 @@ export const handleRequest = (
         }
       } else {
         if (suc) {
-          return suc(response.data)
+          return suc(response.data);
         }
       }
-    }).catch(error => {
+    })
+    .catch(error => {
       if (showLoading) {
         window.httpCount--;
       }
-      console.log(error)
+      console.log(error);
       let errMsg = {
         msgcde: "net_error",
         rtnmsg: "网络异常"
-      }
+      };
       if (window.httpCount === 0) {
         // loading end
       }
       // toast errmsg
       if (err) {
-        return err(errMsg)
+        return err(errMsg);
       }
-    })
+    });
 };
 
 export const handleRequestPromise = (
@@ -93,9 +92,10 @@ export const handleRequestPromise = (
             reject(response.data);
           }
         } else {
-          resolve(response.data)
+          resolve(response.data);
         }
-      }).catch(error => {
+      })
+      .catch(error => {
         // let errMsg = {
         //   msgcde: "net_error",
         //   rtnmsg: "网络异常"
@@ -104,7 +104,7 @@ export const handleRequestPromise = (
           window.httpCount--;
           // toast
         }
-        console.log(error)
+        console.log(error);
         // let errMsg = {
         //   msgcde: "net_error",
         //   rtnmsg: "网络异常"
@@ -114,39 +114,59 @@ export const handleRequestPromise = (
         }
         // toast(errmsg)
         if (error) {
-          reject(error)
+          reject(error);
         }
-      })
-  })
+      });
+  });
 };
 
 const POST = "post";
 
 // 职位报名
-export const enRoll = (params) => {
+export const enRoll = params => {
   return axiosRequest(POST, urlConstant.enRoll, params);
-}
+};
 
-export const userLogin = () => {
-  return axiosRequest(POST, urlConstant.userLogin)
-}
+export const userLogin = params => {
+  return axiosRequest(POST, urlConstant.userLogin, params);
+};
 
-export const applyList = (params) => {
-  return axiosRequest(POST, urlConstant.applyList, params)
-}
+export const applyList = params => {
+  return axiosRequest(POST, urlConstant.applyList, params);
+};
 
-export const applyExam = (params) => {
-  return axiosRequest(POST, urlConstant.applyExam, params)
-}
+export const applyExam = params => {
+  return axiosRequest(POST, urlConstant.applyExam, params);
+};
 
-export const queryCurrentDayClock = (params) => {
-  return axiosRequest(POST, urlConstant.queryCurrentDayClock, params)
-}
+export const queryCurrentDayClock = params => {
+  return axiosRequest(POST, urlConstant.queryCurrentDayClock, params);
+};
 
-export const clockInOrSignOut = (params) => {
-  return axiosRequest(POST, urlConstant.clockInOrSignOut, params)
-}
+export const clockInOrSignOut = params => {
+  return axiosRequest(POST, urlConstant.clockInOrSignOut, params);
+};
 
-export const getPayRoll = (params) => {
-  return axiosRequest(POST, urlConstant.getPayRoll, params)
-}
+export const getPayRoll = params => {
+  return axiosRequest(POST, urlConstant.getPayRoll, params);
+};
+
+export const insertEnterprise = params => {
+  return axiosRequest(POST, urlConstant.insertEnterprise, params);
+};
+
+export const insertEnterpriseDirector = params => {
+  return axiosRequest(POST, urlConstant.insertEnterpriseDirector, params);
+};
+
+export const queryPosition = params => {
+  return axiosRequest(POST, urlConstant.queryPosition, params);
+};
+
+export const positionInfo = params => {
+  return axiosRequest(POST, urlConstant.positionInfo, params);
+};
+
+export const disRoll = params => {
+  return axiosRequest(POST, urlConstant.disRoll, params);
+};

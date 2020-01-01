@@ -57,7 +57,7 @@ export default {
   mounted() {},
   data() {
     return {
-      active: "position",
+      active: "myself",
       positionIcon: {
         active: "./img/home/position-img.png",
         inactive: "./img/home/position-img-unchoose.png"

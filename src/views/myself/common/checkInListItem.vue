@@ -7,10 +7,14 @@
       <div class="info">
         <div class="title">
           <div>职位：顺丰快递分派员（顺丰）</div>
-          <div v-if="checkInItem.checkInFlag" class="already-check-in">已打卡</div>
+          <div v-if="checkInItem.checkInFlag" class="already-check-in">
+            已打卡
+          </div>
           <div v-else class="un-check-in">未打卡</div>
         </div>
-        <div class="go">{{checkIndex === 0 ? "上班" : "下班"}}时间 9:00:00</div>
+        <div class="go">
+          {{ checkIndex === 0 ? "上班" : "下班" }}时间 9:00:00
+        </div>
         <div class="out" v-if="checkInItem.checkInFlag">打卡时间 8:55:12</div>
       </div>
     </div>
@@ -18,7 +22,6 @@
 </template>
 
 <script>
-import { Step } from "vant"
 export default {
   name: "checkInListItem",
   props: {
@@ -32,85 +35,82 @@ export default {
       default: 0
     }
   },
-  components: {
-    [Step.name]: Step
-  }
-}
+  components: {}
+};
 </script>
 
 <style lang="less" scoped>
+.step {
+  /deep/ .van-steps {
+    background: @bgColor;
+  }
 
-  .step {
-    /deep/ .van-steps {
-      background: @bgColor;
-    }
-
-    /deep/ .van-step__circle-container {
-      top: 25px;
-    }
+  /deep/ .van-step__circle-container {
+    top: 25px;
   }
-  .already-step {
-    width:12px;
-    height:12px;
-    background: @chooseColor;
-    border-radius:50%
+}
+.already-step {
+  width: 12px;
+  height: 12px;
+  background: @chooseColor;
+  border-radius: 50%;
+}
+.other-step {
+  width: 12px;
+  height: 12px;
+  background: @otherStepColor;
+  border-radius: 50%;
+}
+.check-in-info {
+  display: flex;
+  justify-content: flex-start;
+  .arrow {
+    margin-top: 10px;
+    width: 0;
+    height: 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent @itemColor transparent transparent;
   }
-  .other-step {
-    width:12px;
-    height:12px;
-    background: @otherStepColor;
-    border-radius:50%;
-  }
-  .check-in-info {
-    display: flex;
-    justify-content: flex-start;
-    .arrow {
-      margin-top: 10px;
-      width: 0;
-      height: 0;
-      border-width: 5px;
-      border-style: solid;
-      border-color: transparent @itemColor transparent transparent;
-    }
-    .info {
-      padding: 0 14px 0 20px;
-      background: @jobTitleBgColor;
-      width: -webkit-fill-available;
-      .title {
-        margin-top: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: @fs15;
-        font-family: @pfSC;
-        font-weight:bold;
-        line-height: @fs21;
-        color: @titleColor;
-        .already-check-in {
-          font-size: @fs12;
-          line-height: @fs17;
-          color: @chooseColor;
-        }
-        .un-check-in {
-          font-size: @fs12;
-          line-height: @fs17;
-          color: @tipColor;
-        }
-      }
-      .go {
-        margin: 11px 0 10px;;
+  .info {
+    padding: 0 14px 0 20px;
+    background: @jobTitleBgColor;
+    width: -webkit-fill-available;
+    .title {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: @fs15;
+      font-family: @pfSC;
+      font-weight: bold;
+      line-height: @fs21;
+      color: @titleColor;
+      .already-check-in {
         font-size: @fs12;
-        font-family: @pfSC;
         line-height: @fs17;
-        color: @titleColor;
+        color: @chooseColor;
       }
-      .out {
-        margin: 5px 0 10px;
+      .un-check-in {
         font-size: @fs12;
-        font-family: @pfSC;
         line-height: @fs17;
-        color: @titleColor;
+        color: @tipColor;
       }
     }
+    .go {
+      margin: 11px 0 10px;
+      font-size: @fs12;
+      font-family: @pfSC;
+      line-height: @fs17;
+      color: @titleColor;
+    }
+    .out {
+      margin: 5px 0 10px;
+      font-size: @fs12;
+      font-family: @pfSC;
+      line-height: @fs17;
+      color: @titleColor;
+    }
   }
+}
 </style>
