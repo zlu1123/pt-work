@@ -42,7 +42,6 @@ export default {
   },
   beforeMount() {
     this.userType = this.$route.params.roleInfo;
-    debugger;
   },
   methods: {
     userLoginMethod() {

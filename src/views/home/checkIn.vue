@@ -6,38 +6,68 @@
         v-model="acceptedLoading"
         :finished="acceptedFinished"
         finished-text="没有更多了"
-        @load="acceptedOnLoad">
-        <punch-info-list-item v-for="(item, index) of acceptedList" :key="index" :listItem="item"></punch-info-list-item>
+        @load="acceptedOnLoad"
+      >
+        <punch-info-list-item
+          v-for="(item, index) of acceptedList"
+          :key="index"
+          :listItem="item"
+          @checkInPunchInfo="checkIn(item)"
+        ></punch-info-list-item>
       </van-list>
       <van-list
         slot="lastList"
         v-model="settledLoading"
         :finished="settledFinished"
         finished-text="没有更多了"
-        @load="settledOnLoad">
-        <punch-info-list-item v-for="(item, index) of settledList" :key="index" :listItem="item" ></punch-info-list-item>
+        @load="settledOnLoad"
+      >
+        <punch-info-list-item
+          v-for="(item, index) of settledList"
+          :key="index"
+          :listItem="item"
+        ></punch-info-list-item>
       </van-list>
     </common-list-header>
+    <van-dialog
+      v-model="showDialogFlag"
+      title="打卡审核"
+      show-cancel-button
+      class="dialog__radio"
+    >
+      <van-radio-group v-model="radio" class="dialog_radio_select">
+        <van-radio name="1" checked-color="#21A675">通过</van-radio>
+        <van-radio name="2" checked-color="#F23800 ">驳回</van-radio>
+      </van-radio-group>
+      <van-cell-group v-if="radio === '2'" class="dialog_reject">
+        <van-field
+          v-model="reasonForRejection"
+          rows="1"
+          autosize
+          label="驳回原因"
+          type="textarea"
+          placeholder="驳回原因"
+        />
+      </van-cell-group>
+    </van-dialog>
   </div>
 </template>
 
 <script>
 import commonListHeader from "../components/commonListHeader";
 import punchInfoListItem from "./components/punchInfoListItem";
-import { List } from "vant"
 
 export default {
   name: "checkIn",
   components: {
     commonListHeader,
-    punchInfoListItem,
-    [List.name]: List
+    punchInfoListItem
   },
   data() {
     return {
       showData: {
         title: "零活工",
-        firstName: '待审核',
+        firstName: "待审核",
         lastName: "已审核"
       },
       acceptedList: [
@@ -83,8 +113,11 @@ export default {
         }
       ],
       settledLoading: false,
-      settledFinished: false
-    }
+      settledFinished: false,
+      showDialogFlag: false,
+      radio: "",
+      reasonForRejection: ""
+    };
   },
   methods: {
     acceptedOnLoad() {
@@ -116,11 +149,31 @@ export default {
           this.settledFinished = true;
         }
       }, 500);
+    },
+    checkIn(item) {
+      this.showDialogFlag = true;
+    }
+  },
+  watch: {
+    radio(val) {
+      if (!val || val === "1") {
+        this.reasonForRejection = "";
+      }
     }
   }
-}
+};
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.dialog__radio {
+  .dialog_radio_select {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  .dialog_reject {
+    margin: 20px;
+  }
+}
 </style>

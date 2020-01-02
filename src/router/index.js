@@ -127,7 +127,7 @@ const routes = [
     name: "loginIndex",
     component: () => import("../views/home/loginIndex.vue"),
     meta: {
-      title: "违约信息"
+      title: "登录"
     }
   }
 ];

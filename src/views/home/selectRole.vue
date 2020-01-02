@@ -12,7 +12,6 @@
 
 <script>
 import roleItem from "./components/roleItem";
-import { Dialog } from "vant";
 export default {
   name: "selectRole",
   components: {
