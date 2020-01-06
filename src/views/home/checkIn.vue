@@ -9,7 +9,7 @@
         @load="acceptedOnLoad"
       >
         <punch-info-list-item
-          v-for="(item, index) of acceptedList"
+          v-for="(item, index) of isCheckInList"
           :key="index"
           :listItem="item"
           @checkInPunchInfo="checkIn(item)"
@@ -56,6 +56,7 @@
 <script>
 import commonListHeader from "../components/commonListHeader";
 import punchInfoListItem from "./components/punchInfoListItem";
+import { enterpisePunchCardRecord } from "../../service/api";
 
 export default {
   name: "checkIn",
@@ -70,7 +71,7 @@ export default {
         firstName: "待审核",
         lastName: "已审核"
       },
-      acceptedList: [
+      isCheckInList: [
         {
           name: "顺丰快递分派员（顺丰）",
           isCheckIn: true,
@@ -122,33 +123,44 @@ export default {
   methods: {
     acceptedOnLoad() {
       // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.acceptedList.push(this.acceptedList[i]);
-        }
-        // 加载状态结束
-        this.acceptedLoading = false;
-
-        // 数据全部加载完成
-        if (this.acceptedList.length >= 40) {
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.acceptedList.push(this.acceptedList[i]);
+      //   }
+      //   // 加载状态结束
+      //   this.acceptedLoading = false;
+      //   // 数据全部加载完成
+      //   if (this.acceptedList.length >= 40) {
+      //     this.acceptedFinished = true;
+      //   }
+      // }, 500);
+      enterpisePunchCardRecord({
+        // merchId: localStorage.getItem("merchChargeId")
+      }).then(res => {
+        if (res.data.retCode === "00000") {
+          this.isCheckInList = res.data.data;
           this.acceptedFinished = true;
         }
-      }, 500);
+      });
     },
     settledOnLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.settledList.push(this.settledList[i]);
-        }
-        // 加载状态结束
-        this.settledLoading = false;
-
-        // 数据全部加载完成
-        if (this.settledList.length >= 10) {
-          this.settledFinished = true;
-        }
-      }, 500);
+      // // 异步更新数据
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.settledList.push(this.settledList[i]);
+      //   }
+      //   // 加载状态结束
+      //   this.settledLoading = false;
+      //   // 数据全部加载完成
+      //   if (this.settledList.length >= 10) {
+      //     this.settledFinished = true;
+      //   }
+      // }, 500);
+      enterpisePunchCardRecord({
+        // merchId: localStorage.getItem("merchChargeId")
+        // 01-职位申请 -02申请通过 -03职位申请不通过 -04工作审核通过 -05工作审核不通过
+        examStat: "04"
+      }).then(res => {});
     },
     checkIn(item) {
       this.showDialogFlag = true;

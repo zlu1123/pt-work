@@ -41,7 +41,7 @@ export default {
     };
   },
   beforeMount() {
-    this.userType = this.$route.params.roleInfo;
+    this.userType = this.$route.query.roleInfo;
   },
   methods: {
     userLoginMethod() {
@@ -51,6 +51,7 @@ export default {
         loginType: this.userType.loginType // 02 企业人员  03 平台人员
       }).then(res => {
         console.log(res);
+        localStorage.setItem("merchChargeId", res.data.data.merchChargeId);
         this.$router.push({
           path: "/checkIn"
         });

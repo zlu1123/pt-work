@@ -30,9 +30,9 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <!-- <div class="login-out" @click="test">
+      <div class="login-out" @click="test">
         退出登录
-      </div> -->
+      </div>
       <!-- <div class="login-out" @click="test1">
         职位申请维护-职位申请人列表
       </div>
@@ -48,12 +48,12 @@
       <div class="login-out" @click="test5">
         发工资
       </div> -->
-      <div class="login-out" @click="test6">
+      <!-- <div class="login-out" @click="test6">
         企业新增
       </div>
       <div class="login-out" @click="test7">
         企业负责人新增
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

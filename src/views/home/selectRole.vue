@@ -51,8 +51,8 @@ export default {
         .then(() => {
           if (item.path !== "/home") {
             this.$router.replace({
-              name: "loginIndex",
-              params: {
+              path: "/loginIndex",
+              query: {
                 roleInfo: item
               }
             });
