@@ -129,6 +129,13 @@ const routes = [
     meta: {
       title: "登录"
     }
+  },
+  {
+    name: "auth",
+    component: () => import("../views/components/auth.vue"),
+    meta: {
+      title: "授权"
+    }
   }
 ];
 
@@ -162,7 +169,18 @@ router.beforeEach((to, from, next) => {
   if (title) {
     document.title = title;
   }
-  next();
+  const token = localStorage.getItem("token");
+  const openid = localStorage.getItem("openid");
+  if (!openid && !token) {
+    if (to.path === "/auth") {
+      next();
+    } else {
+      localStorage.setItem("now_url", to.fullPath); // 当前页url与参数放入缓存
+      next("/auth");
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

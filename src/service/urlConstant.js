@@ -19,3 +19,5 @@ export const queryCurrentDayClock =
 
 export const enterpisePunchCardRecord =
   baseUrlConfig.proxyURL + "/enterpise/punchCardRecord"; // 企业查询打卡信息
+
+export const getWechatSign = baseUrlConfig.proxyURL + "/lsg/wxjs/getWechatSign"; // 企业查询打卡信息

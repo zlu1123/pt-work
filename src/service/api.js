@@ -174,3 +174,7 @@ export const disRoll = params => {
 export const enterpisePunchCardRecord = params => {
   return axiosRequest(POST, urlConstant.enterpisePunchCardRecord, params);
 };
+
+export const getWechatSign = params => {
+  return axiosRequest(POST, urlConstant.getWechatSign, params);
+};

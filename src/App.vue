@@ -19,6 +19,7 @@ export default {
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
     this.initMap();
+    this.initWeChat();
   },
   methods: {
     ...mapActions([actionsName.requestUserInfo]),
@@ -66,7 +67,9 @@ export default {
           console.error("根据经纬度查询地址失败");
         }
       });
-    }
+    },
+
+    initWeChat() {}
   },
 
   computed: {}
