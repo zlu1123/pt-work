@@ -170,3 +170,7 @@ export const positionInfo = params => {
 export const disRoll = params => {
   return axiosRequest(POST, urlConstant.disRoll, params);
 };
+
+export const enterpisePunchCardRecord = params => {
+  return axiosRequest(POST, urlConstant.enterpisePunchCardRecord, params);
+};

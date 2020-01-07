@@ -31,18 +31,17 @@ export default {
   mounted() {
     queryCurrentDayClock({}).then(res => {
       // console.log(res);
-      this.postionApplyId = res.data.data;
+      this.postionApplyId = res.data.data[0].postionApplyId;
+      this.postionId = res.data.data[0].postionId;
+      this.merchId = res.data.data[0].merchId;
     });
   },
   data() {
     return {
-      checkInList: [
-        {
-          checkInFlag: true
-        },
-        {}
-      ],
-      postionApplyId: ""
+      checkInList: [],
+      postionApplyId: "",
+      postionId: "",
+      merchId: ""
     };
   },
   methods: {
@@ -53,10 +52,12 @@ export default {
     },
     checkIn() {
       clockInOrSignOut({
+        merchId: this.merchId,
+        postionId: this.postionId,
         postionApplyId: this.postionApplyId,
         clockType: "2", // 1上班 2下班
         clockAddr: "112312", // 经纬度
-        currentDay: "20191229" // new Date();
+        currentDay: "20200107" // new Date();
       });
     }
   }

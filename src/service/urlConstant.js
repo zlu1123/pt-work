@@ -15,4 +15,7 @@ export const disRoll = baseUrlConfig.proxyURL + "/worker/operation/disRoll";
 export const clockInOrSignOut =
   baseUrlConfig.proxyURL + "/worker/mine/clockInOrSignOut"; // 打卡ID
 export const queryCurrentDayClock =
-  baseUrlConfig.proxyURL + "worker/mine/queryCurrentDayClock"; // 查询打卡信息
+  baseUrlConfig.proxyURL + "/worker/mine/queryCurrentDayClock"; // 查询打卡信息
+
+export const enterpisePunchCardRecord =
+  baseUrlConfig.proxyURL + "/enterpise/punchCardRecord"; // 企业查询打卡信息

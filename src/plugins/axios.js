@@ -93,6 +93,8 @@ export function getOpenId() {
   // return Math.random(32);
   // return 0.7546318464188451
   return "2019122874054400";
+  // return "11111111";
+  // return "2020010641207808";
 }
 
 export default Plugin;
