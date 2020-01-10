@@ -11,7 +11,8 @@ export default {
     locationInfo: {
       lng: 108.982758,
       lat: 34.327999
-    } // 默认显示万科幸福里
+    }, // 默认显示万科幸福里
+    loading: false
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -33,6 +34,12 @@ export default {
     },
     [mutationsName.setLocationInfo]: (state, data) => {
       state.locationInfo = data;
+    },
+    showLoading: state => {
+      state.loading = true;
+    },
+    hideLoading: state => {
+      state.loading = false;
     }
   },
   actions: {
@@ -56,6 +63,9 @@ export default {
     },
     [gettersName.getLocationInfo](state, getters) {
       return state.locationInfo;
+    },
+    getLoading(state, getters) {
+      return state.loading;
     }
   }
 };

@@ -1,46 +1,51 @@
 <template> <div></div></template>
 <script>
 import { getWechatSign } from "../../service/api";
-const murl = "http://www.xx.com";
+import { baseUrlConfig } from "../../service/baseUrl";
 const url = localStorage.getItem("now_url");
-var appid = "wx8a3767e4d64a71a2";
 export default {
   // 生命周期函数
   created() {
-    debugger;
     this._initJDKConfig();
-    const code = this.GetUrlParame("code"); // 截取code
-    if (!code) {
-      var domine = window.location.href.split("#")[0]; // 微信会自动识别#    并且清除#后面的内容
-      // 这里的axios是已封装过的
-      // this.axios
-      //   .get("/set_wxcode_url?url=" + domine) // 如果没有code，说明用户还没授权   将当前地址传递给后台
-      //   .then(res => {
-      //     window.location.href = res.data;
-      //   });
-      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
-        domine
-      )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
-    } else {
-      this.axios
-        .get("/gzh_token?code=", { code: code }) // 如果有code，说明用户点击了授权  将获取到的code传递给后台
-        .then(res => {
-          // 返回状态和UId
-          console.log(res.data);
-          if (res.data.token) {
-            localStorage.setItem("token", res.data.token);
-          }
-          if (res.data.openid) {
-            localStorage.setItem("openid", res.data.openid);
-          }
-          window.location.replace(murl + "/#" + url);
-        });
-    }
   },
   data() {
     return {};
   },
   methods: {
+    geiWechatOpenId() {
+      const code = this.GetUrlParame("code"); // 截取code
+      if (!code) {
+        var domine = window.location.href.split("#")[0]; // 微信会自动识别#    并且清除#后面的内容
+        // 这里的axios是已封装过的
+        // this.axios
+        //   .get("/set_wxcode_url?url=" + domine) // 如果没有code，说明用户还没授权   将当前地址传递给后台
+        //   .then(res => {
+        //     window.location.href = res.data;
+        //   });
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
+          baseUrlConfig.weChatAppid
+        }&redirect_uri=${encodeURIComponent(
+          domine
+        )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
+        // －scope=snsapi_base 获取微信用户openid,获取后直接跳转业务页面，不需要用户操作
+        // －scope=snsapi_userinfo 获取微信用户详细信息（昵称，头像等），需要用户手动点击授权，当点击允许时，会跳转业务页面（类似于关闭弹窗），点击拒绝时会推出页面，授权如图
+      } else {
+        this.axios
+          .get("/gzh_token?code=", { code: code }) // 如果有code，说明用户点击了授权  将获取到的code传递给后台
+          .then(res => {
+            // 返回状态和UId
+            console.log(res.data);
+            if (res.data.token) {
+              localStorage.setItem("token", res.data.token);
+            }
+            if (res.data.openid) {
+              localStorage.setItem("openid", res.data.openid);
+            }
+            window.location.replace(baseUrlConfig.weChatUrl + "/#" + url);
+          });
+      }
+    },
+
     // 截取code
     GetUrlParame(parameName) {
       /// 获取地址栏指定参数的值
@@ -68,9 +73,8 @@ export default {
     /* 配置微信jdk */
     _initJDKConfig() {
       getWechatSign({
-        jsUrl:
-          "http://test.coa.police.adxinfo.cn/officialAccountsUi/index.html",
-        appid: appid
+        jsUrl: baseUrlConfig.weChatUrl,
+        appid: baseUrlConfig.weChatAppid
       }).then(data => {
         // eslint-disable-next-line no-undef
         wx.config({
