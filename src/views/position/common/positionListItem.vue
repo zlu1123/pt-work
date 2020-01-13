@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     goJobDetail() {
-      this.$emit("goJobDetail");
+      this.$emit("goJobDetail", this.listItem);
     },
     cancelRegistration() {
       // 取消报名

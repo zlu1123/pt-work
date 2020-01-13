@@ -25,7 +25,7 @@ export default {
   },
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
-    this.initMap();
+    // this.initMap();
   },
   methods: {
     ...mapActions([actionsName.requestUserInfo]),

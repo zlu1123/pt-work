@@ -1,15 +1,19 @@
-<template> <div></div></template>
+<template>
+  <div></div>
+</template>
 <script>
 import { getWechatSign } from "../../service/api";
 import { baseUrlConfig } from "../../service/baseUrl";
+import { mutationsName } from "../../common/constants";
 const url = localStorage.getItem("now_url");
 export default {
   // 生命周期函数
   created() {
+    // this.geiWechatOpenId();
     this._initJDKConfig();
   },
   data() {
-    return {};
+    return { appId: "" };
   },
   methods: {
     geiWechatOpenId() {
@@ -23,7 +27,7 @@ export default {
         //     window.location.href = res.data;
         //   });
         window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
-          baseUrlConfig.weChatAppid
+          this.appId
         }&redirect_uri=${encodeURIComponent(
           domine
         )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
@@ -73,9 +77,10 @@ export default {
     /* 配置微信jdk */
     _initJDKConfig() {
       getWechatSign({
-        jsUrl: baseUrlConfig.weChatUrl,
-        appid: baseUrlConfig.weChatAppid
+        url: baseUrlConfig.weChatUrl
+        // appid: baseUrlConfig.weChatAppid
       }).then(data => {
+        this.appId = data.appId;
         // eslint-disable-next-line no-undef
         wx.config({
           debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -83,8 +88,27 @@ export default {
           timestamp: data.timestamp, // 必填，生成签名的时间戳
           nonceStr: data.nonceStr, // 必填，生成签名的随机串
           signature: data.sign, // 必填，签名
-          jsApiList: ["scanQRCode"] // 必填，需要使用的JS接口列表
+          jsApiList: ["scanQRCode", "getLocation"] // 必填，需要使用的JS接口列表
         });
+        // this.geiWechatOpenId();
+        this.getUserLocation();
+      });
+    },
+
+    getUserLocation() {
+      const that = this;
+      // eslint-disable-next-line no-undef
+      wx.getLocation({
+        type: "wgs84", // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        success: function(res) {
+          // let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+          // let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+          // let speed = res.speed; // 速度，以米/每秒计
+          // let accuracy = res.accuracy; // 位置精度
+          console.log(res);
+          debugger;
+          that.$store.commit(mutationsName.setLocationInfo, res);
+        }
       });
     },
 

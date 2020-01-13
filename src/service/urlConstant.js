@@ -10,7 +10,7 @@ export const insertEnterpriseDirector =
   baseUrlConfig.proxyURL + "/enterpriseDirector/insert"; // 企业负责人新增
 export const queryPosition = baseUrlConfig.proxyURL + "/common/queryPosition"; // 企业列表
 export const positionInfo =
-  baseUrlConfig.proxyURL + "/postionRelease/positionInfo"; // zhiwei xiangqing
+  baseUrlConfig.proxyURL + "/postionRelease/positionInfo"; // 职位信息详情
 export const disRoll = baseUrlConfig.proxyURL + "/worker/operation/disRoll";
 export const clockInOrSignOut =
   baseUrlConfig.proxyURL + "/worker/mine/clockInOrSignOut"; // 打卡ID

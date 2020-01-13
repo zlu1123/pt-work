@@ -6,16 +6,19 @@
       <div class="arrow"></div>
       <div class="info">
         <div class="title">
-          <div>职位：顺丰快递分派员（顺丰）</div>
-          <div v-if="checkInItem.checkInFlag" class="already-check-in">
+          <div>职位：{{ checkInItem.positionName }}</div>
+          <div v-if="checkInItem.alreadyCheckIn" class="already-check-in">
             已打卡
           </div>
           <div v-else class="un-check-in">未打卡</div>
         </div>
         <div class="go">
-          {{ checkIndex === 0 ? "上班" : "下班" }}时间 9:00:00
+          {{ checkInItem.checkInFlag === "up" ? "上班" : "下班" }}时间
+          {{ checkInItem.checkInTime }}
         </div>
-        <div class="out" v-if="checkInItem.checkInFlag">打卡时间 8:55:12</div>
+        <div class="out" v-if="checkInItem.alreadyCheckIn">
+          打卡时间 {{ checkInItem.alreadyCheckIn }}
+        </div>
       </div>
     </div>
   </van-step>
@@ -29,10 +32,6 @@ export default {
       type: Object,
       // eslint-disable-next-line vue/require-valid-default-prop
       default: {}
-    },
-    checkIndex: {
-      type: Number,
-      default: 0
     }
   },
   components: {}

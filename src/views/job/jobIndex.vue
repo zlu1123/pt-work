@@ -94,10 +94,23 @@ export default {
       // }, 500);
       applyList().then(res => {
         // { applyExemStat: 2 }
-        this.acceptedList = res.data.data;
+        this.acceptedList = this.fixApplyList(res.data.data);
         // 循环增加职位名称
         this.acceptedFinished = true;
       });
+    },
+
+    fixApplyList(list) {
+      let newList = [];
+      if (list && list.length > 0) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].applyExemStat === "3") {
+            continue;
+          }
+          newList.push(list[i]);
+        }
+      }
+      return newList;
     },
 
     settledOnLoad() {
@@ -120,9 +133,13 @@ export default {
         path: "/punchList"
       });
     },
-    goJobDetail() {
+    goJobDetail(item) {
       this.$router.push({
-        path: "/jobDetail"
+        path: "/jobDetail",
+        query: {
+          postionId: item.postionId,
+          isNotShowBtn: true
+        }
       });
     },
     cancelJob(item) {
