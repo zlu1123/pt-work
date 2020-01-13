@@ -73,7 +73,7 @@
         <div v-for="(item, index) of workDesList" :key="index">{{ item }}</div>
       </div>
     </div>
-    <div class="btn-sign-up" @click="applyWork">
+    <div class="btn-sign-up" @click="applyWork" v-if="!isNotShowBtn">
       立即报名
     </div>
   </div>
@@ -128,13 +128,15 @@ export default {
         "7、办理货物交接手续。"
       ],
       postionId: "",
-      releasEmerch: ""
+      releasEmerch: "",
+      isNotShowBtn: false
     };
   },
-  mounted() {
+  async mounted() {
     this.postionId = this.$route.query.postionId;
-    positionInfo({ postionId: this.postionId }).then(res => {
-      this.eleasEmerch = res.data.data.releasEmerch;
+    this.isNotShowBtn = this.$route.query.isNotShowBtn;
+    await positionInfo({ postionId: this.postionId }).then(res => {
+      this.releasEmerch = res.data.data.releasEmerch;
     });
   },
   methods: {
@@ -143,16 +145,32 @@ export default {
         path: "/routeNavigation"
       });
     },
+
     applyWork() {
-      enRoll({
-        merchId: this.eleasEmerch,
-        postionId: this.postionId
-      }).then(res => {
-        if (res.data.retCode === "00000") {
-          this.$toast("您已经报名成功");
-          this.$router.go(-1);
-        }
+      this.$dialog.confirm({
+        title: "提醒",
+        message: `确认申请该职位吗？`,
+        beforeClose: this.applyRoll
       });
+    },
+
+    applyRoll(action, done) {
+      if (action === "confirm") {
+        enRoll({
+          merchId: this.releasEmerch,
+          postionId: this.postionId
+        }).then(res => {
+          done();
+          if (res.data.retCode === "00000") {
+            this.$toast("您已经报名成功");
+            this.$router.go(-1);
+          } else {
+            this.$toast(res.data.retInfo);
+          }
+        });
+      } else {
+        done();
+      }
     }
   }
 };

@@ -13,7 +13,7 @@
       </van-steps>
     </div>
     <div class="check-in-btn" @click="checkIn">
-      {{ checkInList.length >= 2 ? "下班打卡" : "上班打卡" }}
+      {{ checkInList.lenght === 2 ? "下班打卡" : "上班打卡" }}
     </div>
   </div>
 </template>
@@ -30,10 +30,10 @@ export default {
   },
   mounted() {
     queryCurrentDayClock({}).then(res => {
-      // console.log(res);
       this.postionApplyId = res.data.data[0].postionApplyId;
       this.postionId = res.data.data[0].postionId;
       this.merchId = res.data.data[0].merchId;
+      this.checkInList = this.getCheckInfo(res.data.data[0]);
     });
   },
   data() {
@@ -45,6 +45,21 @@ export default {
     };
   },
   methods: {
+    getCheckInfo(info) {
+      let list = [];
+      let checkInfo = {
+        checkInTime: info.clockBeginDate,
+        positionName: info.postionId,
+        checkInFlag: "up",
+        alreadyCheckIn: ""
+      };
+      list.push(checkInfo);
+      // list[1].checkInTime = info.clockEndDate;
+      // list[1].positionName = info.postionId;
+      // list[1].checkInFlag = "down";
+      // list[1].alreadyCheckIn = "";
+      return list;
+    },
     goPunchList() {
       this.$router.push({
         path: "/punchList"

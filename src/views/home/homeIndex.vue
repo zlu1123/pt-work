@@ -45,6 +45,7 @@ import { Tabbar, TabbarItem } from "vant";
 import myselfIndex from "../myself/myselfIndex";
 import positionIndex from "../position/positionIndex";
 import jobIndex from "../job/jobIndex";
+// import { mutationsName } from "../../common/constants";
 export default {
   name: "homeIndex",
   components: {
@@ -54,10 +55,12 @@ export default {
     positionIndex,
     jobIndex
   },
-  mounted() {},
+  mounted() {
+    // this.getUserLocation();
+  },
   data() {
     return {
-      active: "myself",
+      active: "position",
       positionIcon: {
         active: "./img/home/position-img.png",
         inactive: "./img/home/position-img-unchoose.png"
@@ -72,6 +75,7 @@ export default {
       }
     };
   },
+  methods: {},
   activated() {}
 };
 </script>

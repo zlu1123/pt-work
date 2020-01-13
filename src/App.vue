@@ -5,20 +5,27 @@
         <router-view />
       </keep-alive>
     </transition>
+    <van-overlay :show="getLoading">
+      <div class="wrapper" @click.stop>
+        <van-loading color="#21A675" />
+      </div>
+    </van-overlay>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { actionsName } from "./common/constants";
 
 export default {
   data() {
-    return {};
+    return {
+      show: true
+    };
   },
   mounted() {
     // this.$store.commit(mutationsName.setKeepAlivePath, 'homeIndex');
-    this.initMap();
+    // this.initMap();
   },
   methods: {
     ...mapActions([actionsName.requestUserInfo]),
@@ -69,7 +76,9 @@ export default {
     }
   },
 
-  computed: {}
+  computed: {
+    ...mapGetters(["getLoading"])
+  }
 };
 </script>
 <style lang="less">
@@ -305,6 +314,13 @@ body {
 }
 
 #app {
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
 }
 </style>

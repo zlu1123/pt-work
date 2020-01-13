@@ -100,30 +100,16 @@ export default {
         { text: "其他", value: 5 }
       ],
       titleClass: "filter-title",
-      positionData: [
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg"
-        },
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg"
-        },
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg"
-        },
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg"
-        },
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg"
-        }
-      ],
+      positionData: [],
       loading: false,
       finished: false,
       locationImgUrl: "./img/job/dingwei@2x.png",
       chooseDate: "",
       showCalendar: false,
       minDate: new Date(),
-      currentDate: new Date()
+      currentDate: new Date(),
+      pageSize: "1",
+      pageNum: "1"
     };
   },
   methods: {
@@ -131,11 +117,18 @@ export default {
       queryPosition({
         searchType: "",
         searchName: "",
-        pageSize: "",
-        pageNum: ""
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
       }).then(res => {
-        this.positionData = res.data.data;
-        this.finished = true;
+        const resData = res.data.data;
+        if (resData) {
+          this.positionData = this.positionData.concat(resData);
+          if (resData.lenght <= this.pageSize) {
+            this.finished = true;
+          } else {
+            this.pageNum++;
+          }
+        }
       });
       // console.log(a);
       // // 异步更新数据
