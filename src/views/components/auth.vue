@@ -100,6 +100,7 @@ export default {
       // eslint-disable-next-line no-undef
       wx.getLocation({
         type: "wgs84", // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        // eslint-disable-next-line space-before-function-paren
         success: function(res) {
           // let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
           // let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
@@ -115,8 +116,8 @@ export default {
     getCode() {
       // 非静默授权，第一次有弹框
       this.code = "";
-      var local = window.location.href; // 获取页面url
-      var appid = "wx8a3767e4d64a71a2";
+      let local = window.location.href; // 获取页面url
+      let appid = "wx8a3767e4d64a71a2";
       this.code = this.getUrlCode().code; // 截取code
       if (this.code == null || this.code === "") {
         // 如果没有code，则去请求

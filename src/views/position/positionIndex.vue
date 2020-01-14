@@ -11,7 +11,7 @@
     <!-- 滑动页面 -->
     <div>
       <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
+        <van-swipe-item v-for="(image, index) in adImagesList" :key="index">
           <img v-lazy="image" class="swipe-img-position" />
         </van-swipe-item>
       </van-swipe>
@@ -60,7 +60,7 @@
 </template>
 <script>
 import positionListItem from "./common/positionListItem";
-import { queryPosition } from "../../service/api";
+import { queryPosition, noticeAdPage } from "../../service/api";
 export default {
   name: "positionIndex",
 
@@ -69,10 +69,7 @@ export default {
   },
   data() {
     return {
-      images: [
-        "https://img.yzcdn.cn/vant/apple-1.jpg",
-        "https://img.yzcdn.cn/vant/apple-2.jpg"
-      ],
+      adImagesList: [],
       searchValue: "",
       allSort: 0,
       linkWay: 0,
@@ -108,9 +105,12 @@ export default {
       showCalendar: false,
       minDate: new Date(),
       currentDate: new Date(),
-      pageSize: "1",
-      pageNum: "1"
+      pageSize: "10",
+      pageNo: "1"
     };
+  },
+  mounted() {
+    this.getAdList();
   },
   methods: {
     onLoad() {
@@ -118,7 +118,7 @@ export default {
         searchType: "",
         searchName: "",
         pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageNo: this.pageNo
       }).then(res => {
         const resData = res.data.data;
         if (resData) {
@@ -126,7 +126,7 @@ export default {
           if (resData.lenght <= this.pageSize) {
             this.finished = true;
           } else {
-            this.pageNum++;
+            this.pageNo++;
           }
         }
       });
@@ -157,6 +157,18 @@ export default {
         path: "/jobDetail",
         query: {
           postionId: item.postionId
+        }
+      });
+    },
+    getAdList() {
+      noticeAdPage({
+        // info: "",
+        // seq: "",
+        pageSize: "20",
+        pageNum: "1"
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.adImagesList = res.data.data.list;
         }
       });
     }

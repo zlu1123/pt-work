@@ -129,12 +129,6 @@ export function axiosRequest(methods, requestUrl, params, header) {
 
 export function getHeader(header) {
   let headers = {
-    servcUrl: "",
-    transSeqNo: "",
-    reqTime: "",
-    termId: "",
-    pageSize: "",
-    pageIndex: "",
     openId: getOpenId()
   };
   return Object.assign(headers, header);

@@ -1,5 +1,6 @@
 import { axiosRequest } from "../plugins/axios";
 import * as urlConstant from "./urlConstant";
+import store from "../store";
 
 // 用户管理
 window.httpCount = 0;
@@ -19,6 +20,8 @@ export const handleRequest = (
   }
   if (window.httpCount > 0) {
     // loading start
+    // store.commit();
+    store.commit("showLoading");
   }
   methods(params, headers)
     .then(response => {
@@ -27,6 +30,7 @@ export const handleRequest = (
       }
       if (window.httpCount === 0) {
         // loading end
+        store.commit("hideLoading");
       }
 
       let retCode = response.data.retCode;
@@ -52,6 +56,7 @@ export const handleRequest = (
       };
       if (window.httpCount === 0) {
         // loading end
+        store.commit("hideLoading");
       }
       // toast errmsg
       if (err) {
@@ -70,11 +75,13 @@ export const handleRequestPromise = (
     if (window.httpCount < 0) {
       window.httpCount = 0;
     }
+    window.httpCount++;
     if (showLoading) {
       window.httpCount++;
     }
     if (window.httpCount > 0) {
       // loading start
+      store.commit("showLoading");
     }
     methods(params, headers)
       .then(response => {
@@ -83,6 +90,7 @@ export const handleRequestPromise = (
         }
         if (window.httpCount === 0) {
           // loading end
+          store.commit("hideLoading");
         }
 
         let retCode = response.data.retCode;
@@ -111,6 +119,7 @@ export const handleRequestPromise = (
         // }
         if (window.httpCount === 0) {
           // loading end
+          store.commit("hideLoading");
         }
         // toast(errmsg)
         if (error) {
@@ -177,4 +186,8 @@ export const enterpisePunchCardRecord = params => {
 
 export const getWechatSign = params => {
   return axiosRequest(POST, urlConstant.getWechatSign, params);
+};
+
+export const noticeAdPage = params => {
+  return axiosRequest(POST, urlConstant.noticeAdPage, params);
 };
