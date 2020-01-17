@@ -14,7 +14,3 @@ export const gettersName = {
   getLocationInfo: "getLocationInfo",
   getLoading: "getLoading"
 };
-
-export const actionsName = {
-  requestUserInfo: "requestUserInfo"
-};

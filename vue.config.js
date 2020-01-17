@@ -1,6 +1,7 @@
 const path = require("path");
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "./" : "/pt-work/", // 打包后的位置(如果不设置这个静态资源会报404)
+  publicPath: "./", // 打包后的位置(如果不设置这个静态资源会报404)
+  // publicPath: process.env.NODE_ENV === "production" ? "./" : "/pt-work/", // 打包后的位置(如果不设置这个静态资源会报404)
   outputDir: "dist", // 打包后的目录名称
   assetsDir: "static", // 静态资源目录名称
   pluginOptions: {
@@ -11,9 +12,10 @@ module.exports = {
   },
   devServer: {
     port: process.env.PORT,
+    disableHostCheck: true, // 跳过host检查
     proxy: {
       "/lsgService": {
-        target: "http://test.coa.police.adxinfo.cn:8811/lsg/",
+        target: "http://test.coa.police.adxinfo.cn:8811/lsg",
         changeOrigin: true,
         pathRewrite: {
           "^/lsgService": ""

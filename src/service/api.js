@@ -191,3 +191,7 @@ export const getWechatSign = params => {
 export const noticeAdPage = params => {
   return axiosRequest(POST, urlConstant.noticeAdPage, params);
 };
+
+export const getOpenId = params => {
+  return axiosRequest(POST, urlConstant.getOpenId, params);
+};

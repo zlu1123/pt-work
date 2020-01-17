@@ -11,8 +11,8 @@
     <!-- 滑动页面 -->
     <div>
       <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(image, index) in adImagesList" :key="index">
-          <img v-lazy="image" class="swipe-img-position" />
+        <van-swipe-item v-for="(item, index) in adImagesList" :key="index">
+          <img v-lazy="item.imgUrl" class="swipe-img-position" />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -115,7 +115,7 @@ export default {
   methods: {
     onLoad() {
       queryPosition({
-        searchType: "",
+        searchType: "", // 01-默认查询；02-企业搜索；03-日期；04-结算方式；05-职位类型；06-距离
         searchName: "",
         pageSize: this.pageSize,
         pageNo: this.pageNo

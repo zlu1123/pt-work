@@ -14,8 +14,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { actionsName } from "./common/constants";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -28,8 +27,6 @@ export default {
     // this.initMap();
   },
   methods: {
-    ...mapActions([actionsName.requestUserInfo]),
-
     initMap() {
       const self = this;
       var map = new AMap.Map("container", {

@@ -23,3 +23,5 @@ export const enterpisePunchCardRecord =
 export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 企业查询打卡信息
 
 export const noticeAdPage = baseUrlConfig.proxyURL + "/noticeAd/page"; // 广告查询-分页
+
+export const getOpenId = baseUrlConfig.proxyURL + "/wxjs/getOpenId"; // 获取openID

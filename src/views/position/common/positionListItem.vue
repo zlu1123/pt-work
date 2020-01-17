@@ -1,7 +1,7 @@
 <template>
   <div class="list__item" @click.stop="goJobDetail">
     <div class="list__item__img">
-      <img v-lazy="listItem.imgUrl" alt="" />
+      <img v-lazy="listItem.releasEmerchImg" alt="" />
     </div>
     <div class="list__item__content">
       <div class="list__item__content-tilte">
@@ -23,9 +23,13 @@
         <div v-else class="distance">1.5km</div>
       </div>
       <div class="list__item__content-time">
-        <span>11月12日</span>
-        <span>共一天</span>
-        <span>9:00</span>
+        <span>{{ getWorkBeginDate(listItem.workBeginDate) }}</span>
+        <span
+          >共{{
+            getIntervalDays(listItem.workEndDate, listItem.workBeginDate)
+          }}天</span
+        >
+        <span>{{ listItem.clockBeginDate }}</span>
       </div>
       <div class="list__item__content-type">
         <div>{{ listItem.billtype }}</div>
@@ -36,6 +40,7 @@
 </template>
 
 <script>
+import { formatDateMMDD, dateDiff } from "../../../plugins/util";
 export default {
   name: "positionListItem",
   props: {
@@ -49,6 +54,12 @@ export default {
     return {};
   },
   methods: {
+    getWorkBeginDate(date) {
+      return formatDateMMDD(date);
+    },
+    getIntervalDays(endDate, startDate) {
+      return dateDiff(endDate, startDate);
+    },
     goJobDetail() {
       this.$emit("goJobDetail", this.listItem);
     },

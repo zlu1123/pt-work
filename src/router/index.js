@@ -169,18 +169,18 @@ router.beforeEach((to, from, next) => {
   if (title) {
     document.title = title;
   }
-  // const token = localStorage.getItem("token");
-  // const openid = localStorage.getItem("openid");
-  // if (!openid && !token) {
-  //   if (to.path === "/auth") {
-  //     next();
-  //   } else {
-  //     localStorage.setItem("now_url", to.fullPath); // 当前页url与参数放入缓存
-  //     next("/auth");
-  //   }
-  // } else {
-  next();
-  // }
+  const token = localStorage.getItem("token");
+  const openid = localStorage.getItem("openid");
+  if (!openid && !token) {
+    if (to.path === "/auth") {
+      next();
+    } else {
+      localStorage.setItem("now_url", to.fullPath); // 当前页url与参数放入缓存
+      next("/auth");
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
