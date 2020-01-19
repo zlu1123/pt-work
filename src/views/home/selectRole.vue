@@ -12,6 +12,7 @@
 
 <script>
 import roleItem from "./components/roleItem";
+import { mapActions } from "vuex";
 export default {
   name: "selectRole",
   components: {
@@ -42,6 +43,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["requestUserInfo"]),
     selectRole(item) {
       this.$dialog
         .confirm({
@@ -57,10 +59,20 @@ export default {
               }
             });
           } else {
-            this.$router.push(item.path);
+            this.getWorkInfo(item.path);
           }
         })
         .catch(() => {});
+    },
+
+    async getWorkInfo(path) {
+      let userInfo = await this.requestUserInfo({
+        userName: "最后变成如果",
+        loginType: "01" // 01-个人；02-平台；03-商户（商户/平台）
+      });
+      if (userInfo.retCode === "00000") {
+        this.$router.push(path);
+      }
     }
   }
 };

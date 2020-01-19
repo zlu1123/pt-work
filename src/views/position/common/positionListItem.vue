@@ -1,7 +1,7 @@
 <template>
   <div class="list__item" @click.stop="goJobDetail">
     <div class="list__item__img">
-      <img v-lazy="listItem.imgUrl" alt="" />
+      <img v-lazy="getImgUrl" alt="" />
     </div>
     <div class="list__item__content">
       <div class="list__item__content-tilte">
@@ -23,12 +23,16 @@
         <div v-else class="distance">1.5km</div>
       </div>
       <div class="list__item__content-time">
-        <span>11月12日</span>
-        <span>共一天</span>
-        <span>9:00</span>
+        <span>{{ getWorkBeginDate(listItem.workBeginDate) }}</span>
+        <span
+          >共{{
+            getIntervalDays(listItem.workEndDate, listItem.workBeginDate)
+          }}天</span
+        >
+        <span>{{ listItem.clockBeginDate }}</span>
       </div>
       <div class="list__item__content-type">
-        <div>{{ listItem.billtype }}</div>
+        <div>{{ getBillTypeName(listItem.billtype) }}</div>
       </div>
       <div class="list__item__content-cast">{{ listItem.price }}元/小时</div>
     </div>
@@ -36,6 +40,9 @@
 </template>
 
 <script>
+import { formatDateMMDD, dateDiff } from "../../../plugins/util";
+import { billTypeName } from "../../../common/constants";
+import { baseUrlConfig } from "../../../service/baseUrl";
 export default {
   name: "positionListItem",
   props: {
@@ -49,6 +56,15 @@ export default {
     return {};
   },
   methods: {
+    getWorkBeginDate(date) {
+      return formatDateMMDD(date);
+    },
+    getIntervalDays(endDate, startDate) {
+      return dateDiff(endDate, startDate);
+    },
+    getBillTypeName(billtype) {
+      return billTypeName[billtype];
+    },
     goJobDetail() {
       this.$emit("goJobDetail", this.listItem);
     },
@@ -58,6 +74,12 @@ export default {
     },
     checkInDetail() {
       this.$emit("checkInDetail"); // 打卡详情
+    }
+  },
+
+  computed: {
+    getImgUrl() {
+      return baseUrlConfig.imgUrl + this.listItem.postionImg;
     }
   }
 };

@@ -14,8 +14,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { actionsName } from "./common/constants";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -28,8 +27,6 @@ export default {
     // this.initMap();
   },
   methods: {
-    ...mapActions([actionsName.requestUserInfo]),
-
     initMap() {
       const self = this;
       var map = new AMap.Map("container", {
@@ -56,22 +53,6 @@ export default {
             // onError(result);
           }
         });
-      });
-    },
-
-    getPosition(param) {
-      var geocoder = new AMap.Geocoder({
-        city: "029", // 城市设为北京，默认：“全国”
-        radius: 1000 // 范围，默认：500
-      });
-
-      geocoder.getAddress(param, (status, result) => {
-        if (status === "complete" && result.regeocode) {
-          // var address = result.regeocode.formattedAddress;
-          console.log(result);
-        } else {
-          console.error("根据经纬度查询地址失败");
-        }
       });
     }
   },

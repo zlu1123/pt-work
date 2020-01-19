@@ -4,15 +4,15 @@
       <van-search v-model="searchValue" placeholder="搜索用人单位">
         <div slot="label" class="location">
           <img :src="locationImgUrl" alt="" />
-          <div>大明宫</div>
+          <div>{{ getLocationName }}</div>
         </div>
       </van-search>
     </form>
     <!-- 滑动页面 -->
     <div>
       <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
-          <img v-lazy="image" class="swipe-img-position" />
+        <van-swipe-item v-for="(item, index) in adImagesList" :key="index">
+          <img v-lazy="item.imgUrl" class="swipe-img-position" />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -60,7 +60,10 @@
 </template>
 <script>
 import positionListItem from "./common/positionListItem";
-import { queryPosition } from "../../service/api";
+import { queryPosition, noticeAdPage } from "../../service/api";
+import { getUserLocation } from "../../plugins/wechatUtil";
+import { gettersName } from "../../common/constants";
+import { mapGetters } from "vuex";
 export default {
   name: "positionIndex",
 
@@ -69,10 +72,7 @@ export default {
   },
   data() {
     return {
-      images: [
-        "https://img.yzcdn.cn/vant/apple-1.jpg",
-        "https://img.yzcdn.cn/vant/apple-2.jpg"
-      ],
+      adImagesList: [],
       searchValue: "",
       allSort: 0,
       linkWay: 0,
@@ -108,17 +108,21 @@ export default {
       showCalendar: false,
       minDate: new Date(),
       currentDate: new Date(),
-      pageSize: "1",
-      pageNum: "1"
+      pageSize: "10",
+      pageNo: "1"
     };
+  },
+  mounted() {
+    this.getAdList();
+    getUserLocation();
   },
   methods: {
     onLoad() {
       queryPosition({
-        searchType: "",
+        searchType: "", // 01-默认查询；02-企业搜索；03-日期；04-结算方式；05-职位类型；06-距离
         searchName: "",
         pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageNo: this.pageNo
       }).then(res => {
         const resData = res.data.data;
         if (resData) {
@@ -126,23 +130,10 @@ export default {
           if (resData.lenght <= this.pageSize) {
             this.finished = true;
           } else {
-            this.pageNum++;
+            this.pageNo++;
           }
         }
       });
-      // console.log(a);
-      // // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.positionData.push(this.positionData[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.loading = false;
-      //   // 数据全部加载完成
-      //   if (this.positionData.length >= 40) {
-      //     this.finished = true;
-      //   }
-      // }, 500);
     },
     // 返回一个特定的 DOM 节点，作为挂载的父节点
     openCalendar() {
@@ -159,6 +150,29 @@ export default {
           postionId: item.postionId
         }
       });
+    },
+    getAdList() {
+      noticeAdPage({
+        // info: "",
+        // seq: "",
+        pageSize: "20",
+        pageNum: "1"
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.adImagesList = res.data.data.list;
+        }
+      });
+    }
+  },
+
+  computed: {
+    ...mapGetters([gettersName.getLocationInfo]),
+    getLocationName() {
+      let info = this[gettersName.getLocationInfo];
+      if (info && Object.keys(info).length > 0) {
+        return info.detail ? info.detail.addressComponents.street : "获取中";
+      }
+      return "获取中";
     }
   }
 };
@@ -189,6 +203,12 @@ export default {
     img {
       width: 16px;
       height: 16px;
+    }
+    div {
+      max-width: 36px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

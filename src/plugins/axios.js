@@ -86,6 +86,7 @@ axios.interceptors.response.use(
   response => {
     // Do something with response data
     store.commit("hideLoading");
+    // return response.data;
     return response;
   },
   error => {
@@ -129,24 +130,9 @@ export function axiosRequest(methods, requestUrl, params, header) {
 
 export function getHeader(header) {
   let headers = {
-    servcUrl: "",
-    transSeqNo: "",
-    reqTime: "",
-    termId: "",
-    pageSize: "",
-    pageIndex: "",
-    openId: getOpenId()
+    openId: localStorage.getItem("openid") || ""
   };
   return Object.assign(headers, header);
-}
-
-export function getOpenId() {
-  // return Math.random(32);
-  // return 0.7546318464188451
-  // return "2019122874054400";
-  // return "11111111";
-  // return "2020010641207808";
-  return "2020010641201234";
 }
 
 export default Plugin;

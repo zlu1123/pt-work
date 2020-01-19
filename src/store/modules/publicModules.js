@@ -1,8 +1,4 @@
-import {
-  mutationsName,
-  gettersName,
-  actionsName
-} from "../../common/constants";
+import { mutationsName, gettersName } from "../../common/constants";
 import { handleRequestPromise, userLogin } from "../../service/api";
 export default {
   state: {
@@ -43,13 +39,14 @@ export default {
     }
   },
   actions: {
-    async [actionsName.requestUserInfo]({ commit, state }) {
+    async requestUserInfo({ commit, state }, params) {
       let userInfo = "";
       try {
-        userInfo = await handleRequestPromise(userLogin);
+        userInfo = await handleRequestPromise(userLogin, params);
       } catch (error) {
       } finally {
         commit(mutationsName.setUserInfo, userInfo.data);
+        sessionStorage.setItem("userInfo", userInfo.data);
       }
       return userInfo;
     }
