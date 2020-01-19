@@ -8,7 +8,6 @@ import {
   getOpenId
 } from "../../service/api";
 import { baseUrlConfig } from "../../service/baseUrl";
-import { mutationsName } from "../../common/constants";
 import { mapActions } from "vuex";
 import { getUrlParams } from "../../plugins/util";
 const url = localStorage.getItem("now_url");
@@ -51,8 +50,6 @@ export default {
         // 如果有code，说明用户点击了授权  将获取到的code传递给后台
         getOpenId({ code: code }).then(res => {
           // 返回状态和UId
-          console.log(res.data);
-          debugger;
           const data = res.data.data;
           if (data.token) {
             localStorage.setItem("token", data.token);
@@ -67,49 +64,20 @@ export default {
 
     /* 配置微信jdk */
     async _initJDKConfig() {
-      let url = location.href.split("#")[0]; // 获取当前url,不能带路由
+      let urlBase = location.href.split("#")[0]; // 获取当前url,不能带路由
       let data = await handleRequestPromise(getWechatSign, {
-        // url: baseUrlConfig.weChatUrl
-        url
+        url: urlBase
       });
       this.appId = data.data.appId;
-      // this.wechatConfig(
-      //   data.data.sign,
-      //   data.data.nonceStr,
-      //   data.data.timestamp,
-      //   data.data.appId
-      // );
+      this.wechatConfig(
+        data.data.sign,
+        data.data.nonceStr,
+        data.data.timestamp,
+        data.data.appId
+      );
       // this.getUserLocation();
     },
 
-    getUserLocation() {
-      const that = this;
-      // eslint-disable-next-line no-undef
-      wx.getLocation({
-        type: "wgs84", // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-        // eslint-disable-next-line space-before-function-paren
-        success: function(res) {
-          // let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-          // let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-          // let speed = res.speed; // 速度，以米/每秒计
-          // let accuracy = res.accuracy; // 位置精度
-          console.log(res);
-          that.$store.commit(mutationsName.setLocationInfo, res);
-        },
-        // eslint-disable-next-line space-before-function-paren
-        fail: function(error) {
-          // wx.showModal({
-          //   title: "警告",
-          //   content: "您拒绝获取您当前位置的授权，暂时无法使用！请开启位置信息",
-          //   showCancel: false,
-          //   success: function(res) {
-          //     _this.openLoat();
-          //   }
-          // });
-          console.error(error);
-        }
-      });
-    },
     getUrlCode() {
       // 截取url中的code方法
       var url = location.search;
@@ -132,7 +100,6 @@ export default {
      * @param {Object} timestamp 时间戳
      */
     wechatConfig(signature, noncestr, timestamp, appId) {
-      const that = this;
       // eslint-disable-next-line no-undef
       wx.config({
         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -180,7 +147,7 @@ export default {
       // eslint-disable-next-line space-before-function-paren
       wx.ready(function() {
         /// / config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-        that.getUserLocation();
+        // that.getUserLocation();
       });
     }
   }

@@ -71,6 +71,13 @@ export const formatDateMMDD = date => {
 };
 
 /**
+ * return YYYY-MM-DD
+ */
+export const formatYYYYMMDD = date => {
+  return date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6, 8);
+};
+
+/**
  * 根据起始日期和结束日期计算天数
  */
 export const dateDiff = (sDate1, sDate2) => {

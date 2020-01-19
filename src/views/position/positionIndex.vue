@@ -4,7 +4,7 @@
       <van-search v-model="searchValue" placeholder="搜索用人单位">
         <div slot="label" class="location">
           <img :src="locationImgUrl" alt="" />
-          <div>大明宫</div>
+          <div>{{ getLocationName }}</div>
         </div>
       </van-search>
     </form>
@@ -61,6 +61,9 @@
 <script>
 import positionListItem from "./common/positionListItem";
 import { queryPosition, noticeAdPage } from "../../service/api";
+import { getUserLocation } from "../../plugins/wechatUtil";
+import { gettersName } from "../../common/constants";
+import { mapGetters } from "vuex";
 export default {
   name: "positionIndex",
 
@@ -111,6 +114,7 @@ export default {
   },
   mounted() {
     this.getAdList();
+    getUserLocation();
   },
   methods: {
     onLoad() {
@@ -130,19 +134,6 @@ export default {
           }
         }
       });
-      // console.log(a);
-      // // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.positionData.push(this.positionData[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.loading = false;
-      //   // 数据全部加载完成
-      //   if (this.positionData.length >= 40) {
-      //     this.finished = true;
-      //   }
-      // }, 500);
     },
     // 返回一个特定的 DOM 节点，作为挂载的父节点
     openCalendar() {
@@ -171,6 +162,17 @@ export default {
           this.adImagesList = res.data.data.list;
         }
       });
+    }
+  },
+
+  computed: {
+    ...mapGetters([gettersName.getLocationInfo]),
+    getLocationName() {
+      let info = this[gettersName.getLocationInfo];
+      if (info && Object.keys(info).length > 0) {
+        return info.detail ? info.detail.addressComponents.street : "获取中";
+      }
+      return "获取中";
     }
   }
 };
@@ -201,6 +203,12 @@ export default {
     img {
       width: 16px;
       height: 16px;
+    }
+    div {
+      max-width: 36px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

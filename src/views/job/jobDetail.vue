@@ -2,7 +2,7 @@
   <div>
     <div class="company-info">
       <div class="name">
-        西安顺丰有限责任公司
+        {{ jobDetailInfo.releasEmerchName }}
       </div>
       <div class="scale">
         民营 1000-9999人
@@ -11,7 +11,7 @@
         货运/物流仓储，咨询服务，民航/铁路/公路/水路客运
       </div>
       <div class="logo">
-        <img v-lazy="'https://img.yzcdn.cn/vant/apple-1.jpg'" alt="" />
+        <img v-lazy="getImgUrl(jobDetailInfo.releasEmerchImg)" alt="" />
       </div>
     </div>
     <div class="job-info">
@@ -21,7 +21,7 @@
             <img :src="locationImgUrl" alt="" />
           </div>
           <div class="location-name">
-            公司地址：陕西省西安市雁塔区沣惠南路27号
+            职位地址：{{ jobDetailInfo.postionAddr }}
           </div>
         </div>
         <div class="right">
@@ -29,12 +29,13 @@
         </div>
       </div>
       <div class="job-img">
-        <van-image
+        <!-- <van-image
           height="150px"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-          lazy-load
+          :src="postionImgUrl"
+          :lazy-load="true"
           contain
-        />
+        /> -->
+        <img v-lazy="getImgUrl(jobDetailInfo.postionImg)" alt="" />
       </div>
       <div class="required">
         <detail-title title-name="福利及要求"></detail-title>
@@ -55,8 +56,23 @@
       </div>
       <div class="work-time">
         <detail-title title-name="工作时间"></detail-title>
-        <div class="interval">2019-11-21 至 2019-11-25<span>共5天</span></div>
-        <div class="interval">上班时间9:00-19:00</div>
+        <div class="interval">
+          {{
+            getWorkDate(jobDetailInfo.workBeginDate, jobDetailInfo.workEndDate)
+          }}<span
+            >共{{
+              getWorkNum(
+                jobDetailInfo.workBeginDate,
+                jobDetailInfo.workEndDate
+              )
+            }}天</span
+          >
+        </div>
+        <div class="interval">
+          上班时间{{ jobDetailInfo.clockBeginDate }}-{{
+            jobDetailInfo.clockEndDate
+          }}
+        </div>
       </div>
       <div class="work-info">
         <detail-title title-name="职位信息"></detail-title>
@@ -70,7 +86,10 @@
       </div>
       <div class="work-des">
         <detail-title title-name="职位描述"></detail-title>
-        <div v-for="(item, index) of workDesList" :key="index">{{ item }}</div>
+        <div v-for="(item, index) of workDesList" :key="index">
+          {{ item }}
+        </div>
+        <!-- <div>{{ jobDetailInfo.positiondes }}</div> -->
       </div>
     </div>
     <div class="btn-sign-up" @click="applyWork" v-if="!isNotShowBtn">
@@ -85,6 +104,9 @@ import detailTitle from "./common/detailTitle";
 import detailWelfareRequire from "./common/detailWelfareRequire";
 import detailWorkInfo from "./common/detailWorkInfo";
 import { enRoll, positionInfo } from "../../service/api";
+import { welfareName, requireName, billTypeName } from "../../common/constants";
+import { formatYYYYMMDD, dateDiff } from "../../plugins/util";
+import { baseUrlConfig } from "../../service/baseUrl";
 export default {
   name: "jobDetail",
   components: {
@@ -97,26 +119,9 @@ export default {
     return {
       locationImgUrl: "./img/job/dingwei@2x.png",
       defaultImgUrl: "./img/myself/fanhui@2x.png",
-      welfareList: ["提供工作餐", "提供住宿", "提供工作服"],
-      requireList: ["实名认证", "年龄限制：16-25岁"],
-      workInfoList: [
-        {
-          label: "职位名称",
-          value: "顺丰快递分拣员"
-        },
-        {
-          label: "职位单价",
-          value: "13元/小时"
-        },
-        {
-          label: "需      求",
-          value: "共10人，还需3人，男1人，女2人 "
-        },
-        {
-          label: "结算方式",
-          value: "周结"
-        }
-      ],
+      welfareList: [],
+      requireList: [],
+      workInfoList: [],
       workDesList: [
         "分拣拣货工作内容: ",
         "1、核对货物品种、数量、规格、等级、型号；",
@@ -129,6 +134,8 @@ export default {
       ],
       postionId: "",
       releasEmerch: "",
+      jobDetailInfo: "",
+      postionImgUrl: "",
       isNotShowBtn: false
     };
   },
@@ -136,10 +143,67 @@ export default {
     this.postionId = this.$route.query.postionId;
     this.isNotShowBtn = this.$route.query.isNotShowBtn;
     await positionInfo({ postionId: this.postionId }).then(res => {
-      this.releasEmerch = res.data.data.releasEmerch;
+      if (res.data.retCode === "00000") {
+        this.jobDetailInfo = res.data.data;
+        this.releasEmerch = this.jobDetailInfo.releasEmerch;
+        this.welfareList = this.getList(this.jobDetailInfo.postionWelfare, "1");
+        this.requireList = this.getList(this.jobDetailInfo.postionRequire, "2");
+        this.workInfoList = this.getWorkInfoList(this.jobDetailInfo);
+        this.workDesList = this.getWorkDes(this.jobDetailInfo);
+        this.postionImgUrl = this.jobDetailInfo.releasEmerchName;
+      }
     });
   },
   methods: {
+    getImgUrl(img) {
+      return baseUrlConfig.imgUrl + img;
+    },
+    getWorkDes(info) {
+      if (info && Object.keys(info).length > 0) {
+        let list = info.positiondes.split("\n");
+        list.unshift(info.postionName + "工作内容：");
+        return list;
+      }
+    },
+    getWorkInfoList(info) {
+      let list = [
+        {
+          label: "职位名称"
+        },
+        {
+          label: "职位单价"
+        },
+        {
+          label: "需      求"
+        },
+        {
+          label: "结算方式"
+        }
+      ];
+      list[0].value = info.postionName;
+      list[1].value = info.price + "元/小时";
+      list[2].value = `共${info.workCount}，还需要?人，男1人，女2人`;
+      list[3].value = billTypeName[info.billtype];
+      return list;
+    },
+    getWorkNum(start, end) {
+      if (start && end) {
+        return dateDiff(start, end);
+      }
+    },
+    getWorkDate(start, end) {
+      if (start && end) {
+        return formatYYYYMMDD(start) + "至" + formatYYYYMMDD(end);
+      }
+    },
+    getList(info, flag) {
+      let listInfo = info.split(",");
+      let list = [];
+      for (let item of listInfo) {
+        list.push(flag === "1" ? welfareName[item] : requireName[item]);
+      }
+      return list;
+    },
     goMapPage() {
       this.$router.push({
         path: "/routeNavigation"
@@ -226,6 +290,11 @@ export default {
         height: 16px;
       }
       .location-name {
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
         font-size: 12px;
         font-family: @pfSC;
         line-height: 17px;
@@ -239,6 +308,10 @@ export default {
   }
   .job-img {
     height: 150px;
+    margin-top: 13px;
+    img {
+      height: 150px;
+    }
   }
   .required {
     margin-top: 12px;
