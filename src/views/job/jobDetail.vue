@@ -8,7 +8,8 @@
         民营 1000-9999人
       </div>
       <div class="des">
-        货运/物流仓储，咨询服务，民航/铁路/公路/水路客运
+        <!-- 货运/物流仓储，咨询服务，民航/铁路/公路/水路客运 -->
+        {{ jobDetailInfo.postionInfo }}
       </div>
       <div class="logo">
         <img v-lazy="getImgUrl(jobDetailInfo.releasEmerchImg)" alt="" />
@@ -205,8 +206,18 @@ export default {
       return list;
     },
     goMapPage() {
+      if (
+        !this.jobDetailInfo.postionLngLat ||
+        !this.jobDetailInfo.postionAddr
+      ) {
+        return;
+      }
       this.$router.push({
-        path: "/routeNavigation"
+        path: "/routeNavigation",
+        query: {
+          postionLngLat: this.jobDetailInfo.postionLngLat,
+          postionAddr: this.jobDetailInfo.postionAddr
+        }
       });
     },
 

@@ -13,7 +13,10 @@
           :key="index"
           v-show="item.exemStat !== '1'"
         >
-          <common-list-des @goJobMap="goJobMapDetail"></common-list-des>
+          <common-list-des
+            v-if="item"
+            @goJobMap="goJobMapDetail"
+          ></common-list-des>
           <position-list-item
             :listItem="item"
             @goJobDetail="goJobDetail"
@@ -59,20 +62,10 @@ export default {
         firstName: "已录取",
         lastName: "已结算"
       },
-      acceptedList: [
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg",
-          status: "accepted"
-        }
-      ],
+      acceptedList: [],
       acceptedLoading: false,
       acceptedFinished: false,
-      settledList: [
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-2.jpg",
-          settled: "settled"
-        }
-      ],
+      settledList: [],
       settledLoading: false,
       settledFinished: false,
       postionApplyId: ""
@@ -92,12 +85,17 @@ export default {
       //     this.acceptedFinished = true;
       //   }
       // }, 500);
-      applyList().then(res => {
-        // { applyExemStat: 2 }
-        this.acceptedList = this.fixApplyList(res.data.data);
-        // 循环增加职位名称
-        this.acceptedFinished = true;
-      });
+      applyList()
+        .then(res => {
+          // { applyExemStat: 2 }
+          this.acceptedList = this.fixApplyList(res.data.data);
+          // 循环增加职位名称
+          this.acceptedFinished = true;
+        })
+        .catch(err => {
+          console.log(err);
+          this.acceptedFinished = true;
+        });
     },
 
     fixApplyList(list) {

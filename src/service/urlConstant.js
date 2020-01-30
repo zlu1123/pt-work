@@ -1,9 +1,14 @@
 import { baseUrlConfig } from "./baseUrl";
 export const enRoll = baseUrlConfig.proxyURL + "/worker/position/enRoll";
+
 export const userLogin = baseUrlConfig.proxyURL + "/user/login";
+
 export const applyList = baseUrlConfig.proxyURL + "/postionApply/applyList"; // 待审核
+
 export const applyExam = baseUrlConfig.proxyURL + "/postionApply/applyExam";
+
 export const getPayRoll = baseUrlConfig.proxyURL + "/worker/mine/GetPayRoll"; // 发工资
+
 export const insertEnterprise =
   baseUrlConfig.proxyURL + "/enterpriseRelease/insert"; // 企业发布新增
 export const insertEnterpriseDirector =
@@ -25,3 +30,10 @@ export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 
 export const noticeAdPage = baseUrlConfig.proxyURL + "/noticeAd/page"; // 广告查询-分页
 
 export const getOpenId = baseUrlConfig.proxyURL + "/wxjs/getOpenId"; // 获取openID
+
+export const getUserInfo = baseUrlConfig.proxyURL + "/worker/mine/userInfo"; // 个人信息
+
+export const updateUserInfoMath =
+  baseUrlConfig.proxyURL + "/worker/mine/userInfoMatn"; // 个人信息维护
+
+export const uploadImageUrl = baseUrlConfig.proxyURL + "/uploadImage/upload"; // 图片上传

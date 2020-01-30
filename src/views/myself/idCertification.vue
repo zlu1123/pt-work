@@ -10,7 +10,6 @@
             clearable
             label="姓      名："
             placeholder="请输入姓名"
-            :label-class="`label-class`"
           />
           <van-field
             v-model="idCard"
@@ -18,7 +17,6 @@
             clearable
             maxlength="18"
             placeholder="请输入身份证号"
-            :label-class="`label-class`"
           />
         </van-cell-group>
       </div>
@@ -26,11 +24,19 @@
     <div class="info-img-upload">
       <common-content-header title-value="上传身份证"></common-content-header>
       <div class="upload">
-        <uploadItem upload-height="140px" img-tip-name="请上传身份证正面照片"></uploadItem>
-        <uploadItem upload-height="140px" img-tip-name="请上传身份证背面照片"></uploadItem>
+        <uploadItem
+          upload-height="140px"
+          img-tip-name="请上传身份证正面照片"
+          @getUploadImgUrl="uploadFrontImg"
+        ></uploadItem>
+        <uploadItem
+          upload-height="140px"
+          img-tip-name="请上传身份证背面照片"
+          @getUploadImgUrl="uploadBackImg"
+        ></uploadItem>
       </div>
     </div>
-    <div class="id-submit">
+    <div class="id-submit" @click="authenticate">
       认证
     </div>
   </div>
@@ -40,23 +46,38 @@
 import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
 import uploadItem from "./common/uploadItem";
-import { Field, CellGroup } from "vant"
+import { updateUserInfoMath } from "../../service/api";
 export default {
   name: "idCertification",
   components: {
     commonHeader,
     commonContentHeader,
-    [Field.name]: Field,
-    [CellGroup.name]: CellGroup,
     uploadItem
   },
   data() {
     return {
       username: "",
-      idCard: ""
+      idCard: "",
+      idCardFrontImg: "",
+      idCardBackImg: ""
+    };
+  },
+  methods: {
+    uploadFrontImg(url) {
+      this.idCardFrontImg = url;
+    },
+
+    uploadBackImg(url) {
+      this.idCardBackImg = url;
+    },
+
+    authenticate() {
+      updateUserInfoMath().then(res => {
+        console.log(res);
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -64,7 +85,7 @@ export default {
   margin: 9px 15px 0 15px;
   border-radius: 5px;
   .info {
-    border-radius:0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
     /deep/ .label-class {
       white-space: pre-wrap;
       color: @chooseColor;

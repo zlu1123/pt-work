@@ -44,6 +44,7 @@
       @load="onLoad"
     >
       <position-list-item
+        class="van-clearfix"
         v-for="(item, index) of positionData"
         :key="index"
         :listItem="item"
@@ -108,8 +109,8 @@ export default {
       showCalendar: false,
       minDate: new Date(),
       currentDate: new Date(),
-      pageSize: "10",
-      pageNo: "1"
+      pageSize: "20",
+      pageNum: "1"
     };
   },
   mounted() {
@@ -122,17 +123,18 @@ export default {
         searchType: "", // 01-默认查询；02-企业搜索；03-日期；04-结算方式；05-职位类型；06-距离
         searchName: "",
         pageSize: this.pageSize,
-        pageNo: this.pageNo
+        pageNum: this.pageNum
       }).then(res => {
         const resData = res.data.data;
-        if (resData) {
-          this.positionData = this.positionData.concat(resData);
-          if (resData.lenght <= this.pageSize) {
+        if (resData.list) {
+          this.positionData = this.positionData.concat(resData.list);
+          if (!resData.hasNextPage) {
             this.finished = true;
           } else {
-            this.pageNo++;
+            this.pageNum++;
           }
         }
+        this.loading = false;
       });
     },
     // 返回一个特定的 DOM 节点，作为挂载的父节点

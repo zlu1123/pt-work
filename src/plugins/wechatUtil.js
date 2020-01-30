@@ -10,7 +10,7 @@ export const getUserLocation = () => {
       // let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
       // let speed = res.speed; // 速度，以米/每秒计
       // let accuracy = res.accuracy; // 位置精度
-      store.commit(mutationsName.setLocationInfo, res);
+      // store.commit(mutationsName.setLocationInfo, res);
       getPosition([res.longitude, res.latitude]);
     },
     // eslint-disable-next-line space-before-function-paren
@@ -39,12 +39,15 @@ export const getPosition = param => {
   //   }
   // });
   // 逆地址解析
+  // eslint-disable-next-line no-undef
   var latLng = new qq.maps.LatLng(param[1], param[0]);
   // 地址和经纬度之间进行转换服务
+  // eslint-disable-next-line no-undef
   let geocoder = new qq.maps.Geocoder();
   // 对指定经纬度进行解析
   geocoder.getAddress(latLng);
   // 设置服务请求成功的回调函数
+  // eslint-disable-next-line space-before-function-paren
   geocoder.setComplete(function(result) {
     // _this.locationList = result.detail.nearPois
     store.commit(mutationsName.setLocationInfo, result);

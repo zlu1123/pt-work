@@ -1,5 +1,10 @@
 import { mutationsName, gettersName } from "../../common/constants";
-import { handleRequestPromise, userLogin } from "../../service/api";
+import {
+  handleRequestPromise,
+  userLogin,
+  getUserInfo,
+  uploadImageUrl
+} from "../../service/api";
 export default {
   state: {
     keepAlivePath: ["homeIndex"],
@@ -8,7 +13,8 @@ export default {
       lng: 108.982758,
       lat: 34.327999
     }, // 默认显示万科幸福里
-    loading: false
+    loading: false,
+    personalInfo: {}
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -36,6 +42,9 @@ export default {
     },
     hideLoading: state => {
       state.loading = false;
+    },
+    setPersonalInfo: (state, data) => {
+      state.personalInfo = data;
     }
   },
   actions: {
@@ -49,20 +58,62 @@ export default {
         sessionStorage.setItem("userInfo", userInfo.data);
       }
       return userInfo;
+    },
+
+    /**
+     * 获取个人信息
+     */
+    async requestPersonalInfo({ commit, state }, params) {
+      let info = "";
+      try {
+        info = await handleRequestPromise(getUserInfo, params);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        commit("setPersonalInfo", info.data);
+      }
+      return info;
+    },
+
+    async uploadImagePublic({ commit, state }, file) {
+      // new 一个FormData格式的参数
+      let formListData = new FormData();
+      formListData.append("files", file.file);
+      formListData.append("type", "postion");
+      let config = {
+        headers: {
+          // 添加请求头
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      let fileInfo = await handleRequestPromise(
+        uploadImageUrl,
+        formListData,
+        false,
+        config
+      );
+      return fileInfo;
     }
   },
   getters: {
     [gettersName.getKeepAlivePath](state, getters) {
       return state.keepAlivePath;
     },
+
     [gettersName.getUserInfo](state, getters) {
       return state.userInfo;
     },
+
     [gettersName.getLocationInfo](state, getters) {
       return state.locationInfo;
     },
+
     getLoading(state, getters) {
       return state.loading;
+    },
+
+    getPersonalInfo(state, getters) {
+      return state.personalInfo;
     }
   }
 };
