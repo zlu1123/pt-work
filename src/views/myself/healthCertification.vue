@@ -7,7 +7,7 @@
         <uploadItem
           upload-height="140px"
           img-tip-name="请上传健康证照片"
-          @getUploadImgUrl="uploadFrontImg"
+          @getUploadImgUrl="uploadHealthImg"
         ></uploadItem>
       </div>
     </div>
@@ -21,7 +21,7 @@
 import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
 import uploadItem from "./common/uploadItem";
-import { updateUserInfoMath } from "../../service/api";
+import { upLoadHealthCert } from "../../service/api";
 export default {
   name: "idCertification",
   components: {
@@ -31,20 +31,26 @@ export default {
   },
   data() {
     return {
-      username: "",
-      idCard: "",
-      idCardFrontImg: "",
-      idCardBackImg: ""
+      healthImage: ""
     };
   },
   methods: {
-    uploadFrontImg(url) {
-      this.idCardFrontImg = url;
+    uploadHealthImg(url) {
+      this.healthImage = url;
     },
 
     authenticate() {
-      updateUserInfoMath().then(res => {
-        console.log(res);
+      if (!this.healthImage) {
+        this.$toast("请上传健康证照片");
+        return;
+      }
+      upLoadHealthCert({
+        healthImage: this.healthImage
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.$toast("健康证上传成功");
+          this.$router.go(-2);
+        }
       });
     }
   }

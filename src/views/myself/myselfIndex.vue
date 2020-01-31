@@ -38,16 +38,11 @@
 </template>
 
 <script>
-import { Row, Col, Image, Cell } from "vant";
 import listItem from "./common/listItem.vue";
 import { mapActions } from "vuex";
 export default {
   name: "",
   components: {
-    [Row.name]: Row,
-    [Col.name]: Col,
-    [Image.name]: Image,
-    [Cell.name]: Cell,
     listItem
   },
   data() {

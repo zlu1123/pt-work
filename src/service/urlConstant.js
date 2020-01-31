@@ -48,3 +48,7 @@ export const queryClockIn =
 
 // 工资单
 export const payRollInfo = baseUrlConfig.proxyURL + "/worker/mine/payRollInfo";
+
+// 工资单
+export const upLoadHealthCert =
+  baseUrlConfig.proxyURL + "/worker/mine/healthCert";

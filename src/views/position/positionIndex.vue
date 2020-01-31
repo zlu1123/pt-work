@@ -1,7 +1,11 @@
 <template>
   <div class="position__content">
     <form action="/">
-      <van-search v-model="searchValue" placeholder="搜索用人单位">
+      <van-search
+        v-model="merchName"
+        @search="queryList"
+        placeholder="搜索用人单位"
+      >
         <div slot="label" class="location">
           <img :src="locationImgUrl" alt="" />
           <div>{{ getLocationName }}</div>
@@ -18,7 +22,11 @@
     </div>
     <div class="filter-list">
       <van-dropdown-menu class="filter-content" active-color="#21A675">
-        <van-dropdown-item v-model="allSort" :options="sortList" />
+        <van-dropdown-item
+          v-model="composite"
+          :options="sortList"
+          @change="changeComposite"
+        />
         <van-dropdown-item
           v-model="chooseDate"
           title="日期选择"
@@ -26,14 +34,16 @@
           class="filter-container"
         />
         <van-dropdown-item
-          v-model="linkWay"
+          v-model="billType"
           title="结算方式"
           :options="linkList"
+          @change="changeBillType"
         />
         <van-dropdown-item
-          v-model="jobWAy"
+          v-model="positionType"
           title="职业类型"
           :options="jobList"
+          @change="changePositionType"
         />
       </van-dropdown-menu>
     </div>
@@ -53,9 +63,9 @@
     </van-list>
     <van-calendar
       v-model="showCalendar"
-      :show-confirm="false"
       color="#21a675"
-      @select="chooseSelectDate"
+      show-confirm
+      @confirm="chooseSelectDate"
     />
   </div>
 </template>
@@ -65,6 +75,7 @@ import { queryPosition, noticeAdPage } from "../../service/api";
 import { getUserLocation } from "../../plugins/wechatUtil";
 import { gettersName } from "../../common/constants";
 import { mapGetters } from "vuex";
+import { formatDate } from "../../plugins/util";
 export default {
   name: "positionIndex",
 
@@ -74,31 +85,27 @@ export default {
   data() {
     return {
       adImagesList: [],
-      searchValue: "",
-      allSort: 0,
-      linkWay: 0,
-      jobWAy: "A",
       sortList: [
-        { text: "综合排序", value: 0 },
-        { text: "离我最近", value: 1 },
-        { text: "价格最高", value: 2 },
-        // { text: "时间最长", value: 3 },
-        { text: "日期最长", value: 4 }
+        { text: "综合排序", value: "create_time" },
+        { text: "离我最近", value: "" },
+        { text: "价格最高", value: "price" },
+        { text: "时间最长", value: "work_time" }
+        // { text: "日期最长", value: 4 }
       ],
       linkList: [
-        { text: "全部", value: 1 },
-        { text: "完工结", value: 2 },
-        { text: "次日结", value: 3 },
-        { text: "周结", value: 4 },
-        { text: "半月结", value: 5 },
-        { text: "月结", value: 6 }
+        { text: "全部", value: "" },
+        { text: "完工结", value: "01" },
+        { text: "次日结", value: "02" },
+        { text: "周结", value: "03" },
+        { text: "半月结", value: "04" },
+        { text: "月结", value: "05" }
       ],
       jobList: [
-        { text: "全部", value: 1 },
-        { text: "餐饮", value: 2 },
-        { text: "快递", value: 3 },
-        { text: "客房", value: 4 },
-        { text: "其他", value: 5 }
+        { text: "全部", value: "" },
+        { text: "餐饮", value: "01" },
+        { text: "快递", value: "02" },
+        { text: "客房", value: "03" },
+        { text: "其他", value: "04" }
       ],
       titleClass: "filter-title",
       positionData: [],
@@ -109,14 +116,14 @@ export default {
       showCalendar: false,
       minDate: new Date(),
       currentDate: new Date(),
-      composite: "", // 综合排序    1.PRICE 价格最高 2.WORK_TIME 时间最长 3.CREATE_TIME 综合排序
+      composite: "create_time", // 综合排序    1.PRICE 价格最高 2.WORK_TIME 时间最长 3.CREATE_TIME 综合排序
       timeChose: "", // 时间筛选
       billType: "", // 结算方式
       positionType: "", // 职位筛选
       merchName: "", // 公司名称
       location: "", // 距离
-      pageSize: "20",
-      pageNum: "1"
+      pageSize: 20,
+      pageNum: 1
     };
   },
   mounted() {
@@ -124,6 +131,24 @@ export default {
     getUserLocation();
   },
   methods: {
+    queryList() {
+      this.pageNum = 1;
+      this.positionData = [];
+      this.onLoad();
+    },
+
+    changeComposite(val) {
+      this.composite = val;
+      this.queryList();
+    },
+    changeBillType(val) {
+      this.billType = val;
+      this.queryList();
+    },
+    changePositionType(val) {
+      this.positionType = val;
+      this.queryList();
+    },
     onLoad() {
       queryPosition({
         // searchType: "", // 01-默认查询；02-企业搜索；03-日期；04-结算方式；05-职位类型；06-距离
@@ -134,8 +159,8 @@ export default {
         positionType: this.positionType, // 职位筛选
         merchName: this.merchName, // 公司名称
         location: this.location, // 距离
-        pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageSize: this.pageSize.toString(),
+        pageNum: this.pageNum.toString()
       }).then(res => {
         const resData = res.data.data;
         if (resData.list) {
@@ -155,7 +180,8 @@ export default {
     },
     chooseSelectDate(value) {
       this.showCalendar = false;
-      console.log(value);
+      this.timeChose = formatDate(value);
+      this.queryList();
     },
     goJobDetail(item) {
       this.$router.push({

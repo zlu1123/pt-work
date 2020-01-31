@@ -219,3 +219,7 @@ export const queryClockIn = params => {
 export const payRollInfo = params => {
   return axiosRequest(POST, urlConstant.payRollInfo, params);
 };
+
+export const upLoadHealthCert = params => {
+  return axiosRequest(POST, urlConstant.upLoadHealthCert, params);
+};

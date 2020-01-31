@@ -16,11 +16,11 @@
     <div class="myself-info-list">
       <div class="info-list">
         <div class="list-title"><span>个人信息</span></div>
-        <list-item
+        <person-list-item
           v-for="(item, index) of infoList"
           :key="index"
           :item-data="item"
-        ></list-item>
+        ></person-list-item>
       </div>
       <div class="person-img-content">
         <div class="img-title">
@@ -45,19 +45,12 @@
 </template>
 
 <script>
-import { Row, Col, Image, Cell, Uploader, Icon } from "vant";
-import listItem from "./common/listItem.vue";
+import personListItem from "./common/personListItem.vue";
 import uploadItem from "./common/uploadItem";
 export default {
   name: "personalInfo",
   components: {
-    [Row.name]: Row,
-    [Col.name]: Col,
-    [Image.name]: Image,
-    [Cell.name]: Cell,
-    [Uploader.name]: Uploader,
-    [Icon.name]: Icon,
-    listItem,
+    personListItem,
     uploadItem
   },
   data() {
@@ -76,12 +69,12 @@ export default {
           value: "30"
         },
         {
-          name: "身高",
-          value: "180"
+          name: "身高"
+          // value: "180"
         },
         {
-          name: "鞋码",
-          value: "42"
+          name: "鞋码"
+          // value: "42"
         }
       ]
     };
