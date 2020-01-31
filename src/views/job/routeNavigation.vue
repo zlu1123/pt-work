@@ -3,11 +3,11 @@
     <div class="map-info">
       <div class="start">
         <div>起点</div>
-        <div>谭家街道万科幸福里</div>
+        <div>{{ getLocationLngLat.address }}</div>
       </div>
       <div class="start">
         <div>终点</div>
-        <div>延平门</div>
+        <div>{{ endAddr }}</div>
       </div>
     </div>
     <van-tabs
@@ -36,7 +36,11 @@ export default {
   data() {
     return {
       active: "0",
-      wrapHeight: 0
+      wrapHeight: 0,
+      startLngLat: [],
+      endLngLat: [],
+      endAddr: "",
+      startAddr: ""
     };
   },
   mounted() {
@@ -44,6 +48,8 @@ export default {
       document.documentElement.clientHeight -
       document.getElementsByClassName("get-height")[0].getBoundingClientRect()
         .bottom;
+    this.endLngLat = this.$route.query.postionLngLat.split(",");
+    this.endAddr = this.$route.query.postionAddr;
     this.$nextTick(() => {
       this.driveCar();
     });
@@ -82,10 +88,10 @@ export default {
       // 根据起终点经纬度规划驾车导航路线
       driving.search(
         new AMap.LngLat(
-          this[gettersName.getLocationInfo].lng,
-          this[gettersName.getLocationInfo].lat
+          this.getLocationLngLat.location.lng,
+          this.getLocationLngLat.location.lat
         ),
-        new AMap.LngLat(108.887444, 34.2372), // 地铁延平门站
+        new AMap.LngLat(this.endLngLat[0], this.endLngLat[1]), // 地铁延平门站
         (status, result) => {
           // result即是对应的驾车导航信息，相关数据结构文档请参考 https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
           if (status === "complete") {
@@ -117,10 +123,10 @@ export default {
       // 根据起、终点坐标查询公交换乘路线
       transfer.search(
         new AMap.LngLat(
-          this[gettersName.getLocationInfo].lng,
-          this[gettersName.getLocationInfo].lat
+          this.getLocationLngLat.location.lng,
+          this.getLocationLngLat.location.lat
         ),
-        new AMap.LngLat(108.887444, 34.2372), // 地铁延平门站
+        new AMap.LngLat(this.endLngLat[0], this.endLngLat[1]), // 地铁延平门站
         (status, result) => {
           // result即是对应的公交路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_TransferResult
           if (status === "complete") {
@@ -210,10 +216,10 @@ export default {
       // 根据起终点坐标规划骑行路线
       riding.search(
         new AMap.LngLat(
-          this[gettersName.getLocationInfo].lng,
-          this[gettersName.getLocationInfo].lat
+          this.getLocationLngLat.location.lng,
+          this.getLocationLngLat.location.lat
         ),
-        new AMap.LngLat(108.887444, 34.2372), // 地铁延平门站
+        new AMap.LngLat(this.endLngLat[0], this.endLngLat[1]), // 地铁延平门站
         (status, result) => {
           // result即是对应的骑行路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_RidingResult
           if (status === "complete") {
@@ -288,10 +294,10 @@ export default {
       // 根据起终点坐标规划步行路线
       walking.search(
         new AMap.LngLat(
-          this[gettersName.getLocationInfo].lng,
-          this[gettersName.getLocationInfo].lat
+          this.getLocationLngLat.location.lng,
+          this.getLocationLngLat.location.lat
         ),
-        new AMap.LngLat(108.887444, 34.2372), // 地铁延平门站
+        new AMap.LngLat(this.endLngLat[0], this.endLngLat[1]), // 地铁延平门站
         (status, result) => {
           // result即是对应的步行路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_WalkingResult
           if (status === "complete") {
@@ -355,7 +361,16 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo])
+    ...mapGetters([gettersName.getLocationInfo]),
+
+    getLocationLngLat() {
+      console.log(
+        `哈哈哈========${JSON.stringify(this[gettersName.getLocationInfo])}`
+      );
+      return this[gettersName.getLocationInfo]
+        ? this[gettersName.getLocationInfo].detail
+        : { address: "陕西西安", location: { lat: 34.95517, lng: 109.58646 } };
+    }
   }
 };
 </script>
@@ -369,9 +384,12 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
     div {
+      &:first-child {
+        flex: 1;
+      }
       &:last-child {
+        flex: 10;
         margin-left: 10px;
         font-size: @fs15;
         color: @titleColor;

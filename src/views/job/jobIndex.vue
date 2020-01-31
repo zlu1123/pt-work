@@ -13,7 +13,11 @@
           :key="index"
           v-show="item.exemStat !== '1'"
         >
-          <common-list-des @goJobMap="goJobMapDetail"></common-list-des>
+          <common-list-des
+            v-if="item"
+            :title-name="item.releasEmerchName"
+            @goJobMap="goJobMapDetail(item)"
+          ></common-list-des>
           <position-list-item
             :listItem="item"
             @goJobDetail="goJobDetail"
@@ -45,6 +49,8 @@ import commonListHeader from "../components/commonListHeader";
 import positionListItem from "../position/common/positionListItem";
 import commonListDes from "../components/commonListDes";
 import { applyList, disRoll } from "../../service/api";
+import { mapGetters } from "vuex";
+import { gettersName } from "../../common/constants";
 export default {
   name: "jobIndex",
   components: {
@@ -59,45 +65,45 @@ export default {
         firstName: "已录取",
         lastName: "已结算"
       },
-      acceptedList: [
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg",
-          status: "accepted"
-        }
-      ],
+      acceptedList: [],
       acceptedLoading: false,
       acceptedFinished: false,
-      settledList: [
-        {
-          imgUrl: "https://img.yzcdn.cn/vant/apple-2.jpg",
-          settled: "settled"
-        }
-      ],
+      settledList: [],
       settledLoading: false,
       settledFinished: false,
-      postionApplyId: ""
+      postionApplyId: "",
+      pageSize: "20",
+      pageNum: "1"
     };
   },
   methods: {
     acceptedOnLoad() {
       // // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.acceptedList.push(this.acceptedList[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.acceptedLoading = false;
-      //   // 数据全部加载完成
-      //   if (this.acceptedList.length >= 40) {
-      //     this.acceptedFinished = true;
-      //   }
-      // }, 500);
-      applyList().then(res => {
-        // { applyExemStat: 2 }
-        this.acceptedList = this.fixApplyList(res.data.data);
-        // 循环增加职位名称
-        this.acceptedFinished = true;
-      });
+      applyList({
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      })
+        .then(res => {
+          if (res && res.data.retCode === "00000") {
+            const resData = res.data.data;
+            if (resData.list) {
+              this.acceptedList = this.acceptedList.concat(
+                this.fixApplyList(resData.list)
+              );
+              if (!resData.hasNextPage) {
+                // 循环增加职位名称
+                this.acceptedFinished = true;
+              } else {
+                this.pageNum++;
+              }
+            }
+            this.loading = false;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.acceptedFinished = true;
+        });
     },
 
     fixApplyList(list) {
@@ -115,18 +121,17 @@ export default {
 
     settledOnLoad() {
       // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.settledList.push(this.settledList[i]);
-        }
-        // 加载状态结束
-        this.settledLoading = false;
-
-        // 数据全部加载完成
-        if (this.settledList.length >= 10) {
-          this.settledFinished = true;
-        }
-      }, 500);
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.settledList.push(this.settledList[i]);
+      //   }
+      //   // 加载状态结束
+      //   this.settledLoading = false;
+      //   // 数据全部加载完成
+      //   if (this.settledList.length >= 10) {
+      this.settledFinished = true;
+      //   }
+      // }, 500);
     },
     goCheckIn() {
       this.$router.push({
@@ -166,12 +171,23 @@ export default {
         done();
       }
     },
-    goJobMapDetail() {
+    goJobMapDetail(item) {
+      if (Object.keys(this[gettersName.getLocationInfo]).length === 0) {
+        return;
+      }
       this.$router.push({
-        path: "/routeNavigation"
+        path: "/routeNavigation",
+        query: {
+          postionLngLat: item.postionLngLat,
+          postionAddr: item.postionAddr
+        }
       });
     },
     disRollPostion(item) {}
+  },
+
+  computed: {
+    ...mapGetters([gettersName.getLocationInfo])
   }
 };
 </script>

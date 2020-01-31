@@ -96,7 +96,7 @@ export const handleRequestPromise = (
         let retCode = response.data.retCode;
         if (retCode !== undefined && retCode !== "00000") {
           if (showLoading) {
-            response.data.msgcde = "cuowu";
+            response.data.msgcde = "访问错误";
             reject(response.data);
           }
         } else {
@@ -194,4 +194,32 @@ export const noticeAdPage = params => {
 
 export const getOpenId = params => {
   return axiosRequest(POST, urlConstant.getOpenId, params);
+};
+
+export const getUserInfo = params => {
+  return axiosRequest(POST, urlConstant.getUserInfo, params);
+};
+
+export const updateUserInfoMath = params => {
+  return axiosRequest(POST, urlConstant.updateUserInfoMath, params);
+};
+
+export const uploadImageUrl = params => {
+  return axiosRequest(POST, urlConstant.uploadImageUrl, params);
+};
+
+export const queryBillInfo = params => {
+  return axiosRequest(POST, urlConstant.queryBillInfo, params);
+};
+
+export const queryClockIn = params => {
+  return axiosRequest(POST, urlConstant.queryClockIn, params);
+};
+
+export const payRollInfo = params => {
+  return axiosRequest(POST, urlConstant.payRollInfo, params);
+};
+
+export const upLoadHealthCert = params => {
+  return axiosRequest(POST, urlConstant.upLoadHealthCert, params);
 };

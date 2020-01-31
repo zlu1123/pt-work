@@ -6,16 +6,27 @@
         v-model="acceptedLoading"
         :finished="acceptedFinished"
         finished-text="没有更多了"
-        @load="acceptedOnLoad">
-        <pay-roll-list-item v-for="(item, index) of acceptedList" :key="index" :listItem="item"></pay-roll-list-item>
+        @load="acceptedOnLoad"
+      >
+        <pay-roll-list-item
+          v-for="(item, index) of acceptedList"
+          :key="index"
+          :listItem="item"
+        ></pay-roll-list-item>
       </van-list>
       <van-list
         slot="lastList"
         v-model="settledLoading"
         :finished="settledFinished"
         finished-text="没有更多了"
-        @load="settledOnLoad">
-        <pay-roll-list-item v-for="(item, index) of settledList" :key="index" :listItem="item" @billFeedback="billFeedback(item)"></pay-roll-list-item>
+        @load="settledOnLoad"
+      >
+        <pay-roll-list-item
+          v-for="(item, index) of settledList"
+          :key="index"
+          :listItem="item"
+          @billFeedback="billFeedback(item)"
+        ></pay-roll-list-item>
       </van-list>
     </common-list-header>
   </div>
@@ -24,7 +35,8 @@
 <script>
 import commonListHeader from "../components/commonListHeader";
 import payRollListItem from "./common/payRollListItem";
-import { List } from "vant"
+import { List } from "vant";
+import { payRollInfo } from "../../service/api";
 export default {
   name: "payRoll",
   components: {
@@ -36,13 +48,13 @@ export default {
     return {
       showData: {
         title: "工资单",
-        firstName: '已领取',
+        firstName: "已领取",
         lastName: "未领取"
       },
       acceptedList: [
         {
           imgUrl: "https://img.yzcdn.cn/vant/apple-1.jpg",
-          claimed: 'claimed'
+          claimed: "claimed"
         }
       ],
       acceptedLoading: false,
@@ -54,23 +66,40 @@ export default {
       ],
       settledLoading: false,
       settledFinished: false
-    }
+    };
   },
+
+  mounted() {},
+
   methods: {
     acceptedOnLoad() {
       // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.acceptedList.push(this.acceptedList[i]);
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.acceptedList.push(this.acceptedList[i]);
+      //   }
+      //   // 加载状态结束
+      //   this.acceptedLoading = false;
+      //   // 数据全部加载完成
+      //   if (this.acceptedList.length >= 40) {
+      //     this.acceptedFinished = true;
+      //   }
+      // }, 500);
+      payRollInfo({
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      }).then(res => {
+        const resData = res.data.data;
+        if (resData.list) {
+          this.acceptedList = this.acceptedList.concat(resData.list);
+          if (!resData.hasNextPage) {
+            this.acceptedFinished = true;
+          } else {
+            this.pageNum++;
+          }
         }
-        // 加载状态结束
         this.acceptedLoading = false;
-
-        // 数据全部加载完成
-        if (this.acceptedList.length >= 40) {
-          this.acceptedFinished = true;
-        }
-      }, 500);
+      });
     },
     settledOnLoad() {
       // 异步更新数据
@@ -90,12 +119,10 @@ export default {
     billFeedback(item) {
       this.$router.push({
         path: "/settlementFeedback"
-      })
+      });
     }
   }
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

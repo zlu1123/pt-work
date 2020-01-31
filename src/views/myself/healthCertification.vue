@@ -1,38 +1,13 @@
 <template>
   <div>
-    <common-header title="身份证认证"></common-header>
-    <div class="detail-info">
-      <common-content-header title-value="基本信息"></common-content-header>
-      <div class="info">
-        <van-cell-group>
-          <van-field
-            v-model="username"
-            clearable
-            label="姓      名："
-            placeholder="请输入姓名"
-          />
-          <van-field
-            v-model="idCard"
-            label="身份证号："
-            clearable
-            maxlength="18"
-            placeholder="请输入身份证号"
-          />
-        </van-cell-group>
-      </div>
-    </div>
+    <common-header title="健康证认证"></common-header>
     <div class="info-img-upload">
-      <common-content-header title-value="上传身份证"></common-content-header>
+      <common-content-header title-value="上传健康证"></common-content-header>
       <div class="upload">
         <uploadItem
           upload-height="140px"
-          img-tip-name="请上传身份证正面照片"
-          @getUploadImgUrl="uploadFrontImg"
-        ></uploadItem>
-        <uploadItem
-          upload-height="140px"
-          img-tip-name="请上传身份证背面照片"
-          @getUploadImgUrl="uploadBackImg"
+          img-tip-name="请上传健康证照片"
+          @getUploadImgUrl="uploadHealthImg"
         ></uploadItem>
       </div>
     </div>
@@ -46,7 +21,7 @@
 import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
 import uploadItem from "./common/uploadItem";
-import { updateUserInfoMath } from "../../service/api";
+import { upLoadHealthCert } from "../../service/api";
 export default {
   name: "idCertification",
   components: {
@@ -56,24 +31,26 @@ export default {
   },
   data() {
     return {
-      username: "",
-      idCard: "",
-      idCardFrontImg: "",
-      idCardBackImg: ""
+      healthImage: ""
     };
   },
   methods: {
-    uploadFrontImg(url) {
-      this.idCardFrontImg = url;
-    },
-
-    uploadBackImg(url) {
-      this.idCardBackImg = url;
+    uploadHealthImg(url) {
+      this.healthImage = url;
     },
 
     authenticate() {
-      updateUserInfoMath().then(res => {
-        console.log(res);
+      if (!this.healthImage) {
+        this.$toast("请上传健康证照片");
+        return;
+      }
+      upLoadHealthCert({
+        healthImage: this.healthImage
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.$toast("健康证上传成功");
+          this.$router.go(-2);
+        }
       });
     }
   }
@@ -104,7 +81,7 @@ export default {
   .upload {
     padding: 0 12px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
   }
 }
 .id-submit {

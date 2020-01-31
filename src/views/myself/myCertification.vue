@@ -1,7 +1,12 @@
 <template>
   <div>
     <common-header title="我的认证"></common-header>
-    <certification-list-item v-for="(item, index) of certificationList" :my-item="item" :key="index"></certification-list-item>
+    <certification-list-item
+      v-for="(item, index) of certificationList"
+      :my-item="item"
+      :key="index"
+      @goCertification="goToApprove"
+    ></certification-list-item>
   </div>
 </template>
 
@@ -19,12 +24,22 @@ export default {
       certificationList: [
         {
           name: "实名认证",
-          isCertification: 1
+          path: "idCertification",
+          isCertification: 0
         },
         {
-          name: "健康认证"
+          name: "健康认证",
+          path: "healthCertification",
+          isCertification: 0
         }
       ]
+    };
+  },
+  methods: {
+    goToApprove(item) {
+      this.$router.push({
+        path: `/${item.path}`
+      });
     }
   }
 };

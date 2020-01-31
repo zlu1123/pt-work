@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="company-info">
+    <!-- <div class="company-info">
       <div class="name">
         {{ jobDetailInfo.releasEmerchName }}
       </div>
@@ -8,9 +8,17 @@
         民营 1000-9999人
       </div>
       <div class="des">
-        货运/物流仓储，咨询服务，民航/铁路/公路/水路客运
+        {{ jobDetailInfo.postionInfo }}
       </div>
       <div class="logo">
+        <img v-lazy="getImgUrl(jobDetailInfo.releasEmerchImg)" alt="" />
+      </div>
+    </div> -->
+    <div class="company-info-content">
+      <div class="name">
+        {{ jobDetailInfo.releasEmerchName }}
+      </div>
+      <div class="merch-logo">
         <img v-lazy="getImgUrl(jobDetailInfo.releasEmerchImg)" alt="" />
       </div>
     </div>
@@ -104,9 +112,15 @@ import detailTitle from "./common/detailTitle";
 import detailWelfareRequire from "./common/detailWelfareRequire";
 import detailWorkInfo from "./common/detailWorkInfo";
 import { enRoll, positionInfo } from "../../service/api";
-import { welfareName, requireName, billTypeName } from "../../common/constants";
+import {
+  welfareName,
+  requireName,
+  billTypeName,
+  gettersName
+} from "../../common/constants";
 import { formatYYYYMMDD, dateDiff } from "../../plugins/util";
 import { baseUrlConfig } from "../../service/baseUrl";
+import { mapGetters } from "vuex";
 export default {
   name: "jobDetail",
   components: {
@@ -156,7 +170,7 @@ export default {
   },
   methods: {
     getImgUrl(img) {
-      return baseUrlConfig.imgUrl + img;
+      return img && baseUrlConfig.imgUrl + img;
     },
     getWorkDes(info) {
       if (info && Object.keys(info).length > 0) {
@@ -205,8 +219,21 @@ export default {
       return list;
     },
     goMapPage() {
+      if (
+        !this.jobDetailInfo.postionLngLat ||
+        !this.jobDetailInfo.postionAddr
+      ) {
+        return;
+      }
+      if (Object.keys(this[gettersName.getLocationInfo]).length === 0) {
+        return;
+      }
       this.$router.push({
-        path: "/routeNavigation"
+        path: "/routeNavigation",
+        query: {
+          postionLngLat: this.jobDetailInfo.postionLngLat,
+          postionAddr: this.jobDetailInfo.postionAddr
+        }
       });
     },
 
@@ -236,6 +263,10 @@ export default {
         done();
       }
     }
+  },
+
+  computed: {
+    ...mapGetters([gettersName.getLocationInfo])
   }
 };
 </script>
@@ -265,6 +296,31 @@ export default {
     position: absolute;
     right: 17px;
     top: 40px;
+    img {
+      width: 54px;
+      height: 54px;
+    }
+  }
+}
+.company-info-content {
+  background: @chooseColor;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 17px 22px 20px;
+  color: @itemColor;
+  font-family: @pfSC;
+  .name {
+    flex: 6;
+    font-size: @fs18;
+    font-weight: bold;
+    line-height: 25px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .merch-logo {
+    flex: 1;
     img {
       width: 54px;
       height: 54px;

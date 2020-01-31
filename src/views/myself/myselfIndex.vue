@@ -17,7 +17,7 @@
           <div class="verified">已认证</div>
         </div>
         <div class="tel-num">电话号码：15509186643</div>
-        <div>用户姓名：谢明刚</div>
+        <div>用户姓名：{{ personalInfo.userName }}</div>
       </div>
     </div>
     <div class="myself-info-list">
@@ -33,50 +33,16 @@
       <div class="login-out" @click="test">
         退出登录
       </div>
-      <!-- <div class="login-out" @click="test1">
-        职位申请维护-职位申请人列表
-      </div>
-      <div class="login-out" @click="test2">
-        职位申请维护-职位申请人审核
-      </div>
-      <div class="login-out" @click="test3">
-        本人打卡ID
-      </div>
-      <div class="login-out" @click="test4">
-        本人打卡信息查询
-      </div>
-      <div class="login-out" @click="test5">
-        发工资
-      </div> -->
-      <!-- <div class="login-out" @click="test6">
-        企业新增
-      </div>
-      <div class="login-out" @click="test7">
-        企业负责人新增
-      </div> -->
     </div>
   </div>
 </template>
 
 <script>
-import { Row, Col, Image, Cell } from "vant";
 import listItem from "./common/listItem.vue";
-import {
-  applyList,
-  applyExam,
-  queryCurrentDayClock,
-  clockInOrSignOut,
-  getPayRoll,
-  insertEnterprise,
-  insertEnterpriseDirector
-} from "../../service/api";
+import { mapActions } from "vuex";
 export default {
   name: "",
   components: {
-    [Row.name]: Row,
-    [Col.name]: Col,
-    [Image.name]: Image,
-    [Cell.name]: Cell,
     listItem
   },
   data() {
@@ -88,8 +54,8 @@ export default {
         },
         {
           name: "我的认证",
-          // path: "/myCertification"
-          path: "/idCertification"
+          path: "/myCertification"
+          // path: "/idCertification"
         },
         {
           name: "银行卡信息",
@@ -110,66 +76,33 @@ export default {
           name: "打卡情况",
           path: "/checkInSituation"
         }
-      ]
+      ],
+      personalInfo: ""
     };
   },
+
+  mounted() {
+    this.getPersonalInfo();
+  },
+
   methods: {
+    ...mapActions(["requestPersonalInfo"]),
+
+    getPersonalInfo() {
+      this.requestPersonalInfo().then(res => {
+        if (res && res.retCode === "00000") {
+          this.personalInfo = res.data;
+        }
+        console.log(this.personalInfo);
+      });
+    },
+
     goToNextPage(item) {
       this.$router.push({
         path: item.path
       });
     },
-    test() {},
-    test1() {
-      applyList({
-        merchId: "001",
-        postionId: "001",
-        pageNum: 1,
-        pageSize: 20
-      });
-    },
-    test2() {
-      applyExam({
-        merchId: "001",
-        postionId: "001",
-        postionApplyId: "20191229165145001001"
-      });
-    },
-    test3() {
-      queryCurrentDayClock({
-        merchId: "001",
-        postionId: "001"
-      });
-      // {"retCode":"00000","retInfo":"操作成功","data":"20191229165145001001"}  申请ID
-    },
-    test4() {
-      clockInOrSignOut({
-        postionApplyId: "20191227103521001001",
-        clockType: "2",
-        clockAddr: "112312",
-        postionId: "001",
-        merchId: "001",
-        currentDay: "20191229"
-      });
-    },
-    test5() {
-      getPayRoll({ payType: "2" });
-    },
-    test6() {
-      insertEnterprise({
-        merchName: "shunfeng",
-        merchImg: "D:/123/123",
-        merchInfo: "快递公司"
-      });
-    },
-    test7() {
-      insertEnterpriseDirector({
-        merchId: "202001019536",
-        merchChargeName: "谢明刚",
-        certNo: "610526199111234914",
-        mobile: "123123123123"
-      });
-    }
+    test() {}
   }
 };
 </script>
