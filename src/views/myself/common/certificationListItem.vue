@@ -1,10 +1,12 @@
 <template>
   <div class="list__item-content">
     <div class="list__item-title">
-      <div class="left">{{myItem.name}}</div>
-      <div class="right" :class="myItem.isCertification ? 'isCer' : 'isNotCer' ">{{myItem.isCertification ? '已认证' : '未认证'}}</div>
+      <div class="left">{{ myItem.name }}</div>
+      <div class="right" :class="myItem.isCertification ? 'isCer' : 'isNotCer'">
+        {{ myItem.isCertification ? "已认证" : "未认证" }}
+      </div>
     </div>
-    <div class="list__item-info">
+    <div class="list__item-info" v-if="myItem.isCertification">
       <div class="left">
         <van-image
           width="86"
@@ -13,15 +15,18 @@
         />
       </div>
       <div class="right">
-        <div class="name">姓      名：<span>李江涛</span></div>
+        <div class="name">姓 名：<span>李江涛</span></div>
         <div class="id-card">身份证号：<span>610303015957426523</span></div>
       </div>
+    </div>
+    <div class="list__item__btn" v-else>
+      <div class="in__btn" @click="goCertification">去认证</div>
     </div>
   </div>
 </template>
 
 <script>
-import { Image } from "vant"
+import { Image } from "vant";
 export default {
   name: "certificationListItem",
   props: {
@@ -33,15 +38,20 @@ export default {
   },
   components: {
     [Image.name]: Image
+  },
+  methods: {
+    goCertification() {
+      this.$emit("goCertification", this.myItem);
+    }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
 .list__item-content {
   margin: 10px 15px;
   background: @jobTitleBgColor;
-  border-radius:5px;
+  border-radius: 5px;
   .list__item-title {
     height: 37px;
     display: flex;
@@ -52,14 +62,13 @@ export default {
     font-family: @pfSC;
     .left {
       font-size: @fs15;
-      font-weight:bold;
+      font-weight: bold;
       line-height: @fs21;
       color: @tipColor;
     }
     .right {
       font-size: @fs13;
       line-height: @fs18;
-
     }
     .isCer {
       color: @chooseColor;
@@ -91,6 +100,23 @@ export default {
       .name {
         white-space: pre-wrap;
       }
+    }
+  }
+  .list__item__btn {
+    padding-bottom: 20px;
+    .in__btn {
+      margin: 34px auto 0;
+      width: 130px;
+      height: 40px;
+      background: @chooseColor;
+      border-radius: 5px;
+      font-size: 18px;
+      font-family: @pfSC;
+      line-height: 23px;
+      color: @jobTitleBgColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

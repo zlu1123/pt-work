@@ -37,3 +37,14 @@ export const updateUserInfoMath =
   baseUrlConfig.proxyURL + "/worker/mine/userInfoMatn"; // 个人信息维护
 
 export const uploadImageUrl = baseUrlConfig.proxyURL + "/uploadImage/upload"; // 图片上传
+
+// 结算信息
+export const queryBillInfo =
+  baseUrlConfig.proxyURL + "/worker/aeinooprt/queryBillInfo";
+
+// 结算打卡记录
+export const queryClockIn =
+  baseUrlConfig.proxyURL + "/worker/operation/queryClockIn";
+
+// 工资单
+export const payRollInfo = baseUrlConfig.proxyURL + "/worker/mine/payRollInfo";

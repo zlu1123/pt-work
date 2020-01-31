@@ -121,7 +121,7 @@ export function axiosRequest(methods, requestUrl, params, header) {
     withCredentials: true, // Check cross-site Access-Control
     method: methods,
     url: requestUrl,
-    data: params,
+    data: params || {},
     dataType: "json",
     headers: getHeader(header)
   };

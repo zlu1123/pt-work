@@ -3,18 +3,18 @@ import {
   handleRequestPromise,
   userLogin,
   getUserInfo,
-  uploadImageUrl
+  uploadImageUrl,
+  getWechatSign
 } from "../../service/api";
+import { wechatConfig } from "../../plugins/wechatUtil";
 export default {
   state: {
     keepAlivePath: ["homeIndex"],
     userInfo: {},
-    locationInfo: {
-      lng: 108.982758,
-      lat: 34.327999
-    }, // 默认显示万科幸福里
+    locationInfo: {}, // 默认显示万科幸福里 {lng: 108.982758,lat: 34.327999}
     loading: false,
-    personalInfo: {}
+    personalInfo: {},
+    wechatInfo: {}
   },
   mutations: {
     [mutationsName.setKeepAlivePath]: (state, data) => {
@@ -45,6 +45,9 @@ export default {
     },
     setPersonalInfo: (state, data) => {
       state.personalInfo = data;
+    },
+    setWechatInfo: (state, data) => {
+      state.wechatInfo = data;
     }
   },
   actions: {
@@ -93,6 +96,25 @@ export default {
         config
       );
       return fileInfo;
+    },
+
+    async requestWechatInfo({ commit, state }) {
+      let urlBase = location.href.split("#")[0]; // 获取当前url,不能带路由
+      let data = "";
+      try {
+        data = await handleRequestPromise(getWechatSign, {
+          url: urlBase
+        });
+      } catch (e) {}
+
+      commit("setWechatInfo", data.data);
+      wechatConfig(
+        data.data.sign,
+        data.data.nonceStr,
+        data.data.timestamp,
+        data.data.appId
+      );
+      return data.data.appId;
     }
   },
   getters: {
@@ -114,6 +136,10 @@ export default {
 
     getPersonalInfo(state, getters) {
       return state.personalInfo;
+    },
+
+    getWechatInfo(state, getters) {
+      return state.wechatInfo;
     }
   }
 };

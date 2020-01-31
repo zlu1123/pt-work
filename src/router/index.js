@@ -61,6 +61,13 @@ const routes = [
     }
   },
   {
+    name: "healthCertification",
+    component: () => import("../views/myself/healthCertification.vue"),
+    meta: {
+      title: "身份证认证"
+    }
+  },
+  {
     name: "checkInSituation",
     component: () => import("../views/myself/checkInSituation.vue"),
     meta: {

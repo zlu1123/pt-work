@@ -1,7 +1,7 @@
 <template>
   <div class="list-des-content" @click.stop="goJobMap">
     <div class="list-des-content-info">
-      <div>顺丰快递公司</div>
+      <div>{{ titleName }}</div>
       <img v-if="showDes" :src="defaultImgUrl" alt="" />
     </div>
   </div>
@@ -14,6 +14,10 @@ export default {
     showDes: {
       default: true,
       type: Boolean
+    },
+    titleName: {
+      default: "",
+      type: String
     }
   },
   data() {

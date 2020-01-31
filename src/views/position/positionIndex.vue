@@ -82,7 +82,7 @@ export default {
         { text: "综合排序", value: 0 },
         { text: "离我最近", value: 1 },
         { text: "价格最高", value: 2 },
-        { text: "时间最长", value: 3 },
+        // { text: "时间最长", value: 3 },
         { text: "日期最长", value: 4 }
       ],
       linkList: [
@@ -109,6 +109,12 @@ export default {
       showCalendar: false,
       minDate: new Date(),
       currentDate: new Date(),
+      composite: "", // 综合排序    1.PRICE 价格最高 2.WORK_TIME 时间最长 3.CREATE_TIME 综合排序
+      timeChose: "", // 时间筛选
+      billType: "", // 结算方式
+      positionType: "", // 职位筛选
+      merchName: "", // 公司名称
+      location: "", // 距离
       pageSize: "20",
       pageNum: "1"
     };
@@ -120,8 +126,14 @@ export default {
   methods: {
     onLoad() {
       queryPosition({
-        searchType: "", // 01-默认查询；02-企业搜索；03-日期；04-结算方式；05-职位类型；06-距离
-        searchName: "",
+        // searchType: "", // 01-默认查询；02-企业搜索；03-日期；04-结算方式；05-职位类型；06-距离
+        // searchName: "",
+        composite: this.composite, // 综合排序    1.PRICE 价格最高 2.WORK_TIME 时间最长 3.CREATE_TIME 综合排序
+        timeChose: this.timeChose, // 时间筛选
+        billType: this.billType, // 结算方式
+        positionType: this.positionType, // 职位筛选
+        merchName: this.merchName, // 公司名称
+        location: this.location, // 距离
         pageSize: this.pageSize,
         pageNum: this.pageNum
       }).then(res => {

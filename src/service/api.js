@@ -207,3 +207,15 @@ export const updateUserInfoMath = params => {
 export const uploadImageUrl = params => {
   return axiosRequest(POST, urlConstant.uploadImageUrl, params);
 };
+
+export const queryBillInfo = params => {
+  return axiosRequest(POST, urlConstant.queryBillInfo, params);
+};
+
+export const queryClockIn = params => {
+  return axiosRequest(POST, urlConstant.queryClockIn, params);
+};
+
+export const payRollInfo = params => {
+  return axiosRequest(POST, urlConstant.payRollInfo, params);
+};

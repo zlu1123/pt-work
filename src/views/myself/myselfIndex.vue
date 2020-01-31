@@ -59,8 +59,8 @@ export default {
         },
         {
           name: "我的认证",
-          // path: "/myCertification"
-          path: "/idCertification"
+          path: "/myCertification"
+          // path: "/idCertification"
         },
         {
           name: "银行卡信息",

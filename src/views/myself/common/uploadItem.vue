@@ -5,7 +5,8 @@
         v-if="!imgUrl"
         :before-read="beforeRead"
         :after-read="afterRead"
-        max-size="1048576"
+        :max-size="maxSize"
+        :max-count="maxCount"
       >
         <div class="upload-content-img" :style="{ height: uploadHeight }">
           <van-icon size="25px" color="#21A675" name="plus" />
@@ -48,7 +49,9 @@ export default {
 
   data() {
     return {
-      imgUrl: ""
+      imgUrl: "",
+      maxSize: 1048576,
+      maxCount: 1
     };
   },
 
