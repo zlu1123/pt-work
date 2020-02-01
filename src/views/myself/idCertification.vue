@@ -6,13 +6,13 @@
       <div class="info">
         <van-cell-group>
           <van-field
-            v-model="username"
+            v-model="custName"
             clearable
             label="姓      名："
             placeholder="请输入姓名"
           />
           <van-field
-            v-model="idCard"
+            v-model="certNo"
             label="身份证号："
             clearable
             maxlength="18"
@@ -47,6 +47,7 @@ import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
 import uploadItem from "./common/uploadItem";
 import { updateUserInfoMath } from "../../service/api";
+import { checkID } from "../../plugins/util";
 export default {
   name: "idCertification",
   components: {
@@ -56,15 +57,15 @@ export default {
   },
   data() {
     return {
-      username: "",
-      idCard: "",
-      idCardFrontImg: "",
+      custName: "",
+      certNo: "",
+      identImageAddr: "",
       idCardBackImg: ""
     };
   },
   methods: {
     uploadFrontImg(url) {
-      this.idCardFrontImg = url;
+      this.identImageAddr = url;
     },
 
     uploadBackImg(url) {
@@ -72,7 +73,31 @@ export default {
     },
 
     authenticate() {
-      updateUserInfoMath().then(res => {
+      if (!this.custName) {
+        this.$toast("请输入姓名");
+        return;
+      }
+      if (!this.certNo) {
+        this.$toast("请输入身份证号码");
+        return;
+      }
+      if (!checkID(this.certNo)) {
+        this.$toast("请输入正确的身份证号码");
+        return;
+      }
+      if (!checkID(this.identImageAddr)) {
+        this.$toast("请上传身份证正面照片");
+        return;
+      }
+      if (!checkID(this.idCardBackImg)) {
+        this.$toast("请上传身份证反面照片");
+        return;
+      }
+      updateUserInfoMath({
+        custName: this.custName,
+        certNo: this.certNo,
+        identImageAddr: this.identImageAddr
+      }).then(res => {
         console.log(res);
       });
     }
