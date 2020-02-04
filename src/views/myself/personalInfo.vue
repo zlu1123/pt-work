@@ -75,6 +75,10 @@ export default {
         {
           name: "鞋码"
           // value: "42"
+        },
+        {
+          name: "手机号码"
+          // value: "42"
         }
       ]
     };

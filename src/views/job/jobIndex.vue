@@ -48,7 +48,7 @@
 import commonListHeader from "../components/commonListHeader";
 import positionListItem from "../position/common/positionListItem";
 import commonListDes from "../components/commonListDes";
-import { applyList, disRoll } from "../../service/api";
+import { applyList, disRoll, queryBillInfo } from "../../service/api";
 import { mapGetters } from "vuex";
 import { gettersName } from "../../common/constants";
 export default {
@@ -120,18 +120,31 @@ export default {
     },
 
     settledOnLoad() {
-      // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.settledList.push(this.settledList[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.settledLoading = false;
-      //   // 数据全部加载完成
-      //   if (this.settledList.length >= 10) {
-      this.settledFinished = true;
-      //   }
-      // }, 500);
+      queryBillInfo({
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      })
+        .then(res => {
+          if (res && res.data.retCode === "00000") {
+            const resData = res.data.data;
+            if (resData.list) {
+              this.settledList = this.settledList.concat(
+                this.fixApplyList(resData.list)
+              );
+              if (!resData.hasNextPage) {
+                // 循环增加职位名称
+                this.settledFinished = true;
+              } else {
+                this.pageNum++;
+              }
+            }
+            this.loading = false;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.settledFinished = true;
+        });
     },
     goCheckIn() {
       this.$router.push({

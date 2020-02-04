@@ -40,7 +40,7 @@ export const uploadImageUrl = baseUrlConfig.proxyURL + "/uploadImage/upload"; //
 
 // 结算信息
 export const queryBillInfo =
-  baseUrlConfig.proxyURL + "/worker/aeinooprt/queryBillInfo";
+  baseUrlConfig.proxyURL + "/worker/operation/queryBillInfo";
 
 // 结算打卡记录
 export const queryClockIn =
