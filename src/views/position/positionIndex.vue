@@ -16,7 +16,7 @@
     <div>
       <van-swipe :autoplay="3000">
         <van-swipe-item v-for="(item, index) in adImagesList" :key="index">
-          <img v-lazy="item.imgUrl" class="swipe-img-position" />
+          <img v-lazy="getImgUrl(item.imgUrl)" class="swipe-img-position" />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -76,6 +76,7 @@ import { getUserLocation } from "../../plugins/wechatUtil";
 import { gettersName } from "../../common/constants";
 import { mapGetters } from "vuex";
 import { formatDate } from "../../plugins/util";
+import { baseUrlConfig } from "../../service/baseUrl";
 export default {
   name: "positionIndex",
 
@@ -202,6 +203,9 @@ export default {
           this.adImagesList = res.data.data.list;
         }
       });
+    },
+    getImgUrl(postionImg) {
+      return baseUrlConfig.imgUrl + postionImg;
     }
   },
 
