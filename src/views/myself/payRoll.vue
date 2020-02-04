@@ -26,6 +26,7 @@
           :key="index"
           :listItem="item"
           @billFeedback="billFeedback(item)"
+          @getPayOff="getPayOff"
         ></pay-roll-list-item>
       </van-list>
     </common-list-header>
@@ -65,13 +66,23 @@ export default {
         }
       ],
       settledLoading: false,
-      settledFinished: false
+      settledFinished: false,
+      pageSize: 20,
+      pageNum: 1
     };
   },
 
   mounted() {},
 
   methods: {
+    /**
+     * 领取工资
+     */
+    getPayOff() {
+      this.$router.push({
+        path: "/getPaid"
+      });
+    },
     acceptedOnLoad() {
       // 异步更新数据
       // setTimeout(() => {
@@ -86,8 +97,8 @@ export default {
       //   }
       // }, 500);
       payRollInfo({
-        pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageSize: this.pageSize.toString(),
+        pageNum: this.pageNum.toString()
       }).then(res => {
         const resData = res.data.data;
         if (resData.list) {

@@ -64,7 +64,14 @@ const routes = [
     name: "healthCertification",
     component: () => import("../views/myself/healthCertification.vue"),
     meta: {
-      title: "身份证认证"
+      title: "健康证认证"
+    }
+  },
+  {
+    name: "getPaid",
+    component: () => import("../views/myself/getPaid.vue"),
+    meta: {
+      title: "领取工资"
     }
   },
   {
