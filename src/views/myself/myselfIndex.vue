@@ -90,10 +90,9 @@ export default {
 
     getPersonalInfo() {
       this.requestPersonalInfo().then(res => {
-        if (res && res.retCode === "00000") {
-          this.personalInfo = res.data;
+        if (res && res.data.retCode === "00000") {
+          this.personalInfo = res.data.data;
         }
-        console.log(this.personalInfo);
       });
     },
 

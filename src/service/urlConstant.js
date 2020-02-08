@@ -49,6 +49,21 @@ export const queryClockIn =
 // 工资单
 export const payRollInfo = baseUrlConfig.proxyURL + "/worker/mine/payRollInfo";
 
-// 工资单
+// 健康证认证
 export const upLoadHealthCert =
   baseUrlConfig.proxyURL + "/worker/mine/healthCert";
+
+// 身份证认证
+export const usrIdtfyCert =
+  baseUrlConfig.proxyURL + "/worker/mine/usrIdtfyCert";
+
+// 充值
+export const enterpiseRecharge = baseUrlConfig.proxyURL + "/enterpise/recharge";
+
+// 查询企业列表
+export const enterpriseReleasePage =
+  baseUrlConfig.proxyURL + "/enterpriseRelease/page";
+
+// 查询职位列表
+export const postionReleasePage =
+  baseUrlConfig.proxyURL + "/postionRelease/page";

@@ -150,6 +150,13 @@ const routes = [
     meta: {
       title: "授权"
     }
+  },
+  {
+    name: "pay",
+    component: () => import("../views/pay/pay.vue"),
+    meta: {
+      title: "充值"
+    }
   }
 ];
 
@@ -189,7 +196,10 @@ router.beforeEach((to, from, next) => {
     if (to.path === "/auth") {
       next();
     } else {
-      localStorage.setItem("now_url", to.fullPath); // 当前页url与参数放入缓存
+      const url = localStorage.getItem("now_url");
+      if (!url) {
+        localStorage.setItem("now_url", to.fullPath); // 当前页url与参数放入缓存
+      }
       next("/auth");
     }
   } else {

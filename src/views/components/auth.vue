@@ -8,6 +8,7 @@ import { getUrlParams } from "../../plugins/util";
 import { mapGetters, mapActions } from "vuex";
 
 const url = localStorage.getItem("now_url");
+
 export default {
   data() {
     return {};
@@ -26,12 +27,6 @@ export default {
       }
       if (!code) {
         let domine = window.location.href.split("#")[0]; // 微信会自动识别#    并且清除#后面的内容
-        // 这里的axios是已封装过的
-        // this.axios
-        //   .get("/set_wxcode_url?url=" + domine) // 如果没有code，说明用户还没授权   将当前地址传递给后台
-        //   .then(res => {
-        //     window.location.href = res.data;
-        //   });
         const wechatHref = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${domine}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
         window.location.href = wechatHref;
         // －scope=snsapi_base 获取微信用户openid,获取后直接跳转业务页面，不需要用户操作
@@ -41,7 +36,6 @@ export default {
         getOpenId({ code: code }).then(res => {
           // 返回状态和UId
           const data = res.data.data;
-          console.log(data);
           if (data.token) {
             localStorage.setItem("token", data.token);
           }
@@ -49,6 +43,9 @@ export default {
             localStorage.setItem("openid", data.openid);
           }
           window.location.replace(baseUrlConfig.weChatUrl + "/#" + url);
+          if (url) {
+            localStorage.removeItem("now_url");
+          }
         });
       }
     },

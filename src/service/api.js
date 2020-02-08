@@ -223,3 +223,19 @@ export const payRollInfo = params => {
 export const upLoadHealthCert = params => {
   return axiosRequest(POST, urlConstant.upLoadHealthCert, params);
 };
+
+export const usrIdtfyCert = params => {
+  return axiosRequest(POST, urlConstant.usrIdtfyCert, params);
+};
+
+export const enterpiseRecharge = params => {
+  return axiosRequest(POST, urlConstant.enterpiseRecharge, params);
+};
+
+export const enterpriseReleasePage = (params, headers) => {
+  return axiosRequest(POST, urlConstant.enterpriseReleasePage, params, headers);
+};
+
+export const postionReleasePage = (params, headers) => {
+  return axiosRequest(POST, urlConstant.postionReleasePage, params, headers);
+};

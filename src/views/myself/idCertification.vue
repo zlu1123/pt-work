@@ -46,7 +46,7 @@
 import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
 import uploadItem from "./common/uploadItem";
-import { updateUserInfoMath } from "../../service/api";
+import { usrIdtfyCert } from "../../service/api";
 import { checkID } from "../../plugins/util";
 export default {
   name: "idCertification",
@@ -60,7 +60,7 @@ export default {
       custName: "",
       certNo: "",
       identImageAddr: "",
-      idCardBackImg: ""
+      identImageAddr1: ""
     };
   },
   methods: {
@@ -69,7 +69,7 @@ export default {
     },
 
     uploadBackImg(url) {
-      this.idCardBackImg = url;
+      this.identImageAddr1 = url;
     },
 
     authenticate() {
@@ -85,18 +85,19 @@ export default {
         this.$toast("请输入正确的身份证号码");
         return;
       }
-      if (!checkID(this.identImageAddr)) {
+      if (!this.identImageAddr) {
         this.$toast("请上传身份证正面照片");
         return;
       }
-      if (!checkID(this.idCardBackImg)) {
+      if (!this.identImageAddr1) {
         this.$toast("请上传身份证反面照片");
         return;
       }
-      updateUserInfoMath({
+      usrIdtfyCert({
         custName: this.custName,
         certNo: this.certNo,
-        identImageAddr: this.identImageAddr
+        identImageAddr: this.identImageAddr,
+        identImageAddr1: this.identImageAddr1
       }).then(res => {
         console.log(res);
       });
