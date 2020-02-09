@@ -13,11 +13,17 @@
       </div>
       <div class="myself-detail">
         <div class="name-verified">
-          <div class="name">微信用户45565</div>
-          <div class="verified">已认证</div>
+          <div class="name ellipsis">微信昵称：{{ personalInfo.userName }}</div>
+          <div class="verified">
+            {{ personalInfo.isCert === "1" ? "已" : "未" }}认证
+          </div>
         </div>
-        <div class="tel-num">电话号码：15509186643</div>
-        <div>用户姓名：{{ personalInfo.userName }}</div>
+        <div class="tel-num" v-if="personalInfo.mainMobile">
+          电话号码：{{ personalInfo.mainMobile }}
+        </div>
+        <div v-if="personalInfo.custName">
+          用户姓名：{{ personalInfo.custName }}
+        </div>
       </div>
     </div>
     <div class="myself-info-list">
@@ -90,8 +96,8 @@ export default {
 
     getPersonalInfo() {
       this.requestPersonalInfo().then(res => {
-        if (res && res.data.retCode === "00000") {
-          this.personalInfo = res.data.data;
+        if (res && res.retCode === "00000") {
+          this.personalInfo = res.data;
         }
       });
     },
@@ -125,8 +131,10 @@ export default {
           font-size: 18px;
           font-family: @pfSC;
           font-weight: bold;
+          flex: 5;
         }
         .verified {
+          flex: 1;
           font-size: 12px;
           border: 1px solid @myselfNameColor;
           padding: 1px 2px;

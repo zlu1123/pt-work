@@ -60,7 +60,7 @@ export default {
           nonceStr: data.nonceStr, // 随机串
           package: data.package,
           signType: data.signType, // 微信签名方式：
-          paySign: data.paySign // 微信签名
+          paySign: data.sign // 微信签名
         },
         // eslint-disable-next-line space-before-function-paren
         function(res) {
