@@ -67,3 +67,9 @@ export const enterpriseReleasePage =
 // 查询职位列表
 export const postionReleasePage =
   baseUrlConfig.proxyURL + "/postionRelease/page";
+
+// 添加银行卡
+export const cardAdd = baseUrlConfig.proxyURL + "/worker/cardAdd";
+
+// 银行卡列表
+export const cardQuery = baseUrlConfig.proxyURL + "/worker/cardQuery";

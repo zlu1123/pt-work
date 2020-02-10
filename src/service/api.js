@@ -239,3 +239,11 @@ export const enterpriseReleasePage = (params, headers) => {
 export const postionReleasePage = (params, headers) => {
   return axiosRequest(POST, urlConstant.postionReleasePage, params, headers);
 };
+
+export const cardAdd = (params, headers) => {
+  return axiosRequest(POST, urlConstant.cardAdd, params);
+};
+
+export const cardQuery = (params, headers) => {
+  return axiosRequest(POST, urlConstant.cardQuery, params);
+};

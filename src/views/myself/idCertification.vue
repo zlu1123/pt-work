@@ -9,6 +9,7 @@
             v-model="custName"
             clearable
             label="姓      名："
+            label-class="label-class"
             placeholder="请输入姓名"
           />
           <van-field
@@ -16,6 +17,7 @@
             label="身份证号："
             clearable
             maxlength="18"
+            label-class="label-class"
             placeholder="请输入身份证号"
           />
         </van-cell-group>
@@ -99,7 +101,10 @@ export default {
         identImageAddr: this.identImageAddr,
         identImageAddr1: this.identImageAddr1
       }).then(res => {
-        console.log(res);
+        if (res && res.data.retCode === "00000") {
+          this.$toast("健康证上传成功");
+          this.$router.go(-2);
+        }
       });
     }
   }

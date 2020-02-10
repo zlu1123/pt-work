@@ -36,7 +36,7 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <div class="login-out" @click="test">
+      <div class="login-out">
         退出登录
       </div>
     </div>
@@ -45,7 +45,7 @@
 
 <script>
 import listItem from "./common/listItem.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "",
   components: {
@@ -87,27 +87,38 @@ export default {
     };
   },
 
-  mounted() {
-    this.getPersonalInfo();
+  async mounted() {
+    await this.requestPersonalInfo();
+    this.personalInfo = this.getPersonalInfo;
   },
 
   methods: {
-    ...mapActions(["requestPersonalInfo"]),
+    ...mapActions(["requestPersonalInfo", "requestBankList"]),
 
-    getPersonalInfo() {
-      this.requestPersonalInfo().then(res => {
-        if (res && res.retCode === "00000") {
-          this.personalInfo = res.data;
+    async goToNextPage(item) {
+      if (item.path === "/myBankCard") {
+        if (this.getPersonalInfo.isCert !== "1") {
+          this.$toast("您暂未进行身份证实名认证，请先认证");
+        } else {
+          await this.requestBankList();
+          if (!this.getBandCardList || this.getBandCardList.length === 0) {
+            item.path = "/addBankCard";
+          }
         }
-      });
-    },
-
-    goToNextPage(item) {
+      }
       this.$router.push({
         path: item.path
       });
-    },
-    test() {}
+    }
+  },
+
+  computed: {
+    ...mapGetters(["getPersonalInfo", "getBandCardList"])
+  },
+
+  async activated() {
+    await this.requestPersonalInfo();
+    this.personalInfo = this.getPersonalInfo;
   }
 };
 </script>

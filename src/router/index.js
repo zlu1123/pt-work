@@ -157,6 +157,13 @@ const routes = [
     meta: {
       title: "充值"
     }
+  },
+  {
+    name: "addBankCard",
+    component: () => import("../views/myself/addBankCard.vue"),
+    meta: {
+      title: "银行卡绑定"
+    }
   }
 ];
 

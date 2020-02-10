@@ -31,23 +31,24 @@ export default {
   },
   data() {
     return {
-      healthImage: ""
+      healthImageAddr: ""
     };
   },
   methods: {
     uploadHealthImg(url) {
-      this.healthImage = url;
+      this.healthImageAddr = url;
     },
 
     authenticate() {
-      if (!this.healthImage) {
+      if (!this.healthImageAddr) {
         this.$toast("请上传健康证照片");
         return;
       }
       upLoadHealthCert({
-        healthImage: this.healthImage
+        healthImageAddr: this.healthImageAddr
       }).then(res => {
         if (res && res.data.retCode === "00000") {
+          debugger;
           this.$toast("健康证上传成功");
           this.$router.go(-2);
         }

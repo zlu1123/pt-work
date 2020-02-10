@@ -6,9 +6,6 @@
       <div class="card__No">6225 **** **** 8888</div>
     </div>
   </div>
-  <div v-else class="card__add">
-    请绑卡
-  </div>
 </template>
 
 <script>
@@ -37,14 +34,5 @@ export default {
   .info {
     margin-left: 10px;
   }
-}
-.card__add {
-  background: @itemColor;
-  height: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 10px 10px 10px;
-  border-radius: 10px;
 }
 </style>
