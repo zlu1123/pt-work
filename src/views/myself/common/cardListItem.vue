@@ -1,38 +1,82 @@
 <template>
-  <div class="card__list__item" v-if="!lastEnd">
-    <van-image width="80px" height="80px" class="image" src="" alt="" />
-    <div class="info">
-      <div class="title">银行卡号</div>
-      <div class="card__No">6225 **** **** 8888</div>
+  <div class="list__item-content">
+    <div class="list__item" :class="last ? 'no-border-bottom' : ''">
+      <div class="left">
+        <van-image lazy-load width="60" height="60" :src="cardItem.imgUrl" />
+      </div>
+      <div class="right">
+        <div class="name">{{ cardItem.bankName }}</div>
+        <div class="id-card">
+          <span>{{ cardItem.acctNo }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { baseUrlConfig } from "../../../service/baseUrl";
 export default {
   props: {
-    lastEnd: {
-      default: false,
-      type: Boolean
+    cardItem: {
+      // eslint-disable-next-line vue/require-valid-default-prop
+      default: {},
+      type: Object
+    },
+    last: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  methods: {
+    getImgUrl(img) {
+      return baseUrlConfig.imgUrl + img;
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.card__list__item {
-  background: @itemColor;
-  height: 120px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 10px 10px 10px;
-  border-radius: 10px;
-  .image {
-    margin-left: 10px;
+.list__item-content {
+  margin: 10px 15px;
+  background: @jobTitleBgColor;
+  border-radius: 5px;
+  border-bottom: 1px solid @dividerBgColor;
+  .list__item {
+    padding: 0 18px 0 11px;
+    display: flex;
+    justify-content: flex-start;
+    .left {
+      margin-top: 13px;
+      padding-bottom: 21px;
+    }
+    .right {
+      margin-left: 18px;
+      div {
+        margin-top: 19px;
+        font-size: @fs13;
+        font-family: @pfSC;
+        line-height: @fs18;
+        // color: @chooseColor;
+        span {
+          color: @myCertificationColor;
+        }
+      }
+      .name {
+        white-space: pre-wrap;
+      }
+    }
+    .content {
+      padding: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
   }
-  .info {
-    margin-left: 10px;
-  }
+}
+
+.no-border-bottom {
+  border-bottom: none;
 }
 </style>

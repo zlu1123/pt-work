@@ -129,7 +129,9 @@ export default {
     updatedPersonInfo() {
       updateUserInfoMath({
         mobileNo: "18629512681",
-        logoAddr: this.logoAddr
+        logoAddr: this.logoAddr,
+        shoeSize: "42",
+        stature: "175"
       }).then(res => {
         console.log(res);
       });

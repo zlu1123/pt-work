@@ -130,6 +130,7 @@ export const handleRequestPromise = (
 };
 
 const POST = "post";
+const GET = "get";
 
 // 职位报名
 export const enRoll = params => {
@@ -246,4 +247,11 @@ export const cardAdd = (params, headers) => {
 
 export const cardQuery = (params, headers) => {
   return axiosRequest(POST, urlConstant.cardQuery, params);
+};
+
+export const cardLogoQuery = (params, headers) => {
+  return axiosRequest(
+    GET,
+    urlConstant.cardLogoQuery + "?d=cashier&t=" + params
+  );
 };

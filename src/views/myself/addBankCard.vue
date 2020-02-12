@@ -6,17 +6,16 @@
       <div class="info">
         <van-cell-group>
           <van-field
-            v-model="cardName"
+            v-model="acctName"
             clearable
             label="持卡人姓名："
             label-class="label-class"
             readonly
           />
           <van-field
-            v-model="cardNo"
+            v-model="acctNo"
             label="卡         号："
             clearable
-            maxlength="18"
             label-class="label-class"
             placeholder="请输入卡号"
             @blur="getCardBinInfo"
@@ -40,7 +39,7 @@ import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
 import { cardAdd } from "../../service/api";
 import { mapGetters } from "vuex";
-import cardBin from "bankcardinfo";
+import CardBin from "chinabankbin";
 export default {
   components: {
     commonHeader,
@@ -48,43 +47,68 @@ export default {
   },
   data() {
     return {
-      cardName: "",
-      cardNo: "",
-      bankName: ""
+      acctName: "",
+      acctNo: "",
+      bankName: "",
+      bankCode: "",
+      cardType: "",
+      cardTypeName: ""
     };
   },
   mounted() {
-    this.cardName = this.getPersonalInfo.custName;
+    this.acctName = this.getPersonalInfo.custName;
   },
   methods: {
     addCardEvent() {
+      if (this.cardType !== "DC") {
+        this.$toast("请绑定借记卡");
+        return;
+      }
       cardAdd({
-        cardNo: this.cardNo,
-        cardName: this.cardName
+        acctNo: this.acctNo,
+        acctName: this.acctName,
+        bankName: this.bankName,
+        bankCode: this.bankCode,
+        cardType: this.cardType,
+        cardTypeName: this.cardTypeName
       }).then(res => {
-        console.log(res);
+        if (res && res.data.retCode === "00000") {
+          this.$toast("绑定成功");
+          this.$router.replace({
+            path: "/myBankCard"
+          });
+        }
       });
     },
 
     /**
      * 获取银行卡信息
      */
-    getCardBinInfo() {
+    async getCardBinInfo() {
       // promise 方式调用, 2.0.0 及以上版本支持
-      if (!this.cardNo || this.cardNo.length < 10) {
+      if (!this.acctNo || this.acctNo.length < 10) {
+        this.bankName = "";
+        this.bankCode = "";
+        this.cardType = "";
+        this.cardTypeName = "";
         return;
       }
-      cardBin
-        .getBankBin(this.cardNo)
-        .then(res => {
-          this.bankName = `${res.bankName}--${res.cardTypeName}`;
-        })
-        .catch(err => {
-          if (err) {
-            this.$toast(`${err.split(",")[0].split(":")[1]}, 请重新输入卡号`);
-            this.cardNo = "";
-          }
-        });
+      try {
+        const res = await new CardBin(this.acctNo);
+        if (res && res.validated) {
+          this.bankName = res.data.bankName;
+          this.bankCode = res.data.bankCode;
+          this.cardType = res.data.cardType;
+          this.cardTypeName = res.data.cardTypeName;
+        }
+      } catch (e) {
+        this.$toast(`${e.msg}, 请重新输入卡号`);
+        this.cardNo = "";
+        this.bankName = "";
+        this.bankCode = "";
+        this.cardType = "";
+        this.cardTypeName = "";
+      }
     }
   },
   computed: {
