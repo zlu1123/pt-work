@@ -13,6 +13,7 @@
 <script>
 import commonHeader from "../components/commonHeader";
 import certificationListItem from "./common/certificationListItem";
+import { mapGetters } from "vuex";
 export default {
   name: "myCertification",
   components: {
@@ -25,15 +26,35 @@ export default {
         {
           name: "实名认证",
           path: "idCertification",
-          isCertification: 0
+          isCertification: 0,
+          personalInfo: {}
         },
         {
           name: "健康认证",
           path: "healthCertification",
-          isCertification: 0
+          isCertification: 0,
+          personalInfo: {}
         }
       ]
     };
+  },
+  mounted() {
+    if (Object.keys(this.getPersonalInfo).length > 0) {
+      if (this.getPersonalInfo.isCert === "1") {
+        this.certificationList[0].isCertification = 1;
+        this.certificationList[0] = Object.assign(
+          this.certificationList[0],
+          this.getPersonalInfo
+        );
+      }
+      if (this.getPersonalInfo.healthImageAddr) {
+        this.certificationList[1].isCertification = 1;
+        this.certificationList[1] = Object.assign(
+          this.certificationList[1],
+          this.getPersonalInfo
+        );
+      }
+    }
   },
   methods: {
     goToApprove(item) {
@@ -41,6 +62,10 @@ export default {
         path: `/${item.path}`
       });
     }
+  },
+
+  computed: {
+    ...mapGetters(["getPersonalInfo"])
   }
 };
 </script>

@@ -25,7 +25,7 @@ export const queryCurrentDayClock =
 export const enterpisePunchCardRecord =
   baseUrlConfig.proxyURL + "/enterpise/punchCardRecord"; // 企业查询打卡信息
 
-export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 企业查询打卡信息
+export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 查询微信相关信息
 
 export const noticeAdPage = baseUrlConfig.proxyURL + "/noticeAd/page"; // 广告查询-分页
 
@@ -49,6 +49,31 @@ export const queryClockIn =
 // 工资单
 export const payRollInfo = baseUrlConfig.proxyURL + "/worker/mine/payRollInfo";
 
-// 工资单
+// 健康证认证
 export const upLoadHealthCert =
   baseUrlConfig.proxyURL + "/worker/mine/healthCert";
+
+// 身份证认证
+export const usrIdtfyCert =
+  baseUrlConfig.proxyURL + "/worker/mine/usrIdtfyCert";
+
+// 充值
+export const enterpiseRecharge = baseUrlConfig.proxyURL + "/enterpise/recharge";
+
+// 查询企业列表
+export const enterpriseReleasePage =
+  baseUrlConfig.proxyURL + "/enterpriseRelease/page";
+
+// 查询职位列表
+export const postionReleasePage =
+  baseUrlConfig.proxyURL + "/postionRelease/page";
+
+// 添加银行卡
+export const cardAdd = baseUrlConfig.proxyURL + "/worker/cardAdd";
+
+// 银行卡列表
+export const cardQuery = baseUrlConfig.proxyURL + "/worker/cardQuery";
+
+// 支付完成上传接口
+export const rechargeCallBack =
+  baseUrlConfig.proxyURL + "/enterpise/rechargeCallBack";

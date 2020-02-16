@@ -10,17 +10,32 @@
           lazy-load
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
-        <div class="name">微信用户45565</div>
+        <div class="name">微信昵称：{{ getPersonalInfo.userName }}</div>
       </div>
     </div>
     <div class="myself-info-list">
       <div class="info-list">
         <div class="list-title"><span>个人信息</span></div>
-        <person-list-item
+        <van-cell-group>
+          <van-field
+            v-for="(item, index) of infoList"
+            :key="index"
+            size="large"
+            :required="item.required"
+            v-model="item.value"
+            :label="item.name"
+            :border="false"
+            :readonly="item.readonly"
+            :placeholder="item.placeholder"
+            input-align="right"
+            :type="item.type"
+          />
+        </van-cell-group>
+        <!-- <person-list-item
           v-for="(item, index) of infoList"
           :key="index"
           :item-data="item"
-        ></person-list-item>
+        ></person-list-item> -->
       </div>
       <div class="person-img-content">
         <div class="img-title">
@@ -28,7 +43,9 @@
         </div>
         <upload-item
           img-tip-name="请上传真实人员照片"
+          @getUploadImgUrl="uploadLogoAddr"
           upload-height="180px"
+          :img-url="logoAddr"
         ></upload-item>
         <div class="img-size">
           大小3M以内
@@ -37,7 +54,7 @@
       <div class="person-tip">
         提示：<span>姓名、性别、年龄，</span>如果是未知，请在我的认证，身份证认证中实名认证！
       </div>
-      <div class="person-submit">
+      <div class="person-submit" @click="updatedPersonInfo">
         提交
       </div>
     </div>
@@ -45,12 +62,16 @@
 </template>
 
 <script>
-import personListItem from "./common/personListItem.vue";
+// import personListItem from "./common/personListItem.vue";
 import uploadItem from "./common/uploadItem";
+import { mapGetters } from "vuex";
+import { updateUserInfoMath } from "../../service/api";
+import { analyzeIDCard } from "../../plugins/util";
+import { baseUrlConfig } from "../../service/baseUrl";
 export default {
   name: "personalInfo",
   components: {
-    personListItem,
+    // personListItem,
     uploadItem
   },
   data() {
@@ -58,32 +79,90 @@ export default {
       infoList: [
         {
           name: "姓名",
-          value: "涛涛"
+          value: ""
         },
         {
           name: "性别",
-          value: "男"
+          value: ""
         },
         {
           name: "年龄",
-          value: "30"
+          value: ""
         },
         {
-          name: "身高"
-          // value: "180"
+          name: "身高",
+          value: "",
+          placeholder: "请输入身高(cm)",
+          type: "digit",
+          required: true
         },
         {
-          name: "鞋码"
-          // value: "42"
+          name: "鞋码",
+          value: "",
+          placeholder: "请输入鞋码",
+          type: "digit",
+          required: true
         },
         {
-          name: "手机号码"
-          // value: "42"
+          name: "手机号码",
+          value: "",
+          placeholder: "请输入手机号码",
+          required: true
         }
-      ]
+      ],
+      logoAddr: ""
     };
   },
-  methods: {}
+
+  mounted() {
+    if (Object.keys(this.getPersonalInfo).length > 0) {
+      if (this.getPersonalInfo.isCert === "1") {
+        // 实名认证信息 sart
+        this.infoList[0].value = this.getPersonalInfo.custName;
+        this.infoList[0].readonly = true;
+        let sexAndAge = analyzeIDCard(this.getPersonalInfo.certNo);
+        // this.infoList[1].value =
+        //   this.getPersonalInfo.userSex === "1" ? "男" : "女";
+        this.infoList[1].value = sexAndAge.sex;
+        this.infoList[1].readonly = true;
+        this.infoList[2].value = sexAndAge.age;
+        this.infoList[2].readonly = true;
+        // 实名认证信息 end
+        if (this.getPersonalInfo.stature) {
+          this.infoList[3].value = this.getPersonalInfo.stature;
+        }
+        if (this.getPersonalInfo.shoeSize) {
+          this.infoList[4].value = this.getPersonalInfo.shoeSize;
+        }
+        if (this.getPersonalInfo.mainMobile) {
+          this.infoList[5].value = this.getPersonalInfo.mainMobile;
+        }
+        if (this.getPersonalInfo.logoAddr) {
+          this.logoAddr = baseUrlConfig.imgUrl + this.getPersonalInfo.logoAddr;
+        }
+      }
+    }
+  },
+
+  methods: {
+    uploadLogoAddr(url) {
+      this.logoAddr = url;
+    },
+    updatedPersonInfo() {
+      updateUserInfoMath({
+        mobileNo: "18629512681",
+        logoAddr: this.logoAddr,
+        shoeSize: "42",
+        stature: "175"
+      }).then(res => {
+        console.log(res);
+      });
+    }
+  },
+
+  computed: {
+    ...mapGetters(["getPersonalInfo"])
+  }
 };
 </script>
 
@@ -126,6 +205,11 @@ export default {
           font-family: @yhUI;
           font-weight: bold;
           color: @myselfListTitleColor;
+        }
+        .left-class {
+          font-size: @fs15;
+          color: @titleColor;
+          font-family: @pfSC;
         }
       }
     }

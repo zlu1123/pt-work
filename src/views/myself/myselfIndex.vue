@@ -13,11 +13,17 @@
       </div>
       <div class="myself-detail">
         <div class="name-verified">
-          <div class="name">微信用户45565</div>
-          <div class="verified">已认证</div>
+          <div class="name ellipsis">微信昵称：{{ personalInfo.userName }}</div>
+          <div class="verified">
+            {{ personalInfo.isCert === "1" ? "已" : "未" }}认证
+          </div>
         </div>
-        <div class="tel-num">电话号码：15509186643</div>
-        <div>用户姓名：{{ personalInfo.userName }}</div>
+        <div class="tel-num" v-if="personalInfo.mainMobile">
+          电话号码：{{ personalInfo.mainMobile }}
+        </div>
+        <div v-if="personalInfo.custName">
+          用户姓名：{{ personalInfo.custName }}
+        </div>
       </div>
     </div>
     <div class="myself-info-list">
@@ -30,7 +36,7 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <div class="login-out" @click="test">
+      <div class="login-out">
         退出登录
       </div>
     </div>
@@ -39,7 +45,7 @@
 
 <script>
 import listItem from "./common/listItem.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "",
   components: {
@@ -81,28 +87,44 @@ export default {
     };
   },
 
-  mounted() {
-    this.getPersonalInfo();
+  async mounted() {
+    await this.requestPersonalInfo();
+    this.personalInfo = this.getPersonalInfo;
   },
 
   methods: {
-    ...mapActions(["requestPersonalInfo"]),
+    ...mapActions(["requestPersonalInfo", "requestBankList"]),
 
-    getPersonalInfo() {
-      this.requestPersonalInfo().then(res => {
-        if (res && res.retCode === "00000") {
-          this.personalInfo = res.data;
+    async goToNextPage(item) {
+      if (item.path === "/myBankCard") {
+        if (this.getPersonalInfo.isCert !== "1") {
+          this.$toast("您暂未进行身份证实名认证，请先认证");
+          return;
+        } else {
+          await this.requestBankList();
+          if (!this.getBandCardList || this.getBandCardList.length === 0) {
+            item.path = "/addBankCard";
+          }
         }
-        console.log(this.personalInfo);
-      });
-    },
-
-    goToNextPage(item) {
+      } else if (item.path === "/personalInfo") {
+        if (this.getPersonalInfo.isCert !== "1") {
+          this.$toast("您暂未进行身份证实名认证，请先认证");
+          return;
+        }
+      }
       this.$router.push({
         path: item.path
       });
-    },
-    test() {}
+    }
+  },
+
+  computed: {
+    ...mapGetters(["getPersonalInfo", "getBandCardList"])
+  },
+
+  async activated() {
+    await this.requestPersonalInfo();
+    this.personalInfo = this.getPersonalInfo;
   }
 };
 </script>
@@ -126,8 +148,10 @@ export default {
           font-size: 18px;
           font-family: @pfSC;
           font-weight: bold;
+          flex: 5;
         }
         .verified {
+          flex: 1;
           font-size: 12px;
           border: 1px solid @myselfNameColor;
           padding: 1px 2px;

@@ -130,6 +130,7 @@ export const handleRequestPromise = (
 };
 
 const POST = "post";
+const GET = "get";
 
 // 职位报名
 export const enRoll = params => {
@@ -222,4 +223,39 @@ export const payRollInfo = params => {
 
 export const upLoadHealthCert = params => {
   return axiosRequest(POST, urlConstant.upLoadHealthCert, params);
+};
+
+export const usrIdtfyCert = params => {
+  return axiosRequest(POST, urlConstant.usrIdtfyCert, params);
+};
+
+export const enterpiseRecharge = params => {
+  return axiosRequest(POST, urlConstant.enterpiseRecharge, params);
+};
+
+export const enterpriseReleasePage = (params, headers) => {
+  return axiosRequest(POST, urlConstant.enterpriseReleasePage, params, headers);
+};
+
+export const postionReleasePage = (params, headers) => {
+  return axiosRequest(POST, urlConstant.postionReleasePage, params, headers);
+};
+
+export const cardAdd = (params, headers) => {
+  return axiosRequest(POST, urlConstant.cardAdd, params);
+};
+
+export const cardQuery = (params, headers) => {
+  return axiosRequest(POST, urlConstant.cardQuery, params);
+};
+
+export const rechargeCallBack = (params, headers) => {
+  return axiosRequest(POST, urlConstant.rechargeCallBack, params);
+};
+
+export const cardLogoQuery = (params, headers) => {
+  return axiosRequest(
+    GET,
+    urlConstant.cardLogoQuery + "?d=cashier&t=" + params
+  );
 };

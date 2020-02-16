@@ -7,16 +7,31 @@
       </div>
     </div>
     <div class="list__item-info" v-if="myItem.isCertification">
-      <div class="left">
-        <van-image
-          width="86"
-          height="60"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        />
+      <div class="list__item" v-if="myItem.path === 'idCertification'">
+        <div class="left">
+          <van-image
+            lazy-load
+            width="86"
+            height="60"
+            :src="getImgUrl(myItem.identImageAddr)"
+          />
+        </div>
+        <div class="right">
+          <div class="name" v-html="getName"></div>
+          <div class="id-card">
+            身份证号：<span>{{ myItem.certNo }}</span>
+          </div>
+        </div>
       </div>
-      <div class="right">
-        <div class="name">姓 名：<span>李江涛</span></div>
-        <div class="id-card">身份证号：<span>610303015957426523</span></div>
+      <div class="list__item" v-if="myItem.path === 'healthCertification'">
+        <div class="content">
+          <van-image
+            lazy-load
+            width="200"
+            height="150"
+            :src="getImgUrl(myItem.identImageAddr)"
+          />
+        </div>
       </div>
     </div>
     <div class="list__item__btn" v-else>
@@ -26,7 +41,8 @@
 </template>
 
 <script>
-import { Image } from "vant";
+import { baseUrlConfig } from "../../../service/baseUrl";
+
 export default {
   name: "certificationListItem",
   props: {
@@ -36,12 +52,20 @@ export default {
       default: {}
     }
   },
-  components: {
-    [Image.name]: Image
-  },
+
   methods: {
     goCertification() {
       this.$emit("goCertification", this.myItem);
+    },
+
+    getImgUrl(img) {
+      return baseUrlConfig.imgUrl + img;
+    }
+  },
+
+  computed: {
+    getName() {
+      return `姓      名：<span style="color: #1E1B1B;">${this.myItem.custName}</span>`;
     }
   }
 };
@@ -78,27 +102,35 @@ export default {
     }
   }
   .list__item-info {
-    padding: 0 18px 0 11px;
-    display: flex;
-    justify-content: flex-start;
-    .left {
-      margin-top: 13px;
-      padding-bottom: 21px;
-    }
-    .right {
-      margin-left: 18px;
-      div {
-        margin-top: 19px;
-        font-size: @fs13;
-        font-family: @pfSC;
-        line-height: @fs18;
-        color: @chooseColor;
-        span {
-          color: @myCertificationColor;
+    .list__item {
+      padding: 0 18px 0 11px;
+      display: flex;
+      justify-content: flex-start;
+      .left {
+        margin-top: 13px;
+        padding-bottom: 21px;
+      }
+      .right {
+        margin-left: 18px;
+        div {
+          margin-top: 19px;
+          font-size: @fs13;
+          font-family: @pfSC;
+          line-height: @fs18;
+          color: @chooseColor;
+          span {
+            color: @myCertificationColor;
+          }
+        }
+        .name {
+          white-space: pre-wrap;
         }
       }
-      .name {
-        white-space: pre-wrap;
+      .content {
+        padding: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
       }
     }
   }

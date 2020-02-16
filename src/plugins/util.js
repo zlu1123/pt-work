@@ -55,6 +55,17 @@ export const formatDate = date => {
 };
 
 /**
+ * return HH:mm
+ */
+export const formatDatemmss = date => {
+  let time = new Date(Date.parse(date));
+  // time.setTime(time.setHours(time.getHours() + 8));
+  let h = addZero(time.getHours());
+  let m = addZero(time.getMinutes());
+  return h + ":" + m;
+};
+
+/**
  * return YYYY年MM月DD
  */
 export const formatDateYYYYMMDD = date => {
@@ -181,4 +192,40 @@ export const checkID = ID => {
   //   ',' +
   //   (ID.substr(16, 1) % 2 ? ' 男' : '女')
   // )
+};
+
+/**
+ * 根据身份证号得到姓别和精确计算年龄
+ */
+export const analyzeIDCard = IDCard => {
+  let sexAndAge = {};
+  // 获取用户身份证号码
+  let userCard = IDCard;
+  // 如果身份证号码为undefind则返回空
+  if (!userCard) {
+    return sexAndAge;
+  }
+  // 获取性别
+  if (parseInt(userCard.substr(16, 1)) % 2 === 1) {
+    sexAndAge.sex = "男";
+  } else {
+    sexAndAge.sex = "女";
+  }
+  // 获取出生年月日
+  // userCard.substring(6,10) + "-" + userCard.substring(10,12) + "-" + userCard.substring(12,14);
+  let yearBirth = userCard.substring(6, 10);
+  let monthBirth = userCard.substring(10, 12);
+  let dayBirth = userCard.substring(12, 14);
+  // 获取当前年月日并计算年龄
+  let myDate = new Date();
+  let monthNow = myDate.getMonth() + 1;
+  let dayNow = myDate.getDay();
+  let age = myDate.getFullYear() - yearBirth;
+  if (monthNow < monthBirth || (monthNow === monthBirth && dayNow < dayBirth)) {
+    age--;
+  }
+  // 得到年龄
+  sexAndAge.age = age.toString();
+  // 返回性别和年龄
+  return sexAndAge;
 };
