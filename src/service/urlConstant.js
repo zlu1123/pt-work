@@ -25,7 +25,7 @@ export const queryCurrentDayClock =
 export const enterpisePunchCardRecord =
   baseUrlConfig.proxyURL + "/enterpise/punchCardRecord"; // 企业查询打卡信息
 
-export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 企业查询打卡信息
+export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 查询微信相关信息
 
 export const noticeAdPage = baseUrlConfig.proxyURL + "/noticeAd/page"; // 广告查询-分页
 
@@ -73,3 +73,7 @@ export const cardAdd = baseUrlConfig.proxyURL + "/worker/cardAdd";
 
 // 银行卡列表
 export const cardQuery = baseUrlConfig.proxyURL + "/worker/cardQuery";
+
+// 支付完成上传接口
+export const rechargeCallBack =
+  baseUrlConfig.proxyURL + "/enterpise/rechargeCallBack";

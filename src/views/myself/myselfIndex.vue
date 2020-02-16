@@ -99,11 +99,17 @@ export default {
       if (item.path === "/myBankCard") {
         if (this.getPersonalInfo.isCert !== "1") {
           this.$toast("您暂未进行身份证实名认证，请先认证");
+          return;
         } else {
           await this.requestBankList();
           if (!this.getBandCardList || this.getBandCardList.length === 0) {
             item.path = "/addBankCard";
           }
+        }
+      } else if (item.path === "/personalInfo") {
+        if (this.getPersonalInfo.isCert !== "1") {
+          this.$toast("您暂未进行身份证实名认证，请先认证");
+          return;
         }
       }
       this.$router.push({

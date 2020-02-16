@@ -97,20 +97,6 @@ export default {
   computed: {
     ...mapGetters(["getBandCardList"])
   }
-
-  // beforeRouteEnter(to, from, next) {
-  //   // ...
-  //   if (from.path === "/addBankCard") {
-  //     next(vm => {
-  //       vm.$store.dispatch("requestBankList");
-  //       vm.cardList = vm.$store.getters.getBandCardList;
-  //       if (vm.cardList.length > 0) {
-  //         vm.getCardLogo(vm.cardList);
-  //       }
-  //     });
-  //   }
-  //   next();
-  // }
 };
 </script>
 

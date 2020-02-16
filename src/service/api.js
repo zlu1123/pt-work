@@ -249,6 +249,10 @@ export const cardQuery = (params, headers) => {
   return axiosRequest(POST, urlConstant.cardQuery, params);
 };
 
+export const rechargeCallBack = (params, headers) => {
+  return axiosRequest(POST, urlConstant.rechargeCallBack, params);
+};
+
 export const cardLogoQuery = (params, headers) => {
   return axiosRequest(
     GET,

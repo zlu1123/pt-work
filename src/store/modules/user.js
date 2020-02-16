@@ -1,4 +1,9 @@
-import { handleRequestPromise, cardQuery } from "../../service/api";
+import {
+  handleRequestPromise,
+  cardQuery,
+  cardAdd,
+  rechargeCallBack
+} from "../../service/api";
 export default {
   state: {
     bandCard: []
@@ -22,6 +27,28 @@ export default {
           commit("setBandCard", bankInfo.data.list);
         }
       } catch (error) {}
+    },
+    async addBankCard({ commit, state, dispatch }, param) {
+      let cardInfo = "";
+      try {
+        cardInfo = await handleRequestPromise(cardAdd, param);
+        if (cardInfo && cardInfo.retCode === "00000") {
+          await dispatch("requestBankList");
+        }
+      } catch (error) {}
+      return cardInfo;
+    },
+    /**
+     * 支付完成回调
+     */
+    async addRechargeCallBack({ commit, state }, param) {
+      let result = "";
+      try {
+        result = await handleRequestPromise(rechargeCallBack, param);
+      } catch (e) {
+      } finally {
+      }
+      return result;
     }
   }
 };

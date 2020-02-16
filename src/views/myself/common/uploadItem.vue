@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { Uploader, Icon } from "vant";
 import { mapActions } from "vuex";
 import { baseUrlConfig } from "../../../service/baseUrl";
 export default {
@@ -40,16 +39,15 @@ export default {
     imgTipName: {
       type: String,
       default: ""
+    },
+    imgUrl: {
+      type: String,
+      default: ""
     }
-  },
-  components: {
-    [Uploader.name]: Uploader,
-    [Icon.name]: Icon
   },
 
   data() {
     return {
-      imgUrl: "",
       maxSize: 1048576,
       maxCount: 1
     };

@@ -13,7 +13,7 @@
       </van-steps>
     </div>
     <div class="check-in-btn" @click="checkIn">
-      {{ checkInList.lenght === 2 ? "下班打卡" : "上班打卡" }}
+      {{ getBtnshow }}
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ import checkInListItem from "./common/checkInListItem";
 import { clockInOrSignOut, queryCurrentDayClock } from "../../service/api";
 import { mapGetters } from "vuex";
 import { gettersName } from "../../common/constants";
-import { formatDate } from "../../plugins/util";
+import { formatDate, formatDatemmss } from "../../plugins/util";
 export default {
   name: "checkInSituation",
   components: {
@@ -46,30 +46,35 @@ export default {
     getCheckPostionInfo() {
       queryCurrentDayClock().then(res => {
         if (res && res.data.retCode === "00000") {
-          this.postionApplyId = res.data.data.postionInfo[0].postionApplyId;
-          this.postionId = res.data.data.postionInfo[0].postionId;
-          this.merchId = res.data.data.postionInfo[0].merchId;
-          this.checkInList = this.getCheckInfo(res.data.data.clockInfo);
+          this.postionApplyId = res.data.data.postionInfo.postionApplyId;
+          this.postionId = res.data.data.postionInfo.postionId;
+          // this.merchId = res.data.data.postionInfo.merchId;
+          this.checkInList = this.getCheckInfo(
+            res.data.data.clockInfo,
+            res.data.data.postionInfo
+          );
         }
       });
     },
-    getCheckInfo(info) {
+    getCheckInfo(info, positonInfo) {
       let list = [];
       if (info.length > 0) {
         let checkInfo = {
-          checkInTime: info[0].clockBeginDate,
-          positionName: info[0].postionName,
+          checkInTime: positonInfo.clockBeginDate,
+          positionName: positonInfo.postionName,
           checkInFlag: "up",
-          alreadyCheckIn: true
+          alreadyCheckIn: formatDatemmss(info[0].clockTime)
         };
         list.push(checkInfo);
         if (info[1]) {
-          list[1].checkInTime = info[1].clockEndDate;
-          list[1].positionName = info[1].postionId;
-          list[1].checkInFlag = "down";
-          list[1].alreadyCheckIn = true;
+          let endClock = {
+            checkInTime: positonInfo.clockEndDate,
+            positionName: positonInfo.postionName,
+            checkInFlag: "down",
+            alreadyCheckIn: formatDatemmss(info[1].clockTime)
+          };
+          list.push(endClock);
         }
-      } else {
       }
       return list;
     },
@@ -79,13 +84,23 @@ export default {
       });
     },
     checkIn() {
+      // if (this.getBtnshow === "下班打卡") {
+      //   if(this.checkInList.length === 2){
+
+      //   }
+      // }
       clockInOrSignOut({
-        merchId: this.merchId,
+        // merchId: this.merchId,
         postionId: this.postionId,
         postionApplyId: this.postionApplyId,
         clockType: this.checkInList.length === 0 ? "1" : "2", // 1上班 2下班
         clockAddr: this.getLocationAdrr.join(","), // 经纬度
         currentDay: formatDate(new Date()) // new Date();
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.$toast("打卡成功");
+          this.getCheckPostionInfo();
+        }
       });
     }
   },
@@ -102,6 +117,12 @@ export default {
         }
       }
       return [108.93984, 34.34127];
+    },
+
+    getBtnshow() {
+      return this.checkInList && this.checkInList.length === 0
+        ? "上班打卡"
+        : "下班打卡";
     }
   }
 };

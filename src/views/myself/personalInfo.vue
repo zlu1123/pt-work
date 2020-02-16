@@ -28,6 +28,7 @@
             :readonly="item.readonly"
             :placeholder="item.placeholder"
             input-align="right"
+            :type="item.type"
           />
         </van-cell-group>
         <!-- <person-list-item
@@ -44,6 +45,7 @@
           img-tip-name="请上传真实人员照片"
           @getUploadImgUrl="uploadLogoAddr"
           upload-height="180px"
+          :img-url="logoAddr"
         ></upload-item>
         <div class="img-size">
           大小3M以内
@@ -64,6 +66,8 @@
 import uploadItem from "./common/uploadItem";
 import { mapGetters } from "vuex";
 import { updateUserInfoMath } from "../../service/api";
+import { analyzeIDCard } from "../../plugins/util";
+import { baseUrlConfig } from "../../service/baseUrl";
 export default {
   name: "personalInfo",
   components: {
@@ -75,26 +79,28 @@ export default {
       infoList: [
         {
           name: "姓名",
-          value: "涛涛"
+          value: ""
         },
         {
           name: "性别",
-          value: "男"
+          value: ""
         },
         {
           name: "年龄",
-          value: "30"
+          value: ""
         },
         {
           name: "身高",
           value: "",
-          placeholder: "请输入身高",
+          placeholder: "请输入身高(cm)",
+          type: "digit",
           required: true
         },
         {
           name: "鞋码",
           value: "",
           placeholder: "请输入鞋码",
+          type: "digit",
           required: true
         },
         {
@@ -111,13 +117,29 @@ export default {
   mounted() {
     if (Object.keys(this.getPersonalInfo).length > 0) {
       if (this.getPersonalInfo.isCert === "1") {
+        // 实名认证信息 sart
         this.infoList[0].value = this.getPersonalInfo.custName;
         this.infoList[0].readonly = true;
-        this.infoList[1].value =
-          this.getPersonalInfo.userSex === "1" ? "男" : "女";
+        let sexAndAge = analyzeIDCard(this.getPersonalInfo.certNo);
+        // this.infoList[1].value =
+        //   this.getPersonalInfo.userSex === "1" ? "男" : "女";
+        this.infoList[1].value = sexAndAge.sex;
         this.infoList[1].readonly = true;
-        this.infoList[2].value = this.getPersonalInfo.certNo;
+        this.infoList[2].value = sexAndAge.age;
         this.infoList[2].readonly = true;
+        // 实名认证信息 end
+        if (this.getPersonalInfo.stature) {
+          this.infoList[3].value = this.getPersonalInfo.stature;
+        }
+        if (this.getPersonalInfo.shoeSize) {
+          this.infoList[4].value = this.getPersonalInfo.shoeSize;
+        }
+        if (this.getPersonalInfo.mainMobile) {
+          this.infoList[5].value = this.getPersonalInfo.mainMobile;
+        }
+        if (this.getPersonalInfo.logoAddr) {
+          this.logoAddr = baseUrlConfig.imgUrl + this.getPersonalInfo.logoAddr;
+        }
       }
     }
   },

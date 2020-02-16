@@ -37,8 +37,7 @@
 <script>
 import commonHeader from "../components/commonHeader";
 import commonContentHeader from "../components/commonContentHeader";
-import { cardAdd } from "../../service/api";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import CardBin from "chinabankbin";
 export default {
   components: {
@@ -59,26 +58,26 @@ export default {
     this.acctName = this.getPersonalInfo.custName;
   },
   methods: {
-    addCardEvent() {
+    ...mapActions(["requestBankList", "addBankCard"]),
+    async addCardEvent() {
       if (this.cardType !== "DC") {
         this.$toast("请绑定借记卡");
         return;
       }
-      cardAdd({
+      let card = await this.addBankCard({
         acctNo: this.acctNo,
         acctName: this.acctName,
         bankName: this.bankName,
         bankCode: this.bankCode,
         cardType: this.cardType,
         cardTypeName: this.cardTypeName
-      }).then(res => {
-        if (res && res.data.retCode === "00000") {
-          this.$toast("绑定成功");
-          this.$router.replace({
-            path: "/myBankCard"
-          });
-        }
       });
+      if (card && card.retCode === "00000") {
+        this.$toast("绑定成功");
+        this.$router.replace({
+          path: "/myBankCard"
+        });
+      }
     },
 
     /**

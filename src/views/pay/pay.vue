@@ -22,7 +22,7 @@
 import { enterpiseRecharge } from "../../service/api";
 import { mapActions, mapGetters } from "vuex";
 import { baseUrlConfig } from "../../service/baseUrl";
-// import { getWechatPay } from "../../plugins/wechatUtil";
+import { getWechatPay } from "../../plugins/wechatUtil";
 export default {
   data() {
     return {
@@ -49,34 +49,40 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["requestAllMerchListInfo", "requestAllPositionInfo"]),
+    ...mapActions([
+      "requestAllMerchListInfo",
+      "requestAllPositionInfo",
+      "addRechargeCallBack"
+    ]),
     confirmPay(data) {
       // eslint-disable-next-line no-undef
-      WeixinJSBridge.invoke(
-        "getBrandWCPayRequest",
-        {
-          appId: data.appId, // 公众号名称，由商户传入
-          timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
-          nonceStr: data.nonceStr, // 随机串
-          package: data.package,
-          signType: data.signType, // 微信签名方式：
-          paySign: data.sign // 微信签名
-        },
-        // eslint-disable-next-line space-before-function-paren
-        function(res) {
-          if (res.err_msg === "get_brand_wcpay_request:ok") {
-            // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-            console.log(111);
-          } else {
-            console.log(222);
-          }
-        }
-      );
-      // getWechatPay(data, this.getPayResult);
+      // WeixinJSBridge.invoke(
+      //   "getBrandWCPayRequest",
+      //   {
+      //     appId: data.appId, // 公众号名称，由商户传入
+      //     timeStamp: data.timeStamp, // 时间戳，自1970年以来的秒数
+      //     nonceStr: data.nonceStr, // 随机串
+      //     package: data.package,
+      //     signType: data.signType, // 微信签名方式：
+      //     paySign: data.sign // 微信签名
+      //   },
+      //   // eslint-disable-next-line space-before-function-paren
+      //   function(res) {
+      //     if (res.err_msg === "get_brand_wcpay_request:ok") {
+      //       // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+      //       console.log(111);
+      //     } else {
+      //       console.log(222);
+      //     }
+      //   }
+      // );
+      getWechatPay(data, this.getPayResult);
     },
 
-    getPayResult(data) {
-      console.log(data);
+    async getPayResult(data) {
+      await this.addRechargeCallBack();
+      // eslint-disable-next-line no-undef
+      wx.closeWindow();
     },
 
     // 确认买单打开去支付弹框
