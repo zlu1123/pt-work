@@ -6,8 +6,9 @@ import { getOpenId } from "../../service/api";
 import { baseUrlConfig } from "../../service/baseUrl";
 import { getUrlParams } from "../../plugins/util";
 import { mapGetters, mapActions } from "vuex";
+import { localData } from "../../plugins/local";
 
-const url = localStorage.getItem("now_url");
+const url = localData("get", "now_url");
 
 export default {
   data() {
@@ -36,15 +37,16 @@ export default {
         getOpenId({ code: code }).then(res => {
           // 返回状态和UId
           const data = res.data.data;
-          if (data.token) {
-            localStorage.setItem("token", data.token);
-          }
-          if (data.openid) {
-            localStorage.setItem("openid", data.openid);
-          }
+          // if (data.token) {
+          //   localData("set", "token", data.token);
+          // }
+          // if (data.openid) {
+          //   localData("set", "openid", data.openid);
+          // }
+          localData("set", "userInfo", data);
           window.location.replace(baseUrlConfig.weChatUrl + "/#" + url);
           if (url) {
-            localStorage.removeItem("now_url");
+            localData("clean", "now_url");
           }
         });
       }

@@ -106,7 +106,10 @@ export default {
             item.path = "/addBankCard";
           }
         }
-      } else if (item.path === "/personalInfo") {
+      } else if (
+        item.path === "/personalInfo" ||
+        item.path === "/checkInSituation"
+      ) {
         if (this.getPersonalInfo.isCert !== "1") {
           this.$toast("您暂未进行身份证实名认证，请先认证");
           return;

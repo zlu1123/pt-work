@@ -36,7 +36,8 @@ export default {
       checkInList: [],
       postionApplyId: "",
       postionId: "",
-      merchId: ""
+      merchId: "",
+      unPostion: false // 是否有可打卡职位
     };
   },
   mounted() {
@@ -46,13 +47,19 @@ export default {
     getCheckPostionInfo() {
       queryCurrentDayClock().then(res => {
         if (res && res.data.retCode === "00000") {
-          this.postionApplyId = res.data.data.postionInfo.postionApplyId;
-          this.postionId = res.data.data.postionInfo.postionId;
-          // this.merchId = res.data.data.postionInfo.merchId;
-          this.checkInList = this.getCheckInfo(
-            res.data.data.clockInfo,
-            res.data.data.postionInfo
-          );
+          let positonInfo = res.data.data.postionInfo;
+          if (positonInfo && Object.keys(positonInfo).length > 0) {
+            this.unPostion = true;
+            this.postionApplyId = positonInfo.postionApplyId;
+            this.postionId = positonInfo.postionId;
+            // this.merchId = res.data.data.postionInfo.merchId;
+            this.checkInList = this.getCheckInfo(
+              res.data.data.clockInfo,
+              positonInfo
+            );
+          } else {
+            this.unPostion = false;
+          }
         }
       });
     },
@@ -84,11 +91,10 @@ export default {
       });
     },
     checkIn() {
-      // if (this.getBtnshow === "下班打卡") {
-      //   if(this.checkInList.length === 2){
-
-      //   }
-      // }
+      if (!this.unPostion) {
+        this.$toast("您当前无可打卡职位，请先报名");
+        return;
+      }
       clockInOrSignOut({
         // merchId: this.merchId,
         postionId: this.postionId,
@@ -109,10 +115,11 @@ export default {
     ...mapGetters([gettersName.getLocationInfo]),
 
     getLocationAdrr() {
+      debugger;
       let info = this[gettersName.getLocationInfo];
       if (info && Object.keys(info).length > 0) {
         if (info.detail) {
-          let location = info.detail.addressComponents.location;
+          let location = info.detail.location;
           return [location.lng, location.lat];
         }
       }

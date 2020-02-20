@@ -27,12 +27,14 @@ export default {
           name: "实名认证",
           path: "idCertification",
           isCertification: 0,
+          waitApply: 0,
           personalInfo: {}
         },
         {
           name: "健康认证",
           path: "healthCertification",
           isCertification: 0,
+          waitApply: 0,
           personalInfo: {}
         }
       ]
@@ -46,6 +48,11 @@ export default {
           this.certificationList[0],
           this.getPersonalInfo
         );
+      } else {
+        if (this.getPersonalInfo.custName && this.getPersonalInfo.certNo) {
+          this.certificationList[0].isCertification = 0;
+          this.certificationList[0].waitApply = 1;
+        }
       }
       if (this.getPersonalInfo.healthImageAddr) {
         this.certificationList[1].isCertification = 1;

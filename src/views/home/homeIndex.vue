@@ -45,6 +45,7 @@ import { Tabbar, TabbarItem } from "vant";
 import myselfIndex from "../myself/myselfIndex";
 import positionIndex from "../position/positionIndex";
 import jobIndex from "../job/jobIndex";
+import { localData } from "../../plugins/local";
 // import { mutationsName } from "../../common/constants";
 export default {
   name: "homeIndex",
@@ -76,7 +77,33 @@ export default {
     };
   },
   methods: {},
-  activated() {}
+  activated() {},
+  beforeRouteEnter(to, from, next) {
+    const userInfo = localData("get", "userInfo");
+    const userType = userInfo.userType;
+    if (userType) {
+      if (userType !== "01") {
+        next(vm => {
+          vm.$router.replace({
+            path: "/loginIndex",
+            query: {
+              roleInfo: {
+                path: "/checkIn",
+                loginType: userType
+              }
+            }
+          });
+        });
+      }
+    } else {
+      next(vm => {
+        vm.$router.replace({
+          path: "/selectRole"
+        });
+      });
+    }
+    next();
+  }
 };
 </script>
 <style lang="less" scoped>

@@ -110,7 +110,7 @@ export default {
       let newList = [];
       if (list && list.length > 0) {
         for (let i = 0; i < list.length; i++) {
-          if (list[i].applyExemStat === "3") {
+          if (list[i].applyExemStat === "3" || list[i].applyExemStat === "1") {
             continue;
           }
           newList.push(list[i]);

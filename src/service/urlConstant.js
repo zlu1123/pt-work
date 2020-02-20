@@ -77,3 +77,6 @@ export const cardQuery = baseUrlConfig.proxyURL + "/worker/cardQuery";
 // 支付完成上传接口
 export const rechargeCallBack =
   baseUrlConfig.proxyURL + "/enterpise/rechargeCallBack";
+
+export const examCardRecordList =
+  baseUrlConfig.proxyURL + "/platformer/examCardRecordList";

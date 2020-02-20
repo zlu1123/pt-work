@@ -16,8 +16,8 @@
         v-else
         class="upload-content-img"
         :style="{ height: uploadHeight }"
-        :src="imgUrl"
-        alt=""
+        :src="getImgUrl"
+        lazy-load
       />
     </div>
     <div class="img-tip">
@@ -68,9 +68,14 @@ export default {
       // 此时可以自行将文件上传至服务器
       this.uploadImagePublic(file).then(res => {
         file.content = res.data[0].imgUrl;
-        this.imgUrl = baseUrlConfig.imgUrl + res.data[0].imgUrl;
         this.$emit("getUploadImgUrl", res.data[0].imgUrl);
       });
+    }
+  },
+
+  computed: {
+    getImgUrl() {
+      return baseUrlConfig.imgUrl + this.imgUrl;
     }
   }
 };

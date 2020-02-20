@@ -3,6 +3,8 @@
 import Vue from "vue";
 import store from "../store";
 import axios from "axios";
+import { localData } from "../plugins/local";
+import { Toast } from "vant";
 // import { baseUrlConfig } from "../service/baseUrl";
 
 // Full config:  https://github.com/axios/axios#request-config
@@ -87,6 +89,9 @@ axios.interceptors.response.use(
     // Do something with response data
     store.commit("hideLoading");
     // return response.data;
+    if (response && response.data.retCode !== "00000") {
+      Toast(response.data.retInfo);
+    }
     return response;
   },
   error => {
@@ -130,7 +135,7 @@ export function axiosRequest(methods, requestUrl, params, header) {
 
 export function getHeader(header) {
   let headers = {
-    openId: localStorage.getItem("openid") || ""
+    openId: localData("get", "userInfo").openid || ""
   };
   return Object.assign(headers, header);
 }

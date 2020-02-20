@@ -120,7 +120,7 @@ import {
 } from "../../common/constants";
 import { formatYYYYMMDD, dateDiff } from "../../plugins/util";
 import { baseUrlConfig } from "../../service/baseUrl";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "jobDetail",
   components: {
@@ -169,6 +169,8 @@ export default {
     });
   },
   methods: {
+    ...mapActions(["requestPersonalInfo"]),
+
     getImgUrl(img) {
       return img && baseUrlConfig.imgUrl + img;
     },
@@ -237,7 +239,12 @@ export default {
       });
     },
 
-    applyWork() {
+    async applyWork() {
+      await this.requestPersonalInfo();
+      if (this.getPersonalInfo.isCert !== "1") {
+        this.$toast("您暂未进行身份证实名认证，请先认证");
+        return;
+      }
       this.$dialog.confirm({
         title: "提醒",
         message: `确认申请该职位吗？`,
@@ -266,7 +273,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo])
+    ...mapGetters([gettersName.getLocationInfo, "getPersonalInfo"])
   }
 };
 </script>
