@@ -255,3 +255,7 @@ export const rechargeCallBack = (params, headers) => {
 export const examCardRecordList = (params, headers) => {
   return axiosRequest(POST, urlConstant.examCardRecordList, params);
 };
+
+export const userLoginOut = (params, headers) => {
+  return axiosRequest(POST, urlConstant.userLoginOut, params);
+};

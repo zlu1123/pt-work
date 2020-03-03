@@ -80,3 +80,5 @@ export const rechargeCallBack =
 
 export const examCardRecordList =
   baseUrlConfig.proxyURL + "/platformer/examCardRecordList";
+
+export const userLoginOut = baseUrlConfig.proxyURL + "/user/loginOut";

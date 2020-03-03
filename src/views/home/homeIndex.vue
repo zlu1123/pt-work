@@ -46,7 +46,7 @@ import myselfIndex from "../myself/myselfIndex";
 import positionIndex from "../position/positionIndex";
 import jobIndex from "../job/jobIndex";
 import { localData } from "../../plugins/local";
-// import { mutationsName } from "../../common/constants";
+import { mapActions } from "vuex";
 export default {
   name: "homeIndex",
   components: {
@@ -56,8 +56,9 @@ export default {
     positionIndex,
     jobIndex
   },
-  mounted() {
+  async mounted() {
     // this.getUserLocation();
+    await this.requestWechatInfo();
   },
   data() {
     return {
@@ -76,33 +77,33 @@ export default {
       }
     };
   },
-  methods: {},
+  methods: {
+    ...mapActions(["requestWechatInfo"])
+  },
   activated() {},
+
   beforeRouteEnter(to, from, next) {
     const userInfo = localData("get", "userInfo");
     const userType = userInfo.userType;
     if (userType) {
       if (userType !== "01") {
-        next(vm => {
-          vm.$router.replace({
-            path: "/loginIndex",
-            query: {
-              roleInfo: {
-                path: "/checkIn",
-                loginType: userType
-              }
+        next({
+          path: "/loginIndex",
+          query: {
+            roleInfo: {
+              path: "/checkIn",
+              loginType: userType
             }
-          });
+          }
         });
+      } else {
+        next();
       }
     } else {
-      next(vm => {
-        vm.$router.replace({
-          path: "/selectRole"
-        });
+      next({
+        path: "/selectRole"
       });
     }
-    next();
   }
 };
 </script>

@@ -36,7 +36,7 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <div class="login-out">
+      <div class="login-out" @click="loginOut">
         退出登录
       </div>
     </div>
@@ -46,6 +46,8 @@
 <script>
 import listItem from "./common/listItem.vue";
 import { mapActions, mapGetters } from "vuex";
+import { userLoginOut } from "../../service/api";
+import { localData } from "../../plugins/local";
 export default {
   name: "",
   components: {
@@ -117,6 +119,14 @@ export default {
       }
       this.$router.push({
         path: item.path
+      });
+    },
+
+    loginOut() {
+      userLoginOut().then(res => {
+        if (res && res.data.retCode === "00000") {
+          localData("clean", "userInfo");
+        }
       });
     }
   },

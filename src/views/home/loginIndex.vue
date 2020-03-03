@@ -33,7 +33,7 @@
 <script>
 import { userLogin } from "../../service/api";
 import { localData } from "../../plugins/local";
-import md5 from "js-md5";
+// import md5 from "js-md5";
 export default {
   data() {
     return {
@@ -49,7 +49,8 @@ export default {
     userLoginMethod() {
       userLogin({
         loginId: this.username,
-        pwd: md5(this.password),
+        // pwd: md5(this.password),
+        pwd: this.password,
         loginType: this.userType.loginType // 02 企业人员  03 平台人员
       }).then(res => {
         localData("set", "merchChargeId", res.data.data.merchChargeId);

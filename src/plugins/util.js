@@ -66,6 +66,18 @@ export const formatDatemmss = date => {
 };
 
 /**
+ * return HH:mm:ss
+ */
+export const formatDatehhmmss = date => {
+  let time = new Date(Date.parse(date));
+  // time.setTime(time.setHours(time.getHours() + 8));
+  let h = addZero(time.getHours());
+  let m = addZero(time.getMinutes());
+  let s = addZero(time.getSeconds());
+  return h + ":" + m + ":" + s;
+};
+
+/**
  * return YYYY年MM月DD
  */
 export const formatDateYYYYMMDD = date => {

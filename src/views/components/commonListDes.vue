@@ -3,6 +3,7 @@
     <div class="list-des-content-info">
       <div>{{ titleName }}</div>
       <img v-if="showDes" :src="defaultImgUrl" alt="" />
+      <slot></slot>
     </div>
   </div>
 </template>

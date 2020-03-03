@@ -1,26 +1,23 @@
 <template>
   <div class="check__list__item">
     <div class="title">
-      <div class="left">{{ listItem.name }}</div>
+      <div class="left">{{ listItem.postionId }}</div>
       <div
         class="right"
         @click.stop="checkInPunchInfo"
-        :style="{ color: listItem.isCheckIn ? '#21A675' : '#F23800' }"
+        :style="{ color: isCheckIn ? '#F23800' : '#21A675' }"
       >
-        {{ listItem.isCheckIn ? "" : "已" }}审核
+        {{ isCheckIn ? "已" : "" }}审核
       </div>
     </div>
-    <div
-      class="content"
-      v-for="(item, index) of listItem.workInfo"
-      :key="index"
-    >
+    <div class="content" v-for="(item, index) of getWorkInfo()" :key="index">
       {{ item.label }}：<span>{{ item.value }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { formatDatehhmmss } from "../../../plugins/util";
 export default {
   name: "punchInfoListItem",
   props: {
@@ -28,13 +25,34 @@ export default {
       type: Object,
       // eslint-disable-next-line vue/require-valid-default-prop
       default: {}
+    },
+    isCheckIn: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     checkInPunchInfo() {
-      if (this.listItem.isCheckIn) {
+      if (!this.isCheckIn) {
         this.$emit("checkInPunchInfo");
       }
+    },
+    getWorkInfo() {
+      let workInfo = [
+        {
+          label: "打 卡 人",
+          value: this.listItem.userId
+        },
+        {
+          label: "打卡类型",
+          value: this.listItem.clockType === "1" ? "上班" : "下班"
+        },
+        {
+          label: "打卡时间",
+          value: formatDatehhmmss(this.listItem.clockTime)
+        }
+      ];
+      return workInfo;
     }
   }
 };
