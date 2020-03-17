@@ -98,7 +98,8 @@ export default {
       // }, 500);
       payRollInfo({
         pageSize: this.pageSize.toString(),
-        pageNum: this.pageNum.toString()
+        pageNum: this.pageNum.toString(),
+        txnStat: "01"
       }).then(res => {
         const resData = res.data.data;
         if (resData.list) {

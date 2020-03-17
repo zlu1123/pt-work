@@ -55,6 +55,19 @@ export const formatDate = date => {
 };
 
 /**
+ * return YYYY-MM-DD
+ */
+export const formatDateyyyyMMdd = date => {
+  let time = new Date(Date.parse(date));
+  time.setTime(time.setHours(time.getHours() + 8));
+
+  let Y = time.getFullYear();
+  let M = addZero(time.getMonth() + 1);
+  let D = addZero(time.getDate());
+  return Y + "-" + M + "-" + D;
+};
+
+/**
  * return HH:mm
  */
 export const formatDatemmss = date => {

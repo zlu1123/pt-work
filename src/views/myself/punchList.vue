@@ -6,6 +6,12 @@
       @change="change"
       :selected="punchList"
     ></uni-calendar>
+    <!-- <van-calendar
+      :poppable="false"
+      :show-title="false"
+      :show-confirm="false"
+      :style="{ height: '500px' }"
+    /> -->
     <div class="punch-info">
       <div>
         上下班打卡
@@ -39,6 +45,7 @@
 
 <script>
 import uniCalendar from "../components/uni-calendar/uni-calendar";
+import { queryCurrentDayClock } from "../../service/api";
 export default {
   name: "punchList",
   components: {
@@ -54,10 +61,22 @@ export default {
       ]
     };
   },
-  mounted() {},
+  mounted() {
+    this.getCheckInfoFormonth();
+  },
   methods: {
     change(e) {
       console.log(e);
+    },
+    getCheckInfoFormonth() {
+      queryCurrentDayClock({
+        selectFlag: "02", // 当月查询
+        currentMonth: "2020-03-01"
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          console.log(res);
+        }
+      });
     }
   }
 };

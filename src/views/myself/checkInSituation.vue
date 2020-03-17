@@ -25,6 +25,7 @@ import { clockInOrSignOut, queryCurrentDayClock } from "../../service/api";
 import { mapGetters } from "vuex";
 import { gettersName } from "../../common/constants";
 import { formatDate, formatDatemmss } from "../../plugins/util";
+
 export default {
   name: "checkInSituation",
   components: {
@@ -34,10 +35,8 @@ export default {
   data() {
     return {
       checkInList: [],
-      postionApplyId: "",
-      postionId: "",
-      merchId: "",
-      unPostion: false // 是否有可打卡职位
+      unPostion: false, // 是否有可打卡职位
+      positionInfo: {}
     };
   },
   mounted() {
@@ -45,14 +44,14 @@ export default {
   },
   methods: {
     getCheckPostionInfo() {
-      queryCurrentDayClock().then(res => {
+      queryCurrentDayClock({
+        selectFlag: "01" // 当日查询
+      }).then(res => {
         if (res && res.data.retCode === "00000") {
           let positonInfo = res.data.data.postionInfo;
           if (positonInfo && Object.keys(positonInfo).length > 0) {
             this.unPostion = true;
-            this.postionApplyId = positonInfo.postionApplyId;
-            this.postionId = positonInfo.postionId;
-            // this.merchId = res.data.data.postionInfo.merchId;
+            this.positonInfo = positonInfo;
             this.checkInList = this.getCheckInfo(
               res.data.data.clockInfo,
               positonInfo
@@ -96,12 +95,13 @@ export default {
         return;
       }
       clockInOrSignOut({
-        // merchId: this.merchId,
-        postionId: this.postionId,
-        postionApplyId: this.postionApplyId,
+        postionId: this.positonInfo.postionId,
+        postionApplyId: this.positonInfo.postionApplyId,
         clockType: this.checkInList.length === 0 ? "1" : "2", // 1上班 2下班
         clockAddr: this.getLocationAdrr.join(","), // 经纬度
-        currentDay: formatDate(new Date()) // new Date();
+        currentDay: formatDate(new Date()), // new Date();
+        postionName: this.positonInfo.postionName,
+        workerName: this.getPersonalInfo.custName
       }).then(res => {
         if (res && res.data.retCode === "00000") {
           this.$toast("打卡成功");
@@ -112,7 +112,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo]),
+    ...mapGetters([gettersName.getLocationInfo, "getPersonalInfo"]),
 
     getLocationAdrr() {
       let info = this[gettersName.getLocationInfo];

@@ -66,7 +66,6 @@ import {
   examCardRecordList
 } from "../../service/api";
 import { flatten } from "underscore";
-import { formatDate } from "../../plugins/util";
 
 export default {
   name: "checkIn",
@@ -108,7 +107,7 @@ export default {
       //   }
       // }, 500);
       enterpisePunchCardRecord({
-        // merchId: localStorage.getItem("merchChargeId")
+        examStat: "01"
       }).then(res => {
         if (res.data.retCode === "00000") {
           this.isCheckInList = this.flattenArray(res.data.data);
@@ -119,8 +118,8 @@ export default {
     settledOnLoad() {
       enterpisePunchCardRecord({
         // merchId: localStorage.getItem("merchChargeId")
-        // 01-职位申请 -02申请通过 -03职位申请不通过 -04工作审核通过 -05工作审核不通过
-        examStat: "04"
+        // 01-待审核 -02已审核
+        examStat: "02"
       }).then(res => {
         if (res.data.retCode === "00000") {
           this.settledList = this.flattenArray(res.data.data);
@@ -157,9 +156,9 @@ export default {
       }
       examCardRecordList({
         postionApplyId: this.checkInItem.postionApplyId,
-        currentDay: formatDate(new Date()),
+        currentDay: this.checkInItem.clockTime,
         clockType: this.checkInItem.clockType,
-        platformExamStat: this.radio === "1" ? "02" : "03",
+        platformExamStat: this.radio === "1" ? "02" : "03", // 02 通过，03 不通过
         refuseMsg: this.reasonForRejection
       }).then(res => {
         if (res && res.data.retCode === "00000") {
