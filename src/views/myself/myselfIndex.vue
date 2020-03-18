@@ -73,9 +73,9 @@ export default {
           name: "个人信息维护",
           path: "/personalInfo"
         },
-        {
-          name: "保险"
-        },
+        // {
+        //   name: "保险"
+        // },
         {
           name: "违约记录",
           path: "/breachInfo"

@@ -1,45 +1,45 @@
 <template>
-  <div class="uni-calendar"
-       @touchmove.stop.prevent="clean">
-    <div v-if="!insert && show"
-         class="uni-calendar__mask"
-         :class="{ 'uni-calendar--mask-show': aniMaskShow }"
-         @click="clean"></div>
-    <div v-if="insert || show"
-         class="uni-calendar__content"
-         :class="{
+  <div class="uni-calendar" @touchmove.stop.prevent="clean">
+    <div
+      v-if="!insert && show"
+      class="uni-calendar__mask"
+      :class="{ 'uni-calendar--mask-show': aniMaskShow }"
+      @click="clean"
+    ></div>
+    <div
+      v-if="insert || show"
+      class="uni-calendar__content"
+      :class="{
         'uni-calendar--fixed': !insert,
         'uni-calendar--ani-show': aniMaskShow
-      }">
-      <div v-if="!insert"
-           class="uni-calendar__header uni-calendar--fixed-top">
-        <div class="uni-calendar__header-btn-box"
-             @click="close">
-          <span class="uni-calendar__header-span uni-calendar--fixed-width">取消</span>
+      }"
+    >
+      <div v-if="!insert" class="uni-calendar__header uni-calendar--fixed-top">
+        <div class="uni-calendar__header-btn-box" @click="close">
+          <span class="uni-calendar__header-span uni-calendar--fixed-width"
+            >取消</span
+          >
         </div>
-        <div class="uni-calendar__header-btn-box"
-             @click="confirm">
-          <span class="uni-calendar__header-span uni-calendar--fixed-width">确定</span>
+        <div class="uni-calendar__header-btn-box" @click="confirm">
+          <span class="uni-calendar__header-span uni-calendar--fixed-width"
+            >确定</span
+          >
         </div>
       </div>
       <div class="uni-calendar__header">
-        <div class="uni-calendar__header-btn-box"
-             @click="pre">
+        <div class="uni-calendar__header-btn-box" @click="pre">
           <div class="uni-calendar__header-btn uni-calendar--left"></div>
         </div>
         <span class="uni-calendar__header-span">{{
           (nowDate.year || "") + "年" + (nowDate.month || "") + "月"
         }}</span>
-        <div class="uni-calendar__header-btn-box"
-             @click="next">
+        <div class="uni-calendar__header-btn-box" @click="next">
           <div class="uni-calendar__header-btn uni-calendar--right"></div>
         </div>
-        <span class="uni-calendar__backtoday"
-              @click="backtoday">回到今天</span>
+        <span class="uni-calendar__backtoday" @click="backtoday">回到今天</span>
       </div>
       <div class="uni-calendar__box">
-        <div v-if="showMonth"
-             class="uni-calendar__box-bg">
+        <div v-if="showMonth" class="uni-calendar__box-bg">
           <span class="uni-calendar__box-bg-span">{{ nowDate.month }}</span>
         </div>
         <div class="uni-calendar__weeks">
@@ -65,17 +65,23 @@
             <span class="uni-calendar__weeks-day-span">六</span>
           </div>
         </div>
-        <div class="uni-calendar__weeks"
-             v-for="(item, weekIndex) in weeks"
-             :key="weekIndex">
-          <div class="uni-calendar__weeks-item"
-               v-for="(weeks, weeksIndex) in item"
-               :key="weeksIndex">
-            <uni-calendar-item :weeks="weeks"
-                               :calendar="calendar"
-                               :selected="selected"
-                               :lunar="lunar"
-                               @change="choiceDate"></uni-calendar-item>
+        <div
+          class="uni-calendar__weeks"
+          v-for="(item, weekIndex) in weeks"
+          :key="weekIndex"
+        >
+          <div
+            class="uni-calendar__weeks-item"
+            v-for="(weeks, weeksIndex) in item"
+            :key="weeksIndex"
+          >
+            <uni-calendar-item
+              :weeks="weeks"
+              :calendar="calendar"
+              :selected="selected"
+              :lunar="lunar"
+              @change="choiceDate"
+            ></uni-calendar-item>
           </div>
         </div>
       </div>
@@ -178,7 +184,7 @@ export default {
   },
   methods: {
     // 取消穿透
-    clean() { },
+    clean() {},
     init(date) {
       this.weeks = this.cale.weeks;
       this.nowDate = this.calendar = this.cale.getInfo(date);
@@ -203,9 +209,9 @@ export default {
       this.setEmit("confirm");
       this.close();
     },
-    change() {
+    change(backtoday) {
       if (!this.insert) return;
-      this.setEmit("change");
+      this.setEmit("change", backtoday);
     },
     monthSwitch() {
       let { year, month } = this.nowDate;
@@ -214,7 +220,7 @@ export default {
         month: Number(month)
       });
     },
-    setEmit(name) {
+    setEmit(name, backtoday) {
       let { year, month, date, fullDate, lunar, extraInfo } = this.calendar;
       this.$emit(name, {
         range: this.cale.multipleStatus,
@@ -223,7 +229,8 @@ export default {
         date,
         fulldate: fullDate,
         lunar,
-        extraInfo: extraInfo || {}
+        extraInfo: extraInfo || {},
+        backtoday
       });
     },
     choiceDate(weeks) {
@@ -238,7 +245,7 @@ export default {
       this.cale.setDate(this.date);
       this.weeks = this.cale.weeks;
       this.nowDate = this.calendar = this.cale.getInfo(this.date);
-      this.change();
+      this.change(true);
     },
     pre() {
       const preDate = this.cale.getDate(this.nowDate.fullDate, -1, "month")

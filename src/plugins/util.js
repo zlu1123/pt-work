@@ -55,11 +55,24 @@ export const formatDate = date => {
 };
 
 /**
- * return YYYY-MM-DD
+ * return YYYY-MM-DD + 8小时
  */
 export const formatDateyyyyMMdd = date => {
   let time = new Date(Date.parse(date));
   time.setTime(time.setHours(time.getHours() + 8));
+
+  let Y = time.getFullYear();
+  let M = addZero(time.getMonth() + 1);
+  let D = addZero(time.getDate());
+  return Y + "-" + M + "-" + D;
+};
+
+/**
+ * return YYYY-MM-DD normal
+ */
+export const formatDateNormalyyyyMMdd = date => {
+  let time = new Date(Date.parse(date));
+  time.setTime(time.setHours(time.getHours()));
 
   let Y = time.getFullYear();
   let M = addZero(time.getMonth() + 1);
@@ -134,6 +147,16 @@ export const dateDiff = (sDate1, sDate2) => {
   );
   iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);
   return iDays;
+};
+
+/**
+ * 根据起始日期和结束日期计算小时数
+ */
+export const dateDiffHour = (startTime, endTime) => {
+  let startDiffTime = new Date(Date.parse(startTime)); // 开始时间
+  let endDiffTime = new Date(Date.parse(endTime)); // 结束时间
+  let iHours = parseInt(Math.abs(endDiffTime - startDiffTime) / 1000 / 60 / 60);
+  return iHours;
 };
 
 /**

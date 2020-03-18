@@ -94,18 +94,6 @@ export default {
   },
   methods: {
     acceptedOnLoad() {
-      // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.acceptedList.push(this.acceptedList[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.acceptedLoading = false;
-      //   // 数据全部加载完成
-      //   if (this.acceptedList.length >= 40) {
-      //     this.acceptedFinished = true;
-      //   }
-      // }, 500);
       enterpisePunchCardRecord({
         examStat: "01"
       }).then(res => {
@@ -117,8 +105,6 @@ export default {
     },
     settledOnLoad() {
       enterpisePunchCardRecord({
-        // merchId: localStorage.getItem("merchChargeId")
-        // 01-待审核 -02已审核
         examStat: "02"
       }).then(res => {
         if (res.data.retCode === "00000") {

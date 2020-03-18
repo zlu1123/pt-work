@@ -1,16 +1,16 @@
 <template>
   <div class="check__list__item">
     <div class="title">
-      <div class="left">{{ listItem.postionId }}</div>
+      <div class="left">{{ listItem.postionName }}</div>
       <div
         class="right"
         @click.stop="checkInPunchInfo"
         :style="{ color: isCheckIn ? '#F23800' : '#21A675' }"
       >
-        {{ isCheckIn ? "已" : "" }}审核
+        {{ !isCheckIn ? "审核" : getChectStates }}
       </div>
     </div>
-    <div class="content" v-for="(item, index) of getWorkInfo()" :key="index">
+    <div class="content" v-for="(item, index) of getWorkInfo" :key="index">
       {{ item.label }}：<span>{{ item.value }}</span>
     </div>
   </div>
@@ -36,12 +36,23 @@ export default {
       if (!this.isCheckIn) {
         this.$emit("checkInPunchInfo");
       }
+    }
+  },
+  computed: {
+    getChectStates() {
+      let checkInfo = "审核通过";
+      if (this.isCheckIn) {
+        if (this.listItem.refuseMsg) {
+          checkInfo = "审核不通过";
+        }
+      }
+      return checkInfo;
     },
     getWorkInfo() {
       let workInfo = [
         {
           label: "打 卡 人",
-          value: this.listItem.userId
+          value: this.listItem.workerName
         },
         {
           label: "打卡类型",
@@ -52,6 +63,12 @@ export default {
           value: formatDatehhmmss(this.listItem.clockTime)
         }
       ];
+      if (this.listItem.refuseMsg) {
+        workInfo.push({
+          label: "驳回原因",
+          value: this.listItem.refuseMsg
+        });
+      }
       return workInfo;
     }
   }
