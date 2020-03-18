@@ -45,7 +45,8 @@ import { Tabbar, TabbarItem } from "vant";
 import myselfIndex from "../myself/myselfIndex";
 import positionIndex from "../position/positionIndex";
 import jobIndex from "../job/jobIndex";
-// import { mutationsName } from "../../common/constants";
+import { localData } from "../../plugins/local";
+import { mapActions } from "vuex";
 export default {
   name: "homeIndex",
   components: {
@@ -55,8 +56,9 @@ export default {
     positionIndex,
     jobIndex
   },
-  mounted() {
+  async mounted() {
     // this.getUserLocation();
+    await this.requestWechatInfo();
   },
   data() {
     return {
@@ -75,8 +77,34 @@ export default {
       }
     };
   },
-  methods: {},
-  activated() {}
+  methods: {
+    ...mapActions(["requestWechatInfo"])
+  },
+  activated() {},
+
+  beforeRouteEnter(to, from, next) {
+    const userInfo = localData("get", "userInfo");
+    const userType = userInfo.userType;
+    if (userType) {
+      if (userType !== "01") {
+        next({
+          path: "/loginIndex",
+          query: {
+            roleInfo: {
+              path: "/checkIn",
+              loginType: userType
+            }
+          }
+        });
+      } else {
+        next();
+      }
+    } else {
+      next({
+        path: "/selectRole"
+      });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>

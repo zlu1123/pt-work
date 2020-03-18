@@ -12,6 +12,7 @@
           v-for="(item, index) of isCheckInList"
           :key="index"
           :listItem="item"
+          :isCheckIn="false"
           @checkInPunchInfo="checkIn(item)"
         ></punch-info-list-item>
       </van-list>
@@ -26,6 +27,7 @@
           v-for="(item, index) of settledList"
           :key="index"
           :listItem="item"
+          :isCheckIn="true"
         ></punch-info-list-item>
       </van-list>
     </common-list-header>
@@ -34,6 +36,9 @@
       title="打卡审核"
       show-cancel-button
       class="dialog__radio"
+      @confirm="examTheRecord"
+      @cancel="quitExam"
+      confirmButtonColor="#21A675"
     >
       <van-radio-group v-model="radio" class="dialog_radio_select">
         <van-radio name="1" checked-color="#21A675">通过</van-radio>
@@ -56,7 +61,11 @@
 <script>
 import commonListHeader from "../components/commonListHeader";
 import punchInfoListItem from "./components/punchInfoListItem";
-import { enterpisePunchCardRecord } from "../../service/api";
+import {
+  enterpisePunchCardRecord,
+  examCardRecordList
+} from "../../service/api";
+import { flatten } from "underscore";
 
 export default {
   name: "checkIn",
@@ -71,99 +80,77 @@ export default {
         firstName: "待审核",
         lastName: "已审核"
       },
-      isCheckInList: [
-        {
-          name: "顺丰快递分派员（顺丰）",
-          isCheckIn: true,
-          workInfo: [
-            {
-              label: "打 卡 人",
-              value: "李江涛"
-            },
-            {
-              label: "打卡类型",
-              value: "上班"
-            },
-            {
-              label: "打卡时间",
-              value: "8:55:12"
-            }
-          ]
-        }
-      ],
+      isCheckInList: [],
       acceptedLoading: false,
       acceptedFinished: false,
-      settledList: [
-        {
-          name: "顺丰快递分派员（顺丰）",
-          isCheckIn: false,
-          workInfo: [
-            {
-              label: "打 卡 人",
-              value: "李江涛"
-            },
-            {
-              label: "打卡类型",
-              value: "上班"
-            },
-            {
-              label: "打卡时间",
-              value: "8:55:12"
-            }
-          ]
-        }
-      ],
+      settledList: [],
       settledLoading: false,
       settledFinished: false,
       showDialogFlag: false,
       radio: "",
-      reasonForRejection: ""
+      reasonForRejection: "",
+      checkInItem: {}
     };
   },
   methods: {
     acceptedOnLoad() {
-      // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.acceptedList.push(this.acceptedList[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.acceptedLoading = false;
-      //   // 数据全部加载完成
-      //   if (this.acceptedList.length >= 40) {
-      //     this.acceptedFinished = true;
-      //   }
-      // }, 500);
       enterpisePunchCardRecord({
-        // merchId: localStorage.getItem("merchChargeId")
+        examStat: "01"
       }).then(res => {
         if (res.data.retCode === "00000") {
-          this.isCheckInList = res.data.data;
+          this.isCheckInList = this.flattenArray(res.data.data);
           this.acceptedFinished = true;
         }
       });
     },
     settledOnLoad() {
-      // // 异步更新数据
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.settledList.push(this.settledList[i]);
-      //   }
-      //   // 加载状态结束
-      //   this.settledLoading = false;
-      //   // 数据全部加载完成
-      //   if (this.settledList.length >= 10) {
-      //     this.settledFinished = true;
-      //   }
-      // }, 500);
       enterpisePunchCardRecord({
-        // merchId: localStorage.getItem("merchChargeId")
-        // 01-职位申请 -02申请通过 -03职位申请不通过 -04工作审核通过 -05工作审核不通过
-        examStat: "04"
-      }).then(res => {});
+        examStat: "02"
+      }).then(res => {
+        if (res.data.retCode === "00000") {
+          this.settledList = this.flattenArray(res.data.data);
+          this.settledFinished = true;
+        }
+      });
     },
+
     checkIn(item) {
       this.showDialogFlag = true;
+      this.checkInItem = item;
+      this.reasonForRejection = "";
+    },
+
+    /**
+     * 将多维数组转换成一维数组
+     */
+    flattenArray(arr) {
+      return [].concat(...arr.map(x => (Array.isArray(x) ? flatten(x) : x)));
+    },
+
+    quitExam() {
+      this.showDialogFlag = false;
+      this.checkInItem = {};
+      this.reasonForRejection = "";
+    },
+
+    examTheRecord() {
+      if (this.radio === "2") {
+        if (!this.reasonForRejection) {
+          this.$notify({ type: "danger", message: "请填写驳回原因" });
+          return;
+        }
+      }
+      examCardRecordList({
+        postionApplyId: this.checkInItem.postionApplyId,
+        currentDay: this.checkInItem.clockTime,
+        clockType: this.checkInItem.clockType,
+        platformExamStat: this.radio === "1" ? "02" : "03", // 02 通过，03 不通过
+        refuseMsg: this.reasonForRejection
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.$toast("审核完成");
+        }
+      });
     }
   },
   watch: {

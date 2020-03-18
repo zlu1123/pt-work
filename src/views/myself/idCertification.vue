@@ -30,11 +30,13 @@
           upload-height="140px"
           img-tip-name="请上传身份证正面照片"
           @getUploadImgUrl="uploadFrontImg"
+          :img-url="identImageAddr"
         ></uploadItem>
         <uploadItem
           upload-height="140px"
           img-tip-name="请上传身份证背面照片"
           @getUploadImgUrl="uploadBackImg"
+          :img-url="identImageAddr1"
         ></uploadItem>
       </div>
     </div>
@@ -50,6 +52,7 @@ import commonContentHeader from "../components/commonContentHeader";
 import uploadItem from "./common/uploadItem";
 import { usrIdtfyCert } from "../../service/api";
 import { checkID } from "../../plugins/util";
+import { mapGetters } from "vuex";
 export default {
   name: "idCertification",
   components: {
@@ -64,6 +67,16 @@ export default {
       identImageAddr: "",
       identImageAddr1: ""
     };
+  },
+
+  mounted() {
+    let personInfo = this.getPersonalInfo;
+    if (personInfo.custName && personInfo.certNo && personInfo.isCert === "0") {
+      this.certNo = personInfo.certNo;
+      this.custName = personInfo.custName;
+      this.identImageAddr = personInfo.identImageAddr;
+      this.identImageAddr1 = personInfo.identImageAddr1;
+    }
   },
   methods: {
     uploadFrontImg(url) {
@@ -107,6 +120,10 @@ export default {
         }
       });
     }
+  },
+
+  computed: {
+    ...mapGetters(["getPersonalInfo"])
   }
 };
 </script>

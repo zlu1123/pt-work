@@ -25,6 +25,7 @@ import { clockInOrSignOut, queryCurrentDayClock } from "../../service/api";
 import { mapGetters } from "vuex";
 import { gettersName } from "../../common/constants";
 import { formatDate, formatDatemmss } from "../../plugins/util";
+
 export default {
   name: "checkInSituation",
   components: {
@@ -34,9 +35,8 @@ export default {
   data() {
     return {
       checkInList: [],
-      postionApplyId: "",
-      postionId: "",
-      merchId: ""
+      unPostion: false, // 是否有可打卡职位
+      positionInfo: {}
     };
   },
   mounted() {
@@ -44,15 +44,21 @@ export default {
   },
   methods: {
     getCheckPostionInfo() {
-      queryCurrentDayClock().then(res => {
+      queryCurrentDayClock({
+        selectFlag: "01" // 当日查询
+      }).then(res => {
         if (res && res.data.retCode === "00000") {
-          this.postionApplyId = res.data.data.postionInfo.postionApplyId;
-          this.postionId = res.data.data.postionInfo.postionId;
-          // this.merchId = res.data.data.postionInfo.merchId;
-          this.checkInList = this.getCheckInfo(
-            res.data.data.clockInfo,
-            res.data.data.postionInfo
-          );
+          let positonInfo = res.data.data.postionInfo;
+          if (positonInfo && Object.keys(positonInfo).length > 0) {
+            this.unPostion = true;
+            this.positonInfo = positonInfo;
+            this.checkInList = this.getCheckInfo(
+              res.data.data.clockInfo,
+              positonInfo
+            );
+          } else {
+            this.unPostion = false;
+          }
         }
       });
     },
@@ -84,18 +90,18 @@ export default {
       });
     },
     checkIn() {
-      // if (this.getBtnshow === "下班打卡") {
-      //   if(this.checkInList.length === 2){
-
-      //   }
-      // }
+      if (!this.unPostion) {
+        this.$toast("您当前无可打卡职位，请先报名");
+        return;
+      }
       clockInOrSignOut({
-        // merchId: this.merchId,
-        postionId: this.postionId,
-        postionApplyId: this.postionApplyId,
+        postionId: this.positonInfo.postionId,
+        postionApplyId: this.positonInfo.postionApplyId,
         clockType: this.checkInList.length === 0 ? "1" : "2", // 1上班 2下班
         clockAddr: this.getLocationAdrr.join(","), // 经纬度
-        currentDay: formatDate(new Date()) // new Date();
+        currentDay: formatDate(new Date()), // new Date();
+        postionName: this.positonInfo.postionName,
+        workerName: this.getPersonalInfo.custName
       }).then(res => {
         if (res && res.data.retCode === "00000") {
           this.$toast("打卡成功");
@@ -106,13 +112,13 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo]),
+    ...mapGetters([gettersName.getLocationInfo, "getPersonalInfo"]),
 
     getLocationAdrr() {
       let info = this[gettersName.getLocationInfo];
       if (info && Object.keys(info).length > 0) {
         if (info.detail) {
-          let location = info.detail.addressComponents.location;
+          let location = info.detail.location;
           return [location.lng, location.lat];
         }
       }

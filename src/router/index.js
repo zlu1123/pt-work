@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { localData } from "../plugins/local";
 // import Home from '../views/Home.vue'
 
 Vue.use(VueRouter);
@@ -20,7 +21,7 @@ const routes = [
   // }
   {
     path: "/",
-    redirect: "/selectRole"
+    redirect: "/home"
   },
   {
     name: "home",
@@ -197,15 +198,17 @@ router.beforeEach((to, from, next) => {
   if (title) {
     document.title = title;
   }
-  const token = localStorage.getItem("token");
-  const openid = localStorage.getItem("openid");
+
+  const userInfo = localData("get", "userInfo");
+  const token = userInfo.token;
+  const openid = userInfo.openid;
   if (!openid && !token) {
     if (to.path === "/auth") {
       next();
     } else {
-      const url = localStorage.getItem("now_url");
+      const url = localData("get", "now_url");
       if (!url) {
-        localStorage.setItem("now_url", to.fullPath); // 当前页url与参数放入缓存
+        localData("set", "now_url", to.fullPath); // 当前页url与参数放入缓存
       }
       next("/auth");
     }

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -23,13 +23,9 @@ export default {
     };
   },
 
-  async mounted() {
-    await this.requestWechatInfo();
-  },
+  mounted() {},
 
-  methods: {
-    ...mapActions(["requestWechatInfo"])
-  },
+  methods: {},
 
   computed: {
     ...mapGetters(["getLoading"])

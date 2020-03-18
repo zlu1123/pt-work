@@ -30,13 +30,13 @@ export default {
           roleImg: "./img/home/company.png",
           name: "企业人员",
           path: "/checkIn",
-          loginType: "02"
+          loginType: "03"
         },
         {
           roleImg: "./img/home/manager.png",
           name: "平台现场人员",
           path: "/checkIn",
-          loginType: "03"
+          loginType: "02"
         }
       ],
       chooseRole: {}
@@ -48,7 +48,8 @@ export default {
       this.$dialog
         .confirm({
           title: "选择角色",
-          message: `您确认选择${item.name}吗？`
+          message: `您确认选择${item.name}吗？`,
+          confirmButtonColor: "#21A675"
         })
         .then(() => {
           if (item.path !== "/home") {

@@ -3,7 +3,7 @@
     <div class="list__item-title">
       <div class="left">{{ myItem.name }}</div>
       <div class="right" :class="myItem.isCertification ? 'isCer' : 'isNotCer'">
-        {{ myItem.isCertification ? "已认证" : "未认证" }}
+        {{ getTheStatus }}
       </div>
     </div>
     <div class="list__item-info" v-if="myItem.isCertification">
@@ -35,7 +35,9 @@
       </div>
     </div>
     <div class="list__item__btn" v-else>
-      <div class="in__btn" @click="goCertification">去认证</div>
+      <div class="in__btn" @click="goCertification">
+        {{ getBtnText }}
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +68,21 @@ export default {
   computed: {
     getName() {
       return `姓      名：<span style="color: #1E1B1B;">${this.myItem.custName}</span>`;
+    },
+
+    getTheStatus() {
+      if (this.myItem.isCertification) {
+        return "已认证";
+      } else {
+        if (this.myItem.waitApply === 1) {
+          return "待审核";
+        }
+        return "未认证";
+      }
+    },
+
+    getBtnText() {
+      return this.myItem.waitApply === 1 ? "去修改" : "去认证";
     }
   }
 };

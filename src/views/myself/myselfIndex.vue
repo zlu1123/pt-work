@@ -36,7 +36,7 @@
           @goToNextPage="goToNextPage(item)"
         ></list-item>
       </div>
-      <div class="login-out">
+      <div class="login-out" @click="loginOut">
         退出登录
       </div>
     </div>
@@ -46,6 +46,8 @@
 <script>
 import listItem from "./common/listItem.vue";
 import { mapActions, mapGetters } from "vuex";
+import { userLoginOut } from "../../service/api";
+import { localData } from "../../plugins/local";
 export default {
   name: "",
   components: {
@@ -71,9 +73,9 @@ export default {
           name: "个人信息维护",
           path: "/personalInfo"
         },
-        {
-          name: "保险"
-        },
+        // {
+        //   name: "保险"
+        // },
         {
           name: "违约记录",
           path: "/breachInfo"
@@ -106,7 +108,10 @@ export default {
             item.path = "/addBankCard";
           }
         }
-      } else if (item.path === "/personalInfo") {
+      } else if (
+        item.path === "/personalInfo" ||
+        item.path === "/checkInSituation"
+      ) {
         if (this.getPersonalInfo.isCert !== "1") {
           this.$toast("您暂未进行身份证实名认证，请先认证");
           return;
@@ -114,6 +119,14 @@ export default {
       }
       this.$router.push({
         path: item.path
+      });
+    },
+
+    loginOut() {
+      userLoginOut().then(res => {
+        if (res && res.data.retCode === "00000") {
+          localData("clean", "userInfo");
+        }
       });
     }
   },
