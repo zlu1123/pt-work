@@ -25,7 +25,7 @@ export const getUrlParams = parameName => {
 
 export const formatDateTime = date => {
   let time = new Date(Date.parse(date));
-  time.setTime(time.setHours(time.getHours() + 8));
+  time.setTime(time.setHours(time.getHours()));
 
   let Y = time.getFullYear() + "-";
   let M = addZero(time.getMonth() + 1) + "-";
@@ -46,7 +46,7 @@ export const addZero = num => {
  */
 export const formatDate = date => {
   let time = new Date(Date.parse(date));
-  time.setTime(time.setHours(time.getHours() + 8));
+  time.setTime(time.setHours(time.getHours()));
 
   let Y = time.getFullYear();
   let M = addZero(time.getMonth() + 1);
@@ -59,7 +59,7 @@ export const formatDate = date => {
  */
 export const formatDateyyyyMMdd = date => {
   let time = new Date(Date.parse(date));
-  time.setTime(time.setHours(time.getHours() + 8));
+  time.setTime(time.setHours(time.getHours()));
 
   let Y = time.getFullYear();
   let M = addZero(time.getMonth() + 1);

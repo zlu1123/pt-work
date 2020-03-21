@@ -51,6 +51,7 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
+      :immediate-check="false"
       @load="onLoad"
     >
       <position-list-item
@@ -73,7 +74,6 @@
 import positionListItem from "./common/positionListItem";
 import { queryPosition, noticeAdPage } from "../../service/api";
 import { getUserLocation } from "../../plugins/wechatUtil";
-import { gettersName } from "../../common/constants";
 import { mapGetters } from "vuex";
 import { formatDate } from "../../plugins/util";
 import { baseUrlConfig } from "../../service/baseUrl";
@@ -87,11 +87,10 @@ export default {
     return {
       adImagesList: [],
       sortList: [
-        { text: "综合排序", value: "create_time" },
-        { text: "离我最近", value: "" },
-        { text: "价格最高", value: "price" },
-        { text: "时间最长", value: "work_time" }
-        // { text: "日期最长", value: 4 }
+        { text: "综合排序", value: "create_time DESC" },
+        { text: "离我最近", value: "distance ASC" },
+        { text: "价格最高", value: "price DESC" },
+        { text: "时间最长", value: "work_time DESC" }
       ],
       linkList: [
         { text: "全部", value: "" },
@@ -117,7 +116,7 @@ export default {
       showCalendar: false,
       minDate: new Date(),
       currentDate: new Date(),
-      composite: "create_time", // 综合排序    1.PRICE 价格最高 2.WORK_TIME 时间最长 3.CREATE_TIME 综合排序
+      composite: "create_time DESC", // 综合排序    1.PRICE 价格最高 2.WORK_TIME 时间最长 3.CREATE_TIME 综合排序
       timeChose: "", // 时间筛选
       billType: "", // 结算方式
       positionType: "", // 职位筛选
@@ -127,9 +126,9 @@ export default {
       pageNum: 1
     };
   },
-  mounted() {
+  async mounted() {
     this.getAdList();
-    getUserLocation();
+    await getUserLocation();
   },
   methods: {
     queryList() {
@@ -158,7 +157,7 @@ export default {
         timeChose: this.timeChose, // 时间筛选
         billType: this.billType, // 结算方式
         positionType: this.positionType, // 职位筛选
-        merchName: this.merchName, // 公司名称
+        merchName: this.merchName ? this.merchName.replace(/\s+/g, "") : "", // 公司名称
         location: this.location, // 距离
         pageSize: this.pageSize.toString(),
         pageNum: this.pageNum.toString()
@@ -210,13 +209,26 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo]),
+    ...mapGetters(["getLocationInfo"]),
     getLocationName() {
-      let info = this[gettersName.getLocationInfo];
+      let info = this.getLocationInfo;
       if (info && Object.keys(info).length > 0) {
-        return info.detail ? info.detail.addressComponents.street : "获取中";
+        // this.location = info.detail.location.
+        let detail = info.detail;
+        if (detail) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.location = detail.location.lng + "," + detail.location.lat;
+          return detail ? detail.addressComponents.street : "获取中";
+        }
       }
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.location = "";
       return "获取中";
+    }
+  },
+  watch: {
+    location() {
+      this.onLoad();
     }
   }
 };

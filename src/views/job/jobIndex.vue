@@ -50,7 +50,6 @@ import positionListItem from "../position/common/positionListItem";
 import commonListDes from "../components/commonListDes";
 import { applyList, disRoll, queryBillInfo } from "../../service/api";
 import { mapGetters } from "vuex";
-import { gettersName } from "../../common/constants";
 export default {
   name: "jobIndex",
   components: {
@@ -87,9 +86,7 @@ export default {
           if (res && res.data.retCode === "00000") {
             const resData = res.data.data;
             if (resData.list) {
-              this.acceptedList = this.acceptedList.concat(
-                this.fixApplyList(resData.list)
-              );
+              this.acceptedList = this.acceptedList.concat(resData.list);
               if (!resData.hasNextPage) {
                 // 循环增加职位名称
                 this.acceptedFinished = true;
@@ -177,15 +174,17 @@ export default {
         }).then(res => {
           if (res.data.retCode === "00000") {
             this.$toast("取消报名成功");
-            done();
+            this.acceptedList = [];
+            this.acceptedOnLoad();
           }
+          done();
         });
       } else {
         done();
       }
     },
     goJobMapDetail(item) {
-      if (Object.keys(this[gettersName.getLocationInfo]).length === 0) {
+      if (Object.keys(this.getLocationInfo).length === 0) {
         return;
       }
       this.$router.push({
@@ -200,7 +199,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo])
+    ...mapGetters(["getLocationInfo"])
   }
 };
 </script>

@@ -126,7 +126,7 @@ export default {
       return state.userInfo;
     },
 
-    [gettersName.getLocationInfo](state, getters) {
+    getLocationInfo(state, getters) {
       return state.locationInfo;
     },
 

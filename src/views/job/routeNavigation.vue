@@ -30,7 +30,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { gettersName } from "../../common/constants";
 export default {
   name: "routeNavigation",
   data() {
@@ -56,7 +55,6 @@ export default {
   },
   methods: {
     chooseWay(name, title) {
-      console.log(title);
       switch (name) {
         case 0:
           this.driveCar();
@@ -361,14 +359,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo]),
+    ...mapGetters(["getLocationInfo"]),
 
     getLocationLngLat() {
-      console.log(
-        `哈哈哈========${JSON.stringify(this[gettersName.getLocationInfo])}`
-      );
-      return this[gettersName.getLocationInfo]
-        ? this[gettersName.getLocationInfo].detail
+      return this.getLocationInfo
+        ? this.getLocationInfo.detail
         : { address: "陕西西安", location: { lat: 34.95517, lng: 109.58646 } };
     }
   }

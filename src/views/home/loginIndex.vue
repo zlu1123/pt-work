@@ -53,10 +53,15 @@ export default {
         pwd: this.password,
         loginType: this.userType.loginType // 02 企业人员  03 平台人员
       }).then(res => {
-        localData("set", "merchChargeId", res.data.data.merchChargeId);
-        this.$router.push({
-          path: "/checkIn"
-        });
+        if (res && res.data.retCode === "00000") {
+          localData("set", "merchChargeId", res.data.data.merchChargeId);
+          this.$router.push({
+            path: "/checkIn",
+            query: {
+              userType: this.userType.loginType
+            }
+          });
+        }
       });
     }
   }

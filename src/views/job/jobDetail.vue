@@ -103,6 +103,19 @@
     <div class="btn-sign-up" @click="applyWork" v-if="!isNotShowBtn">
       立即报名
     </div>
+    <van-dialog
+      v-model="dialogShow"
+      title="提醒"
+      show-cancel-button
+      confirm-button-color="#21A675"
+      @confirm="applyRoll"
+    >
+      <div class="dialog-style">
+        <div>1、报名后用人单位未批准前可随时取消报名；</div>
+        <div>2、用人单位批准通过后不能取消报名；</div>
+        <div>3、用人单位批准通过，逾期未到岗者，再次报名将缴纳违约金20元。</div>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -112,12 +125,7 @@ import detailTitle from "./common/detailTitle";
 import detailWelfareRequire from "./common/detailWelfareRequire";
 import detailWorkInfo from "./common/detailWorkInfo";
 import { enRoll, positionInfo } from "../../service/api";
-import {
-  welfareName,
-  requireName,
-  billTypeName,
-  gettersName
-} from "../../common/constants";
+import { welfareName, requireName, billTypeName } from "../../common/constants";
 import { formatYYYYMMDD, dateDiff } from "../../plugins/util";
 import { baseUrlConfig } from "../../service/baseUrl";
 import { mapGetters, mapActions } from "vuex";
@@ -150,7 +158,8 @@ export default {
       releasEmerch: "",
       jobDetailInfo: "",
       postionImgUrl: "",
-      isNotShowBtn: false
+      isNotShowBtn: false,
+      dialogShow: false
     };
   },
   async mounted() {
@@ -227,7 +236,7 @@ export default {
       ) {
         return;
       }
-      if (Object.keys(this[gettersName.getLocationInfo]).length === 0) {
+      if (Object.keys(this.getLocationInfo).length === 0) {
         return;
       }
       this.$router.push({
@@ -245,35 +254,35 @@ export default {
         this.$toast("您暂未进行身份证实名认证，请先认证");
         return;
       }
-      this.$dialog.confirm({
-        title: "提醒",
-        message: `确认申请该职位吗？`,
-        beforeClose: this.applyRoll
-      });
+      if (this.jobDetailInfo.health && this.jobDetailInfo.health === "1") {
+        if (!this.getPersonalInfo.healthImageAddr) {
+          this.$toast("您暂未进行健康证认证，请先认证");
+          return;
+        }
+      }
+      this.dialogShow = true;
     },
 
-    applyRoll(action, done) {
-      if (action === "confirm") {
-        enRoll({
-          merchId: this.releasEmerch,
-          postionId: this.postionId
-        }).then(res => {
-          done();
-          if (res.data.retCode === "00000") {
-            this.$toast("您已经报名成功");
-            this.$router.go(-1);
-          } else {
-            this.$toast(res.data.retInfo);
-          }
-        });
-      } else {
-        done();
-      }
+    applyRoll() {
+      enRoll({
+        merchId: this.releasEmerch,
+        postionId: this.postionId
+      }).then(res => {
+        if (res.data.retCode === "00000") {
+          this.$toast("您已经报名成功");
+          this.$store.commit("setRefreshList", true);
+          this.$router.go(-1);
+        } else {
+          this.$toast(res.data.retInfo);
+          this.$store.commit("setRefreshList", false);
+        }
+        this.dialogShow = false;
+      });
     }
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo, "getPersonalInfo"])
+    ...mapGetters(["getLocationInfo", "getPersonalInfo"])
   }
 };
 </script>
@@ -434,5 +443,10 @@ export default {
   font-size: @fs18;
   font-family: @yhUI;
   color: @myselfNameColor;
+}
+
+.dialog-style {
+  padding: 5px 20px;
+  font-size: @fs12;
 }
 </style>

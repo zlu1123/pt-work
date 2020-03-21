@@ -7,7 +7,7 @@
       <div class="list__item__content-tilte">
         <div>{{ listItem.postionName }}({{ listItem.releasEmerchName }})</div>
         <div
-          v-if="listItem.exemStat === '2'"
+          v-if="listItem.applyExemStat === '1'"
           class="cancel-registration"
           @click.stop="cancelRegistration"
         >
@@ -20,7 +20,9 @@
         >
           打卡详情
         </div>
-        <div v-else class="distance">1.5km</div>
+        <div v-else-if="listItem.distance" class="distance">
+          {{ (listItem.distance / 1000).toFixed(1) }}km
+        </div>
       </div>
       <div class="list__item__content-time">
         <span>{{ getWorkBeginDate(listItem.workBeginDate) }}</span>

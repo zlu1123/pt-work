@@ -6,16 +6,23 @@ import {
 } from "../../service/api";
 export default {
   state: {
-    bandCard: []
+    bandCard: [],
+    refreshList: false
   },
   getters: {
     getBandCardList: state => {
       return state.bandCard;
+    },
+    getRefreshList: state => {
+      return state.refreshList;
     }
   },
   mutations: {
     setBandCard(state, data) {
       state.bandCard = data;
+    },
+    setRefreshList(state, data) {
+      state.refreshList = data;
     }
   },
   actions: {

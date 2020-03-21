@@ -12,7 +12,7 @@
         ></check-in-list-item>
       </van-steps>
     </div>
-    <div class="check-in-btn" @click="checkIn">
+    <div class="check-in-btn" v-if="unPostion" @click="checkIn">
       {{ getBtnshow }}
     </div>
   </div>
@@ -22,8 +22,7 @@
 import commonHeader from "../components/commonHeader";
 import checkInListItem from "./common/checkInListItem";
 import { clockInOrSignOut, queryCurrentDayClock } from "../../service/api";
-import { mapGetters } from "vuex";
-import { gettersName } from "../../common/constants";
+import { mapGetters, mapActions } from "vuex";
 import { formatDate, formatDatemmss } from "../../plugins/util";
 
 export default {
@@ -43,41 +42,59 @@ export default {
     this.getCheckPostionInfo();
   },
   methods: {
+    ...mapActions(["requestPersonalInfo"]),
     getCheckPostionInfo() {
       queryCurrentDayClock({
         selectFlag: "01" // 当日查询
       }).then(res => {
         if (res && res.data.retCode === "00000") {
-          let positonInfo = res.data.data.postionInfo;
-          if (positonInfo && Object.keys(positonInfo).length > 0) {
-            this.unPostion = true;
-            this.positonInfo = positonInfo;
-            this.checkInList = this.getCheckInfo(
-              res.data.data.clockInfo,
-              positonInfo
-            );
+          if (res.data.data) {
+            let positonInfo = res.data.data.postionInfo;
+            if (positonInfo && Object.keys(positonInfo).length > 0) {
+              this.unPostion = true;
+              this.positonInfo = positonInfo;
+              this.checkInList = this.getCheckInfo(
+                res.data.data.clockInfo,
+                positonInfo
+              );
+            } else {
+              this.unPostion = false;
+            }
           } else {
-            this.unPostion = false;
+            this.$toast("您当前无可打卡职位，请先报名");
           }
         }
       });
     },
+
+    listSort(arr) {
+      let sortArr = arr.sort((a, b) => {
+        return a.clockType - b.clockType;
+      });
+      return sortArr;
+    },
+
     getCheckInfo(info, positonInfo) {
+      let clockList = this.listSort(info);
+      let upList = clockList.filter(item => item.clockType === "1");
+      let downList = clockList.filter(item => item.clockType === "2");
       let list = [];
-      if (info.length > 0) {
+      if (upList.length > 0) {
         let checkInfo = {
           checkInTime: positonInfo.clockBeginDate,
           positionName: positonInfo.postionName,
           checkInFlag: "up",
-          alreadyCheckIn: formatDatemmss(info[0].clockTime)
+          alreadyCheckIn: formatDatemmss(upList[upList.length - 1].clockTime)
         };
         list.push(checkInfo);
-        if (info[1]) {
+        if (downList.length > 0) {
           let endClock = {
             checkInTime: positonInfo.clockEndDate,
             positionName: positonInfo.postionName,
             checkInFlag: "down",
-            alreadyCheckIn: formatDatemmss(info[1].clockTime)
+            alreadyCheckIn: formatDatemmss(
+              downList[downList.length - 1].clockTime
+            )
           };
           list.push(endClock);
         }
@@ -89,10 +106,13 @@ export default {
         path: "/punchList"
       });
     },
-    checkIn() {
+    async checkIn() {
       if (!this.unPostion) {
         this.$toast("您当前无可打卡职位，请先报名");
         return;
+      }
+      if (Object.keys(this.getPersonalInfo).length === 0) {
+        await this.requestPersonalInfo();
       }
       clockInOrSignOut({
         postionId: this.positonInfo.postionId,
@@ -112,10 +132,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters([gettersName.getLocationInfo, "getPersonalInfo"]),
+    ...mapGetters(["getLocationInfo", "getPersonalInfo"]),
 
     getLocationAdrr() {
-      let info = this[gettersName.getLocationInfo];
+      let info = this.getLocationInfo;
       if (info && Object.keys(info).length > 0) {
         if (info.detail) {
           let location = info.detail.location;

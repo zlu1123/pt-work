@@ -63,7 +63,6 @@ export default {
         {
           name: "我的认证",
           path: "/myCertification"
-          // path: "/idCertification"
         },
         {
           name: "银行卡信息",
@@ -76,10 +75,10 @@ export default {
         // {
         //   name: "保险"
         // },
-        {
-          name: "违约记录",
-          path: "/breachInfo"
-        },
+        // {
+        //   name: "违约记录",
+        //   path: "/breachInfo"
+        // },
         {
           name: "打卡情况",
           path: "/checkInSituation"

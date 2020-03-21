@@ -256,6 +256,14 @@ export const examCardRecordList = (params, headers) => {
   return axiosRequest(POST, urlConstant.examCardRecordList, params);
 };
 
+export const enterpiseExamCardRecordList = (params, headers) => {
+  return axiosRequest(POST, urlConstant.enterpiseExamCardRecordList, params);
+};
+
+export const platformerPunchCardRecord = (params, headers) => {
+  return axiosRequest(POST, urlConstant.platformerPunchCardRecord, params);
+};
+
 export const userLoginOut = (params, headers) => {
   return axiosRequest(POST, urlConstant.userLoginOut, params);
 };

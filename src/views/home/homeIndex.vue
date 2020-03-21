@@ -97,7 +97,16 @@ export default {
           }
         });
       } else {
-        next();
+        if (from.path === "/jobDetail") {
+          next(vm => {
+            if (vm.$store.getters.getRefreshList) {
+              vm.active = "job";
+              vm.$store.commit("setRefreshList", false);
+            }
+          });
+        } else {
+          next();
+        }
       }
     } else {
       next({

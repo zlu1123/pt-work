@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="login-out" @click="loginOut">
+      退出登录
+    </div>
     <common-list-header :content-data="showData">
       <van-list
         slot="firstList"
@@ -36,7 +39,7 @@
       title="打卡审核"
       show-cancel-button
       class="dialog__radio"
-      @confirm="examTheRecord"
+      @confirm="confirmType"
       @cancel="quitExam"
       confirmButtonColor="#21A675"
     >
@@ -63,8 +66,12 @@ import commonListHeader from "../components/commonListHeader";
 import punchInfoListItem from "./components/punchInfoListItem";
 import {
   enterpisePunchCardRecord,
-  examCardRecordList
+  enterpiseExamCardRecordList,
+  platformerPunchCardRecord,
+  examCardRecordList,
+  userLoginOut
 } from "../../service/api";
+import { localData } from "../../plugins/local";
 import { flatten } from "underscore";
 
 export default {
@@ -89,29 +96,64 @@ export default {
       showDialogFlag: false,
       radio: "",
       reasonForRejection: "",
-      checkInItem: {}
+      checkInItem: {},
+      userType: ""
     };
   },
+  mounted() {
+    this.userType = this.$route.query.userType;
+  },
   methods: {
-    acceptedOnLoad() {
-      enterpisePunchCardRecord({
-        examStat: "01"
-      }).then(res => {
-        if (res.data.retCode === "00000") {
-          this.isCheckInList = this.flattenArray(res.data.data);
-          this.acceptedFinished = true;
-        }
-      });
+    confirmType() {
+      if (this.userType === "03") {
+        this.examEnterpiseRecord();
+      } else {
+        this.examTheRecord();
+      }
     },
+
+    acceptedOnLoad() {
+      if (this.userType === "03") {
+        enterpisePunchCardRecord({
+          merchExamStat: "01"
+        }).then(res => {
+          if (res.data.retCode === "00000") {
+            this.isCheckInList = this.flattenArray(res.data.data);
+            this.acceptedFinished = true;
+          }
+        });
+      } else {
+        platformerPunchCardRecord({
+          plaformExamStat: "01"
+        }).then(res => {
+          if (res.data.retCode === "00000") {
+            this.isCheckInList = this.flattenArray(res.data.data);
+            this.acceptedFinished = true;
+          }
+        });
+      }
+    },
+
     settledOnLoad() {
-      enterpisePunchCardRecord({
-        examStat: "02"
-      }).then(res => {
-        if (res.data.retCode === "00000") {
-          this.settledList = this.flattenArray(res.data.data);
-          this.settledFinished = true;
-        }
-      });
+      if (this.userType === "03") {
+        enterpisePunchCardRecord({
+          merchExamStat: "02"
+        }).then(res => {
+          if (res.data.retCode === "00000") {
+            this.settledList = this.flattenArray(res.data.data);
+            this.settledFinished = true;
+          }
+        });
+      } else {
+        platformerPunchCardRecord({
+          plaformExamStat: "02"
+        }).then(res => {
+          if (res.data.retCode === "00000") {
+            this.settledList = this.flattenArray(res.data.data);
+            this.settledFinished = true;
+          }
+        });
+      }
     },
 
     checkIn(item) {
@@ -133,6 +175,32 @@ export default {
       this.reasonForRejection = "";
     },
 
+    /**
+     * 企业审核
+     */
+    examEnterpiseRecord() {
+      if (this.radio === "2") {
+        if (!this.reasonForRejection) {
+          this.$notify({ type: "danger", message: "请填写驳回原因" });
+          return;
+        }
+      }
+      let param = {
+        id: this.checkInItem.id,
+        refuseMsg: this.reasonForRejection,
+        merchExamStat: this.radio === "1" ? "02" : "03" // 02 通过，03 不通过
+      };
+      enterpiseExamCardRecordList(param).then(res => {
+        if (res && res.data.retCode === "00000") {
+          this.$toast("审核完成");
+          this.acceptedOnLoad();
+        }
+      });
+    },
+
+    /**
+     * 平台审核
+     */
     examTheRecord() {
       if (this.radio === "2") {
         if (!this.reasonForRejection) {
@@ -140,15 +208,54 @@ export default {
           return;
         }
       }
-      examCardRecordList({
+      let param = {
         postionApplyId: this.checkInItem.postionApplyId,
         currentDay: this.checkInItem.clockTime,
         clockType: this.checkInItem.clockType,
-        platformExamStat: this.radio === "1" ? "02" : "03", // 02 通过，03 不通过
-        refuseMsg: this.reasonForRejection
-      }).then(res => {
+        refuseMsg: this.reasonForRejection,
+        platformExamStat: this.radio === "1" ? "02" : "03"
+      };
+      examCardRecordList(param).then(res => {
         if (res && res.data.retCode === "00000") {
           this.$toast("审核完成");
+        }
+      });
+    },
+
+    loginOut() {
+      this.$dialog.confirm({
+        title: "提醒",
+        message: `您确认退出当前角色吗？`,
+        confirmButtonColor: "#21A675",
+        beforeClose: this.userLoginOutMethod
+      });
+    },
+
+    userLoginOutMethod(action, done) {
+      if (action === "confirm") {
+        userLoginOut().then(res => {
+          if (res && res.data.retCode === "00000") {
+            localData("clean", "userInfo");
+            done();
+            this.$router.replace("/selectRole");
+          }
+        });
+      } else {
+        done();
+      }
+    },
+
+    /**
+     * 查询平台待审核列表
+     */
+    getPlatformerWait() {
+      platformerPunchCardRecord({
+        merchExamStat: "02",
+        plaformExamStat: "01"
+      }).then(res => {
+        if (res.data.retCode === "00000") {
+          this.settledList = this.flattenArray(res.data.data);
+          this.settledFinished = true;
         }
       });
     }
@@ -174,5 +281,16 @@ export default {
   .dialog_reject {
     margin: 20px;
   }
+}
+.login-out {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 52px;
+  border: 2px solid #d2d2d2;
+  border-radius: 5px;
+  font-size: @fs18;
+  font-family: @pfSC;
+  text-align: center;
+  line-height: 52px;
 }
 </style>

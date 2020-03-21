@@ -123,19 +123,21 @@ export default {
         currentMonth: this.currentMonth
       }).then(res => {
         if (res && res.data.retCode === "00000") {
-          this.postionInfo = res.data.data.postionInfo;
-          this.clockInfo = res.data.data.clockInfo;
-          let nowDate = formatDateNormalyyyyMMdd(new Date());
-          this.clockInfo.forEach(item => {
-            item.clockTime = formatDateNormalyyyyMMdd(item.clockTime);
-            if (nowDate === item.clockTime) {
-              if (item.clockType === "1") {
-                this.startTime = item.createTime;
-              } else {
-                this.endTime = item.createTime;
+          if (res.data.data) {
+            this.postionInfo = res.data.data.postionInfo;
+            this.clockInfo = res.data.data.clockInfo;
+            let nowDate = formatDateNormalyyyyMMdd(new Date());
+            this.clockInfo.forEach(item => {
+              item.clockTime = formatDateNormalyyyyMMdd(item.clockTime);
+              if (nowDate === item.clockTime) {
+                if (item.clockType === "1") {
+                  this.startTime = item.createTime;
+                } else {
+                  this.endTime = item.createTime;
+                }
               }
-            }
-          });
+            });
+          }
         }
       });
     }

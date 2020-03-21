@@ -22,21 +22,32 @@ export const clockInOrSignOut =
 export const queryCurrentDayClock =
   baseUrlConfig.proxyURL + "/worker/mine/queryCurrentDayClock"; // 查询打卡信息
 
+// 企业查询打卡信息
 export const enterpisePunchCardRecord =
-  baseUrlConfig.proxyURL + "/enterpise/punchCardRecord"; // 企业查询打卡信息
+  baseUrlConfig.proxyURL + "/enterpise/punchCardRecord";
 
-export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign"; // 查询微信相关信息
+// 平台查询打卡信息
+export const platformerPunchCardRecord =
+  baseUrlConfig.proxyURL + "/platformer/punchCardRecord";
 
-export const noticeAdPage = baseUrlConfig.proxyURL + "/noticeAd/page"; // 广告查询-分页
+// 查询微信相关信息
+export const getWechatSign = baseUrlConfig.proxyURL + "/wxjs/getWechatSign";
 
-export const getOpenId = baseUrlConfig.proxyURL + "/wxjs/getOpenId"; // 获取openID
+// 广告查询-分页
+export const noticeAdPage = baseUrlConfig.proxyURL + "/noticeAd/page";
 
-export const getUserInfo = baseUrlConfig.proxyURL + "/worker/mine/userInfo"; // 个人信息
+// 获取openID
+export const getOpenId = baseUrlConfig.proxyURL + "/wxjs/getOpenId";
 
+// 个人信息
+export const getUserInfo = baseUrlConfig.proxyURL + "/worker/mine/userInfo";
+
+// 个人信息维护
 export const updateUserInfoMath =
-  baseUrlConfig.proxyURL + "/worker/mine/userInfoMatn"; // 个人信息维护
+  baseUrlConfig.proxyURL + "/worker/mine/userInfoMatn";
 
-export const uploadImageUrl = baseUrlConfig.proxyURL + "/uploadImage/upload"; // 图片上传
+// 图片上传
+export const uploadImageUrl = baseUrlConfig.proxyURL + "/uploadImage/upload";
 
 // 结算信息
 export const queryBillInfo =
@@ -78,7 +89,13 @@ export const cardQuery = baseUrlConfig.proxyURL + "/worker/cardQuery";
 export const rechargeCallBack =
   baseUrlConfig.proxyURL + "/enterpise/rechargeCallBack";
 
+// 平台打卡审核
 export const examCardRecordList =
   baseUrlConfig.proxyURL + "/platformer/examCardRecordList";
 
+// 企业打卡审核
+export const enterpiseExamCardRecordList =
+  baseUrlConfig.proxyURL + "/enterpise/examCardRecordList";
+
+// 用户登出
 export const userLoginOut = baseUrlConfig.proxyURL + "/user/loginOut";
