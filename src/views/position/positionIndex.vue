@@ -52,6 +52,7 @@
       :finished="finished"
       finished-text="没有更多了"
       @load="onLoad"
+      :immediate-check="false"
     >
       <position-list-item
         class="van-clearfix"
@@ -72,7 +73,6 @@
 <script>
 import positionListItem from "./common/positionListItem";
 import { queryPosition, noticeAdPage } from "../../service/api";
-import { getUserLocation } from "../../plugins/wechatUtil";
 import { mapGetters } from "vuex";
 import { formatDate } from "../../plugins/util";
 import { baseUrlConfig } from "../../service/baseUrl";
@@ -127,7 +127,6 @@ export default {
   },
   async mounted() {
     this.getAdList();
-    await getUserLocation();
   },
   methods: {
     queryList() {

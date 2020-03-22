@@ -3,7 +3,6 @@
     <div class="upload-content">
       <van-uploader
         v-if="!imgUrl"
-        :before-read="beforeRead"
         :after-read="afterRead"
         :max-size="maxSize"
         :max-count="maxCount"
@@ -55,14 +54,6 @@ export default {
 
   methods: {
     ...mapActions(["uploadImagePublic"]),
-    // 返回布尔值
-    beforeRead(file) {
-      if (file.type !== "image/jpeg" && file.type !== "image/png") {
-        this.$toast("请上传 jpg/png 格式图片");
-        return false;
-      }
-      return true;
-    },
 
     afterRead(file) {
       // 此时可以自行将文件上传至服务器
