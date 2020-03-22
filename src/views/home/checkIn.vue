@@ -124,10 +124,10 @@ export default {
         });
       } else {
         platformerPunchCardRecord({
-          plaformExamStat: "01"
+          platformExamStat: "01"
         }).then(res => {
           if (res.data.retCode === "00000") {
-            this.isCheckInList = this.flattenArray(res.data.data);
+            this.isCheckInList = this.flattenArray(res.data.data.list);
             this.acceptedFinished = true;
           }
         });
@@ -146,10 +146,10 @@ export default {
         });
       } else {
         platformerPunchCardRecord({
-          plaformExamStat: "02"
+          platformExamStat: "02"
         }).then(res => {
           if (res.data.retCode === "00000") {
-            this.settledList = this.flattenArray(res.data.data);
+            this.settledList = this.flattenArray(res.data.data.list);
             this.settledFinished = true;
           }
         });
@@ -209,9 +209,7 @@ export default {
         }
       }
       let param = {
-        postionApplyId: this.checkInItem.postionApplyId,
-        currentDay: this.checkInItem.clockTime,
-        clockType: this.checkInItem.clockType,
+        id: this.checkInItem.id,
         refuseMsg: this.reasonForRejection,
         platformExamStat: this.radio === "1" ? "02" : "03"
       };
@@ -225,7 +223,7 @@ export default {
     loginOut() {
       this.$dialog.confirm({
         title: "提醒",
-        message: `您确认退出当前角色吗？`,
+        message: `您确认退出当前角色吗？再次进入需要重新登录！`,
         confirmButtonColor: "#21A675",
         beforeClose: this.userLoginOutMethod
       });
@@ -235,7 +233,7 @@ export default {
       if (action === "confirm") {
         userLoginOut().then(res => {
           if (res && res.data.retCode === "00000") {
-            localData("clean", "userInfo");
+            localData("clean", "lsgUserInfo");
             done();
             this.$router.replace("/selectRole");
           }
@@ -283,14 +281,14 @@ export default {
   }
 }
 .login-out {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px 15px;
   height: 52px;
-  border: 2px solid #d2d2d2;
-  border-radius: 5px;
-  font-size: @fs18;
-  font-family: @pfSC;
   text-align: center;
   line-height: 52px;
+  background: @myselfListTitleColor;
+  border-radius: 5px;
+  font-size: @fs18;
+  font-family: @yhUI;
+  color: @myselfNameColor;
 }
 </style>

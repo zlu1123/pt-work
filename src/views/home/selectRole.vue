@@ -13,6 +13,8 @@
 <script>
 import roleItem from "./components/roleItem";
 import { mapActions } from "vuex";
+import { localData } from "../../plugins/local";
+import { userLogin } from "../../service/api";
 export default {
   name: "selectRole",
   components: {
@@ -45,35 +47,45 @@ export default {
   methods: {
     ...mapActions(["requestUserInfo"]),
     selectRole(item) {
-      this.$dialog
-        .confirm({
-          title: "选择角色",
-          message: `您确认选择${item.name}吗？`,
-          confirmButtonColor: "#21A675"
-        })
-        .then(() => {
-          if (item.path !== "/home") {
-            this.$router.replace({
-              path: "/loginIndex",
-              query: {
-                roleInfo: item
-              }
-            });
-          } else {
-            this.getWorkInfo(item.path);
-          }
-        })
-        .catch(() => {});
+      this.chooseRole = item;
+      this.$dialog.confirm({
+        title: "选择角色",
+        message: `您确认选择${item.name}吗？`,
+        confirmButtonColor: "#21A675",
+        beforeClose: this.userLoginOutMethod
+      });
     },
 
-    async getWorkInfo(path) {
-      let userInfo = await this.requestUserInfo({
-        userName: "最后变成如果",
-        loginType: "01" // 01-个人；02-平台；03-商户（商户/平台）
-      });
-      if (userInfo.retCode === "00000") {
-        this.$router.push(path);
+    userLoginOutMethod(action, done) {
+      let item = this.chooseRole;
+      if (action === "confirm") {
+        if (item.path !== "/home") {
+          this.$router.replace({
+            path: "/loginIndex",
+            query: {
+              roleInfo: item
+            }
+          });
+        } else {
+          this.getWorkInfo(item.path, done);
+        }
+      } else {
+        done();
       }
+    },
+
+    async getWorkInfo(path, done) {
+      let user = localData("get", "userInfo");
+      userLogin({
+        userName: user.nickname || "零活工",
+        loginType: "01" // 01-个人；02-平台；03-商户（商户/平台）
+      }).then(res => {
+        if (res && res.data.retCode === "00000") {
+          localData("set", "lsgUserInfo", res.data.data);
+          done();
+          this.$router.push(path);
+        }
+      });
     }
   }
 };

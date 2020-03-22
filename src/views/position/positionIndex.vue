@@ -51,7 +51,6 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
-      :immediate-check="false"
       @load="onLoad"
     >
       <position-list-item
@@ -228,6 +227,8 @@ export default {
   },
   watch: {
     location() {
+      this.pageNum = 1;
+      this.positionData = [];
       this.onLoad();
     }
   }

@@ -2,14 +2,7 @@
   <div class="myself-content">
     <div class="myself-info">
       <div>
-        <van-image
-          round
-          fit
-          width="70"
-          height="70"
-          lazy-load
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        />
+        <van-image round fit width="70" height="70" lazy-load :src="getImg" />
         <div class="name">微信昵称：{{ getPersonalInfo.userName }}</div>
       </div>
     </div>
@@ -68,6 +61,7 @@ import { mapGetters } from "vuex";
 import { updateUserInfoMath } from "../../service/api";
 import { analyzeIDCard } from "../../plugins/util";
 import { baseUrlConfig } from "../../service/baseUrl";
+import { localData } from "../../plugins/local";
 export default {
   name: "personalInfo",
   components: {
@@ -110,11 +104,13 @@ export default {
           required: true
         }
       ],
-      logoAddr: ""
+      logoAddr: "",
+      userInfo: {}
     };
   },
 
   mounted() {
+    this.userInfo = localData("get", "userInfo");
     if (Object.keys(this.getPersonalInfo).length > 0) {
       if (this.getPersonalInfo.isCert === "1") {
         // 实名认证信息 sart
@@ -150,18 +146,27 @@ export default {
     },
     updatedPersonInfo() {
       updateUserInfoMath({
-        mobileNo: "18629512681",
+        mobileNo: this.infoList[5].value,
         logoAddr: this.logoAddr,
-        shoeSize: "42",
-        stature: "175"
+        shoeSize: this.infoList[4].value,
+        stature: this.infoList[3].value
       }).then(res => {
-        console.log(res);
+        if (res && res.data.retCode === "00000") {
+          this.$toast("更新成功");
+          this.$router.go(-1);
+        }
       });
     }
   },
 
   computed: {
-    ...mapGetters(["getPersonalInfo"])
+    ...mapGetters(["getPersonalInfo"]),
+
+    getImg() {
+      return this.userInfo.headimgurl
+        ? this.userInfo.headimgurl
+        : "https://img.yzcdn.cn/vant/cat.jpeg";
+    }
   }
 };
 </script>

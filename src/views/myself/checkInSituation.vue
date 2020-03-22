@@ -12,8 +12,11 @@
         ></check-in-list-item>
       </van-steps>
     </div>
-    <div class="check-in-btn" v-if="unPostion" @click="checkIn">
+    <div class="check-in-btn" v-if="unPostion && !showTip" @click="checkIn">
       {{ getBtnshow }}
+    </div>
+    <div class="tip" v-if="showTip">
+      {{ tip }}
     </div>
   </div>
 </template>
@@ -35,7 +38,9 @@ export default {
     return {
       checkInList: [],
       unPostion: false, // 是否有可打卡职位
-      positionInfo: {}
+      positionInfo: {},
+      showTip: false,
+      tip: "您的下班打卡记录已经被审核，无法更新!!!"
     };
   },
   mounted() {
@@ -88,14 +93,19 @@ export default {
         };
         list.push(checkInfo);
         if (downList.length > 0) {
+          let lastData = downList[downList.length - 1];
           let endClock = {
             checkInTime: positonInfo.clockEndDate,
             positionName: positonInfo.postionName,
             checkInFlag: "down",
-            alreadyCheckIn: formatDatemmss(
-              downList[downList.length - 1].clockTime
-            )
+            alreadyCheckIn: formatDatemmss(lastData.clockTime)
           };
+          if (
+            lastData.merchExamStat !== "01" ||
+            lastData.platformExamStat !== "01"
+          ) {
+            this.showTip = true;
+          }
           list.push(endClock);
         }
       }
@@ -183,5 +193,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tip {
+  padding: 10px;
+  color: #f23800;
 }
 </style>

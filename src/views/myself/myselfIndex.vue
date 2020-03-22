@@ -2,14 +2,7 @@
   <div class="myself-content">
     <div class="myself-info">
       <div>
-        <van-image
-          round
-          fit
-          width="70"
-          height="70"
-          lazy-load
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        />
+        <van-image round fit width="70" height="70" lazy-load :src="getImg" />
       </div>
       <div class="myself-detail">
         <div class="name-verified">
@@ -84,13 +77,15 @@ export default {
           path: "/checkInSituation"
         }
       ],
-      personalInfo: ""
+      personalInfo: "",
+      userInfo: {}
     };
   },
 
   async mounted() {
     await this.requestPersonalInfo();
     this.personalInfo = this.getPersonalInfo;
+    this.userInfo = localData("get", "userInfo");
   },
 
   methods: {
@@ -122,16 +117,37 @@ export default {
     },
 
     loginOut() {
-      userLoginOut().then(res => {
-        if (res && res.data.retCode === "00000") {
-          localData("clean", "userInfo");
-        }
+      this.$dialog.confirm({
+        title: "提醒",
+        message: `您确认退出当前角色吗？再次进入需要重新登录！`,
+        confirmButtonColor: "#21A675",
+        beforeClose: this.userLoginOutMethod
       });
+    },
+
+    userLoginOutMethod(action, done) {
+      if (action === "confirm") {
+        userLoginOut().then(res => {
+          if (res && res.data.retCode === "00000") {
+            localData("clean", "lsgUserInfo");
+            done();
+            this.$router.replace("/selectRole");
+          }
+        });
+      } else {
+        done();
+      }
     }
   },
 
   computed: {
-    ...mapGetters(["getPersonalInfo", "getBandCardList"])
+    ...mapGetters(["getPersonalInfo", "getBandCardList"]),
+
+    getImg() {
+      return this.userInfo.headimgurl
+        ? this.userInfo.headimgurl
+        : "https://img.yzcdn.cn/vant/cat.jpeg";
+    }
   },
 
   async activated() {

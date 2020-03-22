@@ -9,18 +9,28 @@ export const applyExam = baseUrlConfig.proxyURL + "/postionApply/applyExam";
 
 export const getPayRoll = baseUrlConfig.proxyURL + "/worker/mine/GetPayRoll"; // 发工资
 
+// 企业发布新增
 export const insertEnterprise =
-  baseUrlConfig.proxyURL + "/enterpriseRelease/insert"; // 企业发布新增
+  baseUrlConfig.proxyURL + "/enterpriseRelease/insert";
+// 企业负责人新增
 export const insertEnterpriseDirector =
-  baseUrlConfig.proxyURL + "/enterpriseDirector/insert"; // 企业负责人新增
-export const queryPosition = baseUrlConfig.proxyURL + "/common/queryPosition"; // 企业列表
+  baseUrlConfig.proxyURL + "/enterpriseDirector/insert";
+// 企业列表
+export const queryPosition = baseUrlConfig.proxyURL + "/common/queryPosition";
+// 职位信息详情
 export const positionInfo =
-  baseUrlConfig.proxyURL + "/postionRelease/positionInfo"; // 职位信息详情
+  baseUrlConfig.proxyURL + "/postionRelease/positionInfo";
+
+// 取消报名
 export const disRoll = baseUrlConfig.proxyURL + "/worker/operation/disRoll";
+
+// 打卡ID
 export const clockInOrSignOut =
-  baseUrlConfig.proxyURL + "/worker/mine/clockInOrSignOut"; // 打卡ID
+  baseUrlConfig.proxyURL + "/worker/mine/clockInOrSignOut";
+
+// 查询打卡信息
 export const queryCurrentDayClock =
-  baseUrlConfig.proxyURL + "/worker/mine/queryCurrentDayClock"; // 查询打卡信息
+  baseUrlConfig.proxyURL + "/worker/mine/queryCurrentDayClock";
 
 // 企业查询打卡信息
 export const enterpisePunchCardRecord =

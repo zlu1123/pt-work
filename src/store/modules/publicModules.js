@@ -57,8 +57,9 @@ export default {
         userInfo = await handleRequestPromise(userLogin, params);
       } catch (error) {
       } finally {
-        commit(mutationsName.setUserInfo, userInfo.data);
-        sessionStorage.setItem("userInfo", userInfo.data);
+        if (userInfo && userInfo.retCode === "00000") {
+          commit(mutationsName.setUserInfo, userInfo.data);
+        }
       }
       return userInfo;
     },

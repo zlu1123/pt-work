@@ -83,8 +83,9 @@ export default {
   activated() {},
 
   beforeRouteEnter(to, from, next) {
-    const userInfo = localData("get", "userInfo");
-    const userType = userInfo.userType;
+    // const userInfo = localData("get", "userInfo");
+    const lsgUserInfo = localData("get", "lsgUserInfo");
+    const userType = lsgUserInfo.userType;
     if (userType) {
       if (userType !== "01") {
         next({
