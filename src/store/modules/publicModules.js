@@ -90,12 +90,18 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      let fileInfo = await handleRequestPromise(
-        uploadImageUrl,
-        formListData,
-        false,
-        config
-      );
+      let fileInfo = "";
+      try {
+        fileInfo = await handleRequestPromise(
+          uploadImageUrl,
+          formListData,
+          false,
+          config
+        );
+      } catch (e) {
+        console.log(e);
+      } finally {
+      }
       return fileInfo;
     },
 
