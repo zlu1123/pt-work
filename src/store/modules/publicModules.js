@@ -82,8 +82,17 @@ export default {
     async uploadImagePublic({ commit, state }, file) {
       // new 一个FormData格式的参数
       let formListData = new FormData();
-      formListData.append("files", file.file);
-      formListData.append("type", "postion");
+      if (!file.flag) {
+        formListData.append("files", file.file);
+        formListData.append("type", "postion");
+      } else {
+        file.file.formData.append("type", "postion");
+        formListData = file.file.formData;
+      }
+      // 第二种
+      for (var [a, b] of formListData.entries()) {
+        console.log(a, b);
+      }
       let config = {
         headers: {
           // 添加请求头

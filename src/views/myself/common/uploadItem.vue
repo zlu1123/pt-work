@@ -81,9 +81,8 @@ export default {
         return false;
       }
       if (files.size > 1048576) {
-        lrz(e.target.files[0])
+        lrz(e.target.files[0], { fieldName: "files" })
           .then(res => {
-            console.log(res);
             this.uploadImg(res, true);
           })
           .catch()
@@ -94,7 +93,7 @@ export default {
     },
 
     uploadImg(data, flag) {
-      let file = { file: flag ? data.file : data };
+      let file = { file: data, flag };
       // 此时可以自行将文件上传至服务器
       this.uploadImagePublic(file).then(res => {
         if (res && res.retCode === "00000") {
